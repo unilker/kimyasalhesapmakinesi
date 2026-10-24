@@ -1,0 +1,122 @@
+# Kimya Hesap (Chem Calc)
+
+Kimya öğrencileri ve akademisyenler için **ücretsiz, reklamsız, tamamen çevrimdışı** bilimsel hesap makinesi.
+Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayüz Türkçe ve İngilizcedir.
+
+## Özellikler
+
+| Bölüm | İçerik |
+|---|---|
+| **Hesap makinesi** | Bilimsel fonksiyonlar, DEG/RAD, `2nd` tuşu, `Ans`, EE (×10ⁿ), fiziksel sabitler, canlı önizleme, donanım klavyesi desteği |
+| **Mol kütlesi** | `CuSO4·5H2O`, `K4[Fe(CN)6]`, `Ca(OH)2`, `SO4^2-`, `D2O`; yüzde bileşim, kütle ⇄ mol ⇄ tanecik |
+| **Denklem & stokiyometri** | Tam sayılı (kesin aritmetikle) denkleştirme, iyonik/redoks denklemler, sınırlayıcı bileşen, artan miktar, teorik verim |
+| **Çözeltiler** | Çözelti hazırlama (m = C·V·M), molalite, %(k/k) → molarite, kütlece yüzde, ppm |
+| **Seyreltme** | C₁V₁ = C₂V₂, iki çözeltiyi karıştırma, seyreltme faktörü |
+| **Asit–baz** | pH/pOH, kuvvetli asit/baz (suyun iyonlaşması dahil), zayıf asit/baz (ikinci derece denklemle tam çözüm), tampon, Ka/pKa, titrasyon, renkli pH skalası |
+| **Gaz yasaları** | İdeal gaz, birleşik gaz, gaz yoğunluğu, Dalton, Graham |
+| **Termokimya** | q = mcΔT, ΔG = ΔH − TΔS, ΔG° = −RT ln K, Clausius–Clapeyron, van 't Hoff |
+| **Kinetik** | 0., 1., 2. derece, yarılanma süresi, Arrhenius (tek ve iki sıcaklık) |
+| **Elektrokimya** | Nernst, Faraday elektroliz, ΔG = −nFE, E° ⇄ K |
+| **Spektroskopi** | Beer–Lambert, absorbans ⇄ %T, foton enerjisi / dalga boyu / frekans |
+| **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
+| **Basit formül** | Yüzde bileşimden basit ve (mol kütlesiyle) molekül formülü |
+| **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2018 sabitleri |
+| **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
+
+Formül tabanlı her araçta **istediğiniz değişkeni bilinmeyen** seçebilir, her girdi için **birim** seçebilirsiniz.
+Sayı alanları hem `,` hem `.` ondalık ayırıcısını ve `25+273,15` ya da `1,5e-3` gibi küçük ifadeleri kabul eder.
+
+### Ekran uyumu
+
+- **Telefon:** alt gezinme çubuğu; telefon yatay tutulduğunda yan ray ve iki sütun.
+- **Tablet / büyük ekran:** yan gezinme rayı; araçlar listesi ile seçili araç yan yana (liste–detay).
+- **Katlanabilir cihazlar:** Menteşe ve katlama yeri algılanır (`MediaQuery.displayFeatures`).
+  - Kitap duruşunda paneller menteşenin iki yanına yerleşir.
+  - Masa üstü duruşunda hesap makinesinin ekranı üstte, tuşları altta kalır.
+  - Kapak ekranı ile iç ekran arasında geçişte uygulama yeniden başlamaz.
+- Sistem yazı boyutu (1,35× sınırına kadar), koyu tema ve ekran okuyucu etiketleri desteklenir.
+
+### Gizlilik
+
+İnternet izni yoktur (release APK'da doğrulandı). Üyelik, reklam, analiz ve takip yoktur.
+Geçmiş ve ayarlar yalnızca cihazda `SharedPreferences` ile tutulur. Ayrıntılar: [docs/PRIVACY.md](docs/PRIVACY.md).
+
+## Teknoloji ve yapı
+
+[Flutter](https://flutter.dev) (Dart): tek kod tabanından Android ve iOS. Harici bağımlılıklar yalnızca
+`shared_preferences`, `intl` ve `flutter_localizations` paketleridir.
+
+```
+lib/
+  core/                 Arayüzden bağımsız, testli hesap motoru
+    chem/               element verisi, formül çözümleyici, denklem denkleştirme, basit formül
+    math/               ifade çözümleyici, kesirli sayılar (BigInt)
+    solver.dart         "istediğin değişkeni çöz" altyapısı
+    solver_catalog.dart tüm denklemler (gaz, çözelti, asit-baz, termo, kinetik …)
+    units.dart, constants.dart, format.dart
+  state/app_state.dart  ayarlar + geçmiş (yerel)
+  ui/                   ekranlar, uyarlanabilir yerleşim (layout/adaptive.dart), tema, metinler
+test/                   birim testleri + 7 ekran boyutu × 2 dilde arayüz testleri
+tool/                   element verisi, simge ve ekran görüntüsü üreticileri
+```
+
+## Geliştirme
+
+```bash
+flutter pub get
+flutter run                 # bağlı cihaz veya emülatörde
+flutter analyze
+flutter test                # 50+ test
+```
+
+Mağaza için ekran görüntüleri üretmek (gerçek yazı tipleriyle PNG):
+
+```bash
+flutter test tool/screenshots/screenshots_test.dart --update-goldens
+# çıktı: tool/screenshots/out/
+```
+
+Simgeleri yeniden üretmek: `python3 tool/gen_icons.py` (Pillow gerekir).
+Element tablosunu yeniden üretmek: `python3 tool/gen_elements.py lib/core/chem/elements_data.dart`.
+
+## Yayınlama
+
+Uygulama kimlikleri:
+
+- Android: `com.unilker.kimya_hesap`
+- iOS: `com.unilker.kimyaHesap`
+
+İsterseniz ilk yayından **önce** değiştirin, çünkü yayından sonra değiştirilemez.
+Sürüm numarası `pubspec.yaml` içindeki `version: 1.0.0+1` satırıdır.
+
+### Google Play
+
+1. Yükleme anahtarı oluşturun (bir kez):
+   ```bash
+   keytool -genkey -v -keystore ~/kimya-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+2. `android/key.properties` dosyasını oluşturun. Bu dosya **asla commit edilmez** (`.gitignore` içinde):
+   ```properties
+   storePassword=...
+   keyPassword=...
+   keyAlias=upload
+   storeFile=/home/kullanici/kimya-upload.jks
+   ```
+3. `flutter build appbundle --release`, ardından `build/app/outputs/bundle/release/app-release.aab` dosyasını Play Console'a yükleyin.
+4. *Veri güvenliği* formunda "Veri toplanmıyor / paylaşılmıyor" seçeneğini işaretleyin. Gizlilik politikası olarak `docs/PRIVACY.md` içeriğini yayınlayın (ör. GitHub Pages).
+
+### App Store
+
+iOS derlemesi için macOS ve Xcode gerekir. Mac yoksa Codemagic veya GitHub Actions `macos` çalıştırıcısı kullanılabilir.
+
+1. `open ios/Runner.xcworkspace`, ardından *Signing & Capabilities* bölümünde Team'inizi seçin.
+2. `flutter build ipa --release` komutunu çalıştırın, sonra Transporter veya Xcode Organizer ile yükleyin.
+3. App Privacy bölümünde **Data Not Collected** seçin. `ITSAppUsesNonExemptEncryption=false` zaten ayarlıdır.
+
+Mağaza metinleri taslağı: [docs/STORE_LISTING.md](docs/STORE_LISTING.md).
+
+## Veri kaynakları ve lisanslar
+
+- Atom kütleleri: IUPAC standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
+- Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2018 / SI 2019.
+- Yazı tipleri: Nunito ve Noto Sans alt kümeleri. Her ikisi de SIL Open Font License 1.1 ile lisanslıdır (`assets/fonts/OFL*.txt`).
