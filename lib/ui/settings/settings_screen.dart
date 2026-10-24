@@ -7,6 +7,7 @@ import '../strings.dart';
 import '../theme.dart';
 
 const appVersion = '1.0.0';
+const appCopyright = '© 2026 İlker · github.com/unilker';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -129,12 +130,18 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text('${context.t(S.appName)} · ${context.t(S.version)} $appVersion',
                         style: const TextStyle(fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 2),
+                    const Text(appCopyright),
+                    const SizedBox(height: 6),
+                    Text(context.t(S.licenseText),
+                        style: TextStyle(color: context.colors.onSurfaceVariant)),
                     const SizedBox(height: 4),
                     TextButton.icon(
                       onPressed: () => showLicensePage(
                         context: context,
                         applicationName: context.t(S.appName),
                         applicationVersion: appVersion,
+                        applicationLegalese: appCopyright,
                       ),
                       icon: const Icon(Icons.article_rounded),
                       label: Text(context.t(S.licenses)),

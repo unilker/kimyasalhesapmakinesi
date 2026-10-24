@@ -115,7 +115,19 @@ iOS derlemesi için macOS ve Xcode gerekir. Mac yoksa Codemagic veya GitHub Acti
 
 Mağaza metinleri taslağı: [docs/STORE_LISTING.md](docs/STORE_LISTING.md).
 
-## Veri kaynakları ve lisanslar
+## Lisans ve atıf
+
+Copyright © 2026 İlker ([github.com/unilker](https://github.com/unilker)).
+
+Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanmak, değiştirmek ve dağıtmak (ticari kullanım dahil) serbesttir, ancak şu koşullar zorunludur:
+
+- [`LICENSE`](LICENSE) ve [`NOTICE`](NOTICE) dosyaları ile telif bildirimleri korunmalıdır.
+- Türetilen ürünlerde, kullanıcıların görebileceği bir yerde (ör. Hakkında/Lisanslar ekranı veya belgeler) şu atıf yer almalıdır:
+  > "Kimya Hesap" (İlker – https://github.com/unilker/kimyasalhesapmakinesi) temel alınmıştır. Apache Lisansı, Sürüm 2.0 ile lisanslanmıştır.
+- Değiştirilen dosyalarda değişiklik yapıldığı belirtilmelidir.
+- "Kimya Hesap" adı ve simgesi, türetilen ürünün bu projeyle aynı ya da onaylı olduğunu ima edecek şekilde kullanılamaz (lisansın 6. maddesi).
+
+## Veri kaynakları ve üçüncü taraf lisanslar
 
 - Atom kütleleri: IUPAC standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
 - Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2018 / SI 2019.

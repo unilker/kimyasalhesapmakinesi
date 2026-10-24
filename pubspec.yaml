@@ -55,6 +55,8 @@ flutter:
   uses-material-design: true
 
   assets:
+    - LICENSE
+    - NOTICE
     - assets/fonts/OFL.txt
     - assets/fonts/OFL-Noto.txt
 
