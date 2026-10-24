@@ -11,7 +11,7 @@ Kimya Hesap hiçbir kişisel veri toplamaz, işlemez veya paylaşmaz.
 - Hesaplama geçmişiniz ve ayarlarınız (dil, tema, anlamlı basamak) **yalnızca cihazınızda** saklanır. Bu veriler hiçbir sunucuya gönderilmez.
 - Geçmişi uygulama içinden istediğiniz an silebilirsiniz; uygulamayı kaldırdığınızda tüm veriler silinir.
 
-Sorularınız için: GitHub deposu üzerinden iletişime geçebilirsiniz.
+Geliştirici: Dr. İlker Ün · Sorularınız için: https://kimyager.net
 
 ## English
 
@@ -21,3 +21,5 @@ Chem Calc does not collect, process or share any personal data.
 - There are **no accounts, ads, analytics or tracking**.
 - Your calculation history and settings (language, theme, significant digits) are stored **only on your device** and are never sent to any server.
 - You can clear the history in the app at any time; uninstalling the app deletes all data.
+
+Developer: Dr. İlker Ün · Contact: https://kimyager.net

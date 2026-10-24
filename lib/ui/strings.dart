@@ -136,6 +136,7 @@ class S {
     'Atom kütleleri: IUPAC standart atom ağırlıkları. Sabitler: CODATA 2018 / SI 2019.',
   );
   static const version = Bi('Version', 'Sürüm');
+  static const developer = Bi('Developer', 'Geliştirici');
 
   // Molar mass
   static const formulaHint =
