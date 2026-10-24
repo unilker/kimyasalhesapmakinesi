@@ -175,5 +175,8 @@ void main() {
     await t.tap(find.byIcon(Icons.settings_rounded).first);
     await t.pumpAndSettle();
     await _shot('phone_settings');
+    await t.drag(find.byType(ListView).first, const Offset(0, -2000));
+    await t.pumpAndSettle();
+    await _shot('phone_settings_about');
   });
 }

@@ -40,6 +40,7 @@ Chem Calc brings the calculations chemists need — from molar mass and equation
 • Designed for phones, tablets and foldables
 • Completely free: no ads, no accounts, no data collection, works offline.
 
+**Geliştirici / Developer:** Dr. İlker Ün · **Web:** https://kimyager.net
 **Kategori / Category:** Education (Eğitim) · **Yaş / Age rating:** 4+ / Everyone
 **Data safety (Google Play):** No data collected, no data shared.
 **App Privacy (Apple):** Data Not Collected.

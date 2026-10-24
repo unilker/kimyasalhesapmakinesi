@@ -126,12 +126,17 @@ class S {
     'Kimya Hesap tamamen çevrimdışı çalışır. Üyelik, reklam veya takip yoktur ve hiçbir veri toplanmaz. Geçmişiniz yalnızca bu cihazda saklanır; temizlediğinizde veya uygulamayı kaldırdığınızda silinir.',
   );
   static const licenses = Bi('Open-source licenses', 'Açık kaynak lisansları');
+  static const licenseText = Bi(
+    'Free and open source under the Apache License 2.0. Anyone who uses, modifies or redistributes it must keep the copyright notice and credit the author (see NOTICE).',
+    'Apache Lisansı 2.0 ile ücretsiz ve açık kaynaktır. Kullanan, değiştiren veya yeniden dağıtan herkes telif bildirimini korumalı ve geliştiriciye atıf yapmalıdır (bkz. NOTICE).',
+  );
   static const dataSources = Bi('Data sources', 'Veri kaynakları');
   static const dataSourcesText = Bi(
     'Atomic masses: IUPAC standard atomic weights. Constants: CODATA 2018 / SI 2019.',
     'Atom kütleleri: IUPAC standart atom ağırlıkları. Sabitler: CODATA 2018 / SI 2019.',
   );
   static const version = Bi('Version', 'Sürüm');
+  static const developer = Bi('Developer', 'Geliştirici');
 
   // Molar mass
   static const formulaHint =

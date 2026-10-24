@@ -1,0 +1,36 @@
+Kimya Hesap (Chem Calc)
+Copyright 2026 Dr. İlker Ün (https://kimyager.net)
+
+This product is licensed under the Apache License, Version 2.0
+(see the LICENSE file).
+
+ATTRIBUTION REQUIREMENT
+-----------------------
+Under section 4(d) of the license, any redistribution of this work or of
+a work derived from it must keep this NOTICE and show the following
+attribution in a place where users normally see such notices (for example
+an "About" or "Licenses" screen, the documentation, or a NOTICE file
+shipped with the product):
+
+    Based on "Kimya Hesap" by Dr. İlker Ün – https://kimyager.net
+    Licensed under the Apache License, Version 2.0.
+
+ATIF ZORUNLULUĞU (Türkçe)
+-------------------------
+Lisansın 4(d) maddesi uyarınca, bu çalışmanın veya ondan türetilen bir
+çalışmanın her dağıtımında bu NOTICE dosyası korunmalı ve aşağıdaki atıf,
+kullanıcıların bu tür bildirimleri normalde gördüğü bir yerde (örneğin
+"Hakkında" veya "Lisanslar" ekranında, belgelerde ya da ürünle birlikte
+dağıtılan bir NOTICE dosyasında) gösterilmelidir:
+
+    "Kimya Hesap" (Dr. İlker Ün – https://kimyager.net)
+    temel alınmıştır. Apache Lisansı, Sürüm 2.0 ile lisanslanmıştır.
+
+THIRD-PARTY COMPONENTS / ÜÇÜNCÜ TARAF BİLEŞENLER
+------------------------------------------------
+- Nunito font – Copyright 2014 The Nunito Project Authors,
+  SIL Open Font License 1.1 (assets/fonts/OFL.txt)
+- Noto Sans and Noto Sans Math (subsets) – Copyright 2022 The Noto Project
+  Authors, SIL Open Font License 1.1 (assets/fonts/OFL-Noto.txt)
+- Flutter and Dart packages – their own licenses, listed in the app under
+  Settings → Open-source licenses.

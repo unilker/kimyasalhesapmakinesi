@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../state/app_state.dart';
 import '../common.dart';
@@ -7,6 +8,9 @@ import '../strings.dart';
 import '../theme.dart';
 
 const appVersion = '1.0.0';
+const developerName = 'Dr. İlker Ün';
+const developerWebsite = 'https://kimyager.net';
+const appCopyright = '© 2026 $developerName · kimyager.net';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -129,12 +133,50 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text('${context.t(S.appName)} · ${context.t(S.version)} $appVersion',
                         style: const TextStyle(fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 10),
+                    Material(
+                      color: context.colors.secondaryContainer.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(14),
+                      clipBehavior: Clip.antiAlias,
+                      child: ListTile(
+                        leading: const Icon(Icons.person_rounded),
+                        title: Text(context.t(S.developer),
+                            style: TextStyle(color: context.colors.onSurfaceVariant, fontSize: 13)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(developerName,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    color: context.colors.onSurface)),
+                            Text('kimyager.net',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: context.colors.primary,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: context.colors.primary)),
+                          ],
+                        ),
+                        trailing: const Icon(Icons.open_in_new_rounded),
+                        onTap: () => launchUrl(
+                          Uri.parse(developerWebsite),
+                          mode: LaunchMode.externalApplication,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(appCopyright),
+                    const SizedBox(height: 6),
+                    Text(context.t(S.licenseText),
+                        style: TextStyle(color: context.colors.onSurfaceVariant)),
                     const SizedBox(height: 4),
                     TextButton.icon(
                       onPressed: () => showLicensePage(
                         context: context,
                         applicationName: context.t(S.appName),
                         applicationVersion: appVersion,
+                        applicationLegalese: appCopyright,
                       ),
                       icon: const Icon(Icons.article_rounded),
                       label: Text(context.t(S.licenses)),
