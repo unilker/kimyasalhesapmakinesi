@@ -115,6 +115,7 @@ iOS derlemesi için macOS ve Xcode gerekir. Mac yoksa Codemagic veya GitHub Acti
 2. `flutter build ipa --release` komutunu çalıştırın, sonra Transporter veya Xcode Organizer ile yükleyin.
 3. App Privacy bölümünde **Data Not Collected** seçin. `ITSAppUsesNonExemptEncryption=false` zaten ayarlıdır.
 
+Mağaza başlığı **Kimya Hesap Makinesi**'dir; ana ekranda ve uygulama içinde kısa ad **Kimya Hesap** kullanılır.
 Mağaza metinleri taslağı: [docs/STORE_LISTING.md](docs/STORE_LISTING.md).
 
 ## Lisans ve atıf

@@ -1,8 +1,21 @@
 # Mağaza metinleri / Store listing (taslak)
 
+## Adlandırma / Naming
+
+| Yer / Where | Türkçe | English |
+|---|---|---|
+| Ana ekran ve uygulama içi / Home screen & in-app | Kimya Hesap | Chem Calc |
+| Google Play başlığı / title (≤ 30) | Kimya Hesap Makinesi | Chemistry Calculator |
+| App Store adı / name (≤ 30) | Kimya Hesap Makinesi | Chemistry Calculator |
+| App Store alt başlığı / subtitle (≤ 30) | Mol, pH, denklem, gaz yasaları | Molar mass, pH, equations |
+
+Mağaza başlığı aramada bulunmak için tarif edicidir; ana ekrandaki kısa ad
+simge altında kesilmeden görünür.
+
 ## Türkçe
 
-**Ad:** Kimya Hesap – Kimya Hesap Makinesi
+**Başlık (Google Play / App Store):** Kimya Hesap Makinesi
+**App Store alt başlığı:** Mol, pH, denklem, gaz yasaları
 **Kısa açıklama (80):** Öğrenci ve akademisyenler için çevrimdışı, ücretsiz kimya hesap makinesi.
 
 **Açıklama:**
@@ -22,7 +35,8 @@ Kimya Hesap; mol kütlesinden denklem denkleştirmeye, pH’tan gaz yasalarına 
 
 ## English
 
-**Name:** Chem Calc – Chemistry Calculator
+**Title (Google Play / App Store):** Chemistry Calculator
+**App Store subtitle:** Molar mass, pH, equations
 **Short description:** Free, offline chemistry calculator for students and academics.
 
 **Description:**
