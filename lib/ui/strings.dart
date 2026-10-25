@@ -519,9 +519,11 @@ class S {
   // Ionic strength & activity
   static const activityNote = Bi(
     'Molar scale, water. A and B follow from the permittivity of water at the chosen temperature; ion sizes α from Kielland (1937). '
-        'Extended Debye–Hückel is reliable up to about I = 0.1 M, Davies up to about 0.5 M.',
+        'Extended Debye–Hückel is reliable up to about I = 0.1 M, Davies up to about 0.5 M. '
+        'κ at 25 °C uses limiting ionic conductivities (CRC) and is an upper estimate that holds for dilute solutions.',
     'Molar ölçek, su. A ve B, seçilen sıcaklıkta suyun dielektrik sabitinden hesaplanır; iyon boyutları α Kielland (1937). '
-        'Genişletilmiş Debye–Hückel yaklaşık I = 0,1 M’ye, Davies yaklaşık 0,5 M’ye kadar güvenilirdir.',
+        'Genişletilmiş Debye–Hückel yaklaşık I = 0,1 M’ye, Davies yaklaşık 0,5 M’ye kadar güvenilirdir. '
+        '25 °C’deki κ, sonsuz seyreltiklikteki iyon iletkenliklerinden (CRC) hesaplanır; seyreltik çözeltiler için geçerli bir üst tahmindir.',
   );
   static const temperatureC = Bi('Temperature (0–100 °C)', 'Sıcaklık (0–100 °C)');
   static const ionsLabel = Bi('Ions', 'İyonlar');
@@ -546,6 +548,8 @@ class S {
   static const errIonRow = Bi('Each ion needs a concentration ≥ 0 and a non-zero integer charge',
       'Her iyon için ≥ 0 derişim ve sıfırdan farklı tam sayı yük gerekir');
   static const errSaltConc = Bi('Enter a positive salt concentration', 'Pozitif bir tuz derişimi girin');
+  static const kohlrauschKappa = Bi('κ, Kohlrausch (25 °C, infinite dilution)', 'κ, Kohlrausch (25 °C, sonsuz seyreltik)');
+  static const transportNumber = Bi('Transport number t', 'Taşıma sayısı t');
 
   // Water
   static const waterNote = Bi(

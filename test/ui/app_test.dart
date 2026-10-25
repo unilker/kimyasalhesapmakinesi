@@ -721,6 +721,8 @@ void main() {
     await tester.tap(find.text('Hesapla'));
     await tester.pumpAndSettle();
     await seek(tester, find.text('0,04 mol/L'));
+    // Kohlrausch: 2 × (53.0 + 80.0) S cm²/mol × 0.01 M
+    await seek(tester, find.textContaining(RegExp(r'^2.?660 µS/cm$')));
     // Mg²⁺, α = 800 pm, I = 0.04 M at 25 °C
     await seek(tester, find.text('0,5394'));
     expect(state.history.first.toolId, 'activity');

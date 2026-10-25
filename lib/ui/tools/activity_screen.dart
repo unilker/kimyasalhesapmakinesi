@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../core/activity.dart';
+import '../../core/conductivity.dart';
 import '../../core/math/expression.dart';
 import '../common.dart';
 import '../layout/adaptive.dart' show MaxWidth;
@@ -319,6 +320,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
     final balance = ions.fold(0.0, (s, x) => s + x.c * x.z);
     final total = ions.fold(0.0, (s, x) => s + x.c * x.z.abs());
     String g(double log) => nf.format(math.pow(10, log).toDouble(), digits: 4);
+    // λ° are tabulated at 25 °C only
+    final migrating = [for (final x in ions) (x.label, x.z, x.c)];
+    final kappa = (t - 25).abs() < 0.5 ? kohlrauschConductivity(migrating) : null;
+    final transport = kappa == null ? null : transportNumbers(migrating);
     return [
       ResultCard(
         color: widget.tool.color,
@@ -331,6 +336,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           InfoRow('1/B', '${nf.format(1 / dh.bPerPm, digits: 4)} pm'),
           InfoRow('εᵣ (H₂O)', nf.format(dh.permittivity, digits: 4)),
           InfoRow('Σ cᵢzᵢ', '${nf.format(balance, digits: 4)} mol/L'),
+          if (kappa != null) InfoRow(context.t(S.kohlrauschKappa), '${nf.format(kappa * 1e4, digits: 4)} µS/cm'),
         ],
       ),
       if (total > 0 && balance.abs() > 1e-6 * total) ErrorBanner(context.t(S.notNeutral)),
@@ -356,6 +362,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 InfoRow(context.t(S.limitingDH), g(dh.logLimiting(x.z, i))),
                 InfoRow(context.t(S.activityLabel), '${nf.format(_gamma(dh, x, i) * x.c, digits: 4)} mol/L'),
                 if (x.label == 'H⁺' && x.c > 0) InfoRow('pH = −log a(H⁺)', nf.format(-math.log(_gamma(dh, x, i) * x.c) / math.ln10, digits: 4)),
+                if (transport != null) ...[
+                  InfoRow('λ°(1/|z| ${x.label})', '${nf.format(limitingEquivalentConductivity[x.label]!)} S cm² mol⁻¹'),
+                  InfoRow(context.t(S.transportNumber), nf.format(transport[ions.indexOf(x)], digits: 3)),
+                ],
               ],
             ),
           ),
