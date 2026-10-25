@@ -138,6 +138,36 @@ class S {
   static const version = Bi('Version', 'Sürüm');
   static const developer = Bi('Developer', 'Geliştirici');
 
+  // Orientation
+  static const orientation = Bi('Screen orientation', 'Ekran yönü');
+  static const rotateScreen = Bi('Rotate screen', 'Ekranı döndür');
+  static const autoRotate = Bi('Auto-rotate', 'Otomatik döndürme');
+  static const portrait = Bi('Portrait', 'Dikey');
+  static const landscape = Bi('Landscape', 'Yatay');
+  static const showRotateButton = Bi('Show rotate button', 'Döndürme düğmesini göster');
+  static const rotateButtonHint = Bi(
+    'Tap the button on the screen edge to switch between portrait and landscape; long-press it for more options. You can drag it anywhere.',
+    'Ekran kenarındaki düğmeye dokunarak dikey ve yatay arasında geçin; diğer seçenekler için basılı tutun. Düğmeyi istediğiniz yere sürükleyebilirsiniz.',
+  );
+  static const lockedPortrait = Bi(
+    'Locked to portrait · long-press the button for auto-rotate',
+    'Dikey konuma kilitlendi · otomatik döndürme için düğmeyi basılı tutun',
+  );
+  static const lockedLandscape = Bi(
+    'Locked to landscape · long-press the button for auto-rotate',
+    'Yatay konuma kilitlendi · otomatik döndürme için düğmeyi basılı tutun',
+  );
+  static const autoRotateOn = Bi('Auto-rotate is on', 'Otomatik döndürme açık');
+  static const hideButton = Bi('Hide button', 'Düğmeyi gizle');
+  static const hiddenHint = Bi(
+    'You can show it again in Settings → Screen orientation.',
+    'Ayarlar → Ekran yönü bölümünden yeniden gösterebilirsiniz.',
+  );
+  static const largeScreenOrientation = Bi(
+    'On tablets and unfolded foldables the system manages the orientation; the app adapts to both.',
+    'Tabletlerde ve açık katlanabilir cihazlarda ekran yönünü sistem yönetir; uygulama her iki yöne de uyum sağlar.',
+  );
+
   // Molar mass
   static const formulaHint =
       Bi('e.g. CuSO4·5H2O, Ca(OH)2', 'ör. CuSO4·5H2O, Ca(OH)2');

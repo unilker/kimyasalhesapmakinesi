@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core/math/expression.dart';
@@ -44,6 +45,19 @@ class HistoryEntry {
 
 enum LanguagePref { system, tr, en }
 
+/// Screen orientation chosen by the user. Only phones honour a lock; on
+/// tablets and unfolded foldables the system manages orientation.
+enum OrientationPref { auto, portrait, landscape }
+
+List<DeviceOrientation> orientationsFor(OrientationPref p) => switch (p) {
+      OrientationPref.auto => DeviceOrientation.values,
+      OrientationPref.portrait => const [DeviceOrientation.portraitUp],
+      OrientationPref.landscape => const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+    };
+
 const historyLimitOptions = [25, 50, 100, 250, 500];
 
 /// App-wide settings and calculation history, persisted locally with
@@ -64,6 +78,10 @@ class AppState extends ChangeNotifier {
   static const _kLimit = 'historyLimit';
   static const _kAngle = 'angle';
   static const _kHistory = 'history';
+  static const _kOrientation = 'orientation';
+  static const _kRotateButton = 'rotateButton';
+  static const _kRotateY = 'rotateButtonY';
+  static const _kRotateLeft = 'rotateButtonLeft';
 
   LanguagePref _language = LanguagePref.system;
   ThemeMode _themeMode = ThemeMode.system;
@@ -71,12 +89,22 @@ class AppState extends ChangeNotifier {
   int _historyLimit = 100;
   AngleMode _angleMode = AngleMode.degrees;
   List<HistoryEntry> _history = [];
+  OrientationPref _orientation = OrientationPref.auto;
+  bool _showRotateButton = true;
+  double _rotateButtonY = 0.2;
+  bool _rotateButtonLeft = false;
 
   LanguagePref get language => _language;
   ThemeMode get themeMode => _themeMode;
   int get significantDigits => _significantDigits;
   int get historyLimit => _historyLimit;
   AngleMode get angleMode => _angleMode;
+  OrientationPref get orientation => _orientation;
+  bool get showRotateButton => _showRotateButton;
+
+  /// Vertical position of the rotate button as a fraction of the screen.
+  double get rotateButtonY => _rotateButtonY;
+  bool get rotateButtonLeft => _rotateButtonLeft;
 
   /// Newest first.
   List<HistoryEntry> get history => List.unmodifiable(_history);
@@ -102,6 +130,14 @@ class AppState extends ChangeNotifier {
     _angleMode = _prefs.getString(_kAngle) == AngleMode.radians.name
         ? AngleMode.radians
         : AngleMode.degrees;
+    _orientation = OrientationPref.values.firstWhere(
+      (o) => o.name == _prefs.getString(_kOrientation),
+      orElse: () => OrientationPref.auto,
+    );
+    _showRotateButton = _prefs.getBool(_kRotateButton) ?? true;
+    _rotateButtonY = (_prefs.getDouble(_kRotateY) ?? 0.2).clamp(0.0, 1.0);
+    _rotateButtonLeft = _prefs.getBool(_kRotateLeft) ?? false;
+    SystemChrome.setPreferredOrientations(orientationsFor(_orientation));
     final raw = _prefs.getString(_kHistory);
     if (raw != null) {
       try {
@@ -144,6 +180,27 @@ class AppState extends ChangeNotifier {
   void setAngleMode(AngleMode v) {
     _angleMode = v;
     _prefs.setString(_kAngle, v.name);
+    notifyListeners();
+  }
+
+  void setOrientation(OrientationPref v) {
+    _orientation = v;
+    _prefs.setString(_kOrientation, v.name);
+    SystemChrome.setPreferredOrientations(orientationsFor(v));
+    notifyListeners();
+  }
+
+  void setShowRotateButton(bool v) {
+    _showRotateButton = v;
+    _prefs.setBool(_kRotateButton, v);
+    notifyListeners();
+  }
+
+  void setRotateButtonPosition({required double y, required bool left}) {
+    _rotateButtonY = y.clamp(0.0, 1.0);
+    _rotateButtonLeft = left;
+    _prefs.setDouble(_kRotateY, _rotateButtonY);
+    _prefs.setBool(_kRotateLeft, left);
     notifyListeners();
   }
 

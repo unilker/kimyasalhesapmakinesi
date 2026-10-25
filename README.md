@@ -36,6 +36,13 @@ Sayı alanları hem `,` hem `.` ondalık ayırıcısını ve `25+273,15` ya da `
   - Kitap duruşunda paneller menteşenin iki yanına yerleşir.
   - Masa üstü duruşunda hesap makinesinin ekranı üstte, tuşları altta kalır.
   - Kapak ekranı ile iç ekran arasında geçişte uygulama yeniden başlamaz.
+- **Dikey ve yatay:** Tüm ekranlar iki yönde de çalışır. Telefonlarda ekran kenarında, istenen yere sürüklenebilen bir **döndürme düğmesi** vardır:
+  - dokununca dikey ⇄ yatay geçer ve o yönde kilitler;
+  - basılı tutunca *Otomatik döndürme / Dikey / Yatay / Düğmeyi gizle* seçenekleri çıkar;
+  - aynı ayarlar *Ayarlar → Ekran yönü* bölümünde de bulunur.
+
+  Tabletlerde ve açık katlanabilirlerde yönü sistem yönetir (Android 16+ ve iPad çoklu görev kilitleri yok sayar), bu yüzden düğme yalnızca telefonlarda görünür.
+- **Ekran klavyesi:** Klavye açıldığında yazılan alan otomatik olarak görünür alana kaydırılır. Klavye açıkken döndürme düğmesi gizlenir. Bu davranış her araç için dikey ve yatay 6 ekran boyutunda otomatik testlerle doğrulanır.
 - Sistem yazı boyutu (1,35× sınırına kadar), koyu tema ve ekran okuyucu etiketleri desteklenir.
 
 ### Gizlilik
@@ -58,7 +65,7 @@ lib/
     units.dart, constants.dart, format.dart
   state/app_state.dart  ayarlar + geçmiş (yerel)
   ui/                   ekranlar, uyarlanabilir yerleşim (layout/adaptive.dart), tema, metinler
-test/                   birim testleri + 7 ekran boyutu × 2 dilde arayüz testleri
+test/                   birim testleri + 10 ekran boyutu (dikey/yatay) × 2 dilde arayüz ve klavye testleri
 tool/                   element verisi, simge ve ekran görüntüsü üreticileri
 ```
 

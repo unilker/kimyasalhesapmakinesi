@@ -70,7 +70,13 @@ class _AppShellState extends State<AppShell> {
     }
 
     final extended = size.width >= 1200;
+    // On short (landscape) screens the rail drops labels and the logo so
+    // all destinations fit.
+    final short = size.height < 480;
     return Scaffold(
+      // Each page's own Scaffold avoids the keyboard; resizing here would
+      // squeeze the rail when the keyboard opens in landscape.
+      resizeToAvoidBottomInset: false,
       body: Row(
         children: [
           SafeArea(
@@ -79,9 +85,11 @@ class _AppShellState extends State<AppShell> {
               extended: extended,
               minExtendedWidth: 220,
               selectedIndex: _index,
-              labelType: extended ? NavigationRailLabelType.none : NavigationRailLabelType.all,
+              labelType: extended || short
+                  ? NavigationRailLabelType.none
+                  : NavigationRailLabelType.all,
               onDestinationSelected: (i) => setState(() => _index = i),
-              leading: Padding(
+              leading: short ? null : Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Container(
                   width: 48,
@@ -97,7 +105,7 @@ class _AppShellState extends State<AppShell> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.only(bottom: short ? 4 : 16),
                     child: IconButton(
                       tooltip: context.t(S.settings),
                       icon: const Icon(Icons.settings_rounded),

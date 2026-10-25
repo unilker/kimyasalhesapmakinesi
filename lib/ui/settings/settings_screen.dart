@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../state/app_state.dart';
 import '../common.dart';
 import '../layout/adaptive.dart';
+import '../rotate_button.dart';
 import '../strings.dart';
 import '../theme.dart';
 
@@ -68,6 +69,45 @@ class SettingsScreen extends StatelessWidget {
                       ),
                   ],
                 ),
+              ),
+              _Section(
+                icon: Icons.screen_rotation_rounded,
+                color: Palette.indigo,
+                title: context.t(S.orientation),
+                subtitle: context.t(orientationLockSupported(context)
+                    ? S.rotateButtonHint
+                    : S.largeScreenOrientation),
+                child: !orientationLockSupported(context)
+                    ? const SizedBox.shrink()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              for (final (v, icon, label) in [
+                                (OrientationPref.auto, Icons.screen_rotation_rounded, S.autoRotate),
+                                (OrientationPref.portrait, Icons.stay_current_portrait_rounded, S.portrait),
+                                (OrientationPref.landscape, Icons.stay_current_landscape_rounded, S.landscape),
+                              ])
+                                ChoiceChip(
+                                  avatar: Icon(icon, size: 18),
+                                  label: Text(context.t(label)),
+                                  selected: app.orientation == v,
+                                  onSelected: (_) => app.setOrientation(v),
+                                ),
+                            ],
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(context.t(S.showRotateButton),
+                                style: const TextStyle(fontWeight: FontWeight.w700)),
+                            value: app.showRotateButton,
+                            onChanged: app.setShowRotateButton,
+                          ),
+                        ],
+                      ),
               ),
               _Section(
                 icon: Icons.pin_rounded,
