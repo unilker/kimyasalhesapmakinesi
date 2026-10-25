@@ -460,6 +460,16 @@ class S {
   static const remainingAmount = Bi('Remaining amount', 'Kalan miktar');
   static Bi halfLivesElapsed(String n) => Bi('$n half-lives', '$n yarılanma süresi');
 
+  // Speciation
+  static const speciationNote = Bi(
+    'αⱼ = (Ka₁⋯Kaⱼ/[H⁺]ʲ) / Σ; independent of the total concentration (ideal solution).',
+    'αⱼ = (Ka₁⋯Kaⱼ/[H⁺]ʲ) / Σ; toplam derişimden bağımsızdır (ideal çözelti).',
+  );
+  static const atPH = Bi('pH (optional)', 'pH (isteğe bağlı)');
+  static const fractionsAt = Bi('Species fractions', 'Tür kesirleri');
+  static const dominantSpecies = Bi('Dominant species', 'Baskın tür');
+  static const meanProtonsRemoved = Bi('Protons removed per molecule', 'Molekül başına ayrılan proton');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

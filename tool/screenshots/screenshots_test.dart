@@ -285,6 +285,15 @@ void main() {
     await _shot('tall_home');
   });
 
+  testWidgets('phone speciation', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Tür Dağılımı');
+    await t.enterText(find.byType(TextField).at(1), '7');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.byType(XyChart));
+    await _shot('phone_speciation');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

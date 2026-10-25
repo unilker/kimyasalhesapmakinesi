@@ -15,6 +15,7 @@ import 'nuclide_screen.dart';
 import 'ph_scale.dart';
 import 'rate_data_screen.dart';
 import 'solver_screen.dart';
+import 'speciation_screen.dart';
 import 'stats_screen.dart';
 import 'titration_screen.dart';
 import 'unit_converter_screen.dart';
@@ -137,6 +138,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.solutions,
     keywords: 'titration titrasyon curve eğri equivalence eşdeğerlik indicator gösterge indikatör phenolphthalein fenolftalein polyprotic',
     builder: (t) => TitrationScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'speciation',
+    title: const Bi('Species Distribution', 'Tür Dağılımı'),
+    subtitle: const Bi('α fractions vs pH for polyprotic acids', 'Poliprotik asitlerde α – pH'),
+    icon: Icons.stacked_line_chart_rounded,
+    color: Palette.teal,
+    category: ToolCategory.solutions,
+    keywords: 'speciation tür dağılımı alpha alfa fraction kesir polyprotic poliprotik distribution diagram diyagram pka',
+    builder: (t) => SpeciationScreen(tool: t),
   ),
   ToolInfo(
     id: 'balancer',

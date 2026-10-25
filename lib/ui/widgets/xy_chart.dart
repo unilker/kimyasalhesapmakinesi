@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../core/format.dart';
+import '../theme.dart' show fontFallback;
 
 class ChartSeries {
   const ChartSeries({
@@ -82,6 +83,7 @@ class XyChart extends StatelessWidget {
             color: scheme.onSurfaceVariant,
             fontSize: 11,
             fontFamily: 'Nunito',
+            fontFamilyFallback: fontFallback,
             fontWeight: FontWeight.w600,
           ),
         ),

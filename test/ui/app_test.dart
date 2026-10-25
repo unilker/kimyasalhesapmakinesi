@@ -599,6 +599,20 @@ void main() {
     });
   }
 
+  testWidgets('species distribution: phosphate at pH 7', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Tür Dağılımı');
+    await tester.enterText(find.byType(TextField).at(1), '7');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('61,858 %'));
+    expect(find.text('38,141 %'), findsOneWidget);
+    expect(find.text('H₂A⁻'), findsWidgets);
+    expect(state.history.first.toolId, 'speciation');
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);
