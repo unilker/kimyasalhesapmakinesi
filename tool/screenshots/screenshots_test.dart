@@ -302,6 +302,30 @@ void main() {
     await _shot('phone_uncertainty');
   });
 
+  testWidgets('phone activity', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'İyonik Şiddet ve Aktiflik');
+    await seekText(t, find.text('Hesapla'));
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.text('γ limit yasası'));
+    await _shot('phone_activity');
+  });
+
+  testWidgets('tablet activity', (t) async {
+    await _pump(t, tablet);
+    await _openTool(t, 'İyonik Şiddet ve Aktiflik');
+    await seekText(t, find.text('Hesapla'));
+    await _tapText(t, 'Hesapla');
+    await _shot('tablet_activity');
+  });
+
+  testWidgets('phone water', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Suyun Özellikleri');
+    await seekText(t, find.text('t / °C'));
+    await _shot('phone_water');
+  });
+
   testWidgets('tablet nmr', (t) async {
     await _pump(t, tablet);
     await _openTool(t, 'NMR Frekansları');
