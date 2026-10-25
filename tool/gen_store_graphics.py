@@ -1,6 +1,6 @@
 """Generates the store graphics in docs/store from code:
 
-- play_icon_512.png        Google Play icon (512 × 512, 32-bit PNG; Play
+- play_icon_512.png        Google Play icon (512 × 512, full bleed; Play
                            applies its own rounded mask)
 - feature_graphic_tr.png   Google Play feature graphic (1024 × 500, 24-bit)
 - feature_graphic_en.png
@@ -9,9 +9,9 @@ Usage: python3 tool/gen_store_graphics.py
 """
 import os
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-from gen_icons import composite, flask_layer, gradient
+from gen_icons import gradient, keypad, rounded
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONTS = os.path.join(ROOT, 'assets/fonts')
@@ -32,12 +32,15 @@ def feature_graphic(lang):
     w, h = 1024, 500
     k = 2  # supersampling
     img = gradient(256).resize((w * k, h * k), Image.BICUBIC).convert('RGBA')
-    # soft white disc behind the flask
-    disc = Image.new('RGBA', img.size, (0, 0, 0, 0))
-    ImageDraw.Draw(disc).ellipse([70 * k, 70 * k, 430 * k, 430 * k], fill=(255, 255, 255, 38))
-    img.alpha_composite(disc)
-    flask = flask_layer(360 * k, 0.9)
-    img.alpha_composite(flask, (70 * k, 70 * k))
+    # the launcher icon, with a soft halo
+    halo = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(halo).rounded_rectangle([84 * k, 84 * k, 416 * k, 416 * k], radius=80 * k, fill=(255, 255, 255, 40))
+    img.alpha_composite(halo)
+    icon = rounded(keypad(1.0).resize((300 * k, 300 * k), Image.LANCZOS))
+    shadow = Image.new('RGBA', img.size, (0, 0, 0, 0))
+    shadow.paste((20, 0, 60, 110), (100 * k, 112 * k), icon.split()[3])
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(14 * k)))
+    img.alpha_composite(icon, (100 * k, 100 * k))
 
     d = ImageDraw.Draw(img)
     title1, title2, tagline, chips = TEXT[lang]
@@ -59,7 +62,8 @@ def feature_graphic(lang):
 def main():
     out = os.path.join(ROOT, 'docs/store')
     os.makedirs(out, exist_ok=True)
-    composite(512, 0.86).save(os.path.join(out, 'play_icon_512.png'))
+    # full bleed: Play applies its own rounded mask
+    keypad(1.0).resize((512, 512), Image.LANCZOS).convert('RGB').save(os.path.join(out, 'play_icon_512.png'))
     for lang in TEXT:
         feature_graphic(lang).save(os.path.join(out, f'feature_graphic_{lang}.png'))
 

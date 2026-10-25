@@ -1,90 +1,153 @@
-"""Generates the launcher icons (Android, iOS, web) from code.
+"""Generates the launcher icons (Android, iOS, web) and the in-app logo from
+code: a 2 × 2 calculator keypad (+, ×, −) whose fourth key holds an
+Erlenmeyer flask, on a deep violet gradient.
 
 Usage: python3 tool/gen_icons.py
 """
 import json
+import math
 import os
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
-S = 1024  # master size
+S = 1024  # design grid
+K = 2  # supersampling for the masters
+N = S * K
+
+BG = ((49, 27, 146), (106, 27, 154))  # gradient, 45°
+KEYS = [  # centre on the design grid, colour, symbol
+    ((282, 282), (124, 77, 255), '+'),
+    ((742, 282), (255, 179, 0), '×'),
+    ((282, 742), (236, 64, 122), '−'),
+    ((742, 742), (0, 191, 165), 'flask'),
+]
+HALF, RADIUS = 200, 80  # key half-size and corner radius
+WHITE = (255, 255, 255, 255)
+CLEAR = (0, 0, 0, 0)
 
 
-def gradient(size):
-    """Diagonal violet → magenta gradient."""
-    a, b = (106, 76, 255), (214, 64, 230)
-    img = Image.new('RGB', (size, size))
-    px = img.load()
-    for y in range(size):
-        for x in range(size):
-            t = (x + y) / (2 * (size - 1))
-            px[x, y] = tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
+def gradient(size, c1=BG[0], c2=BG[1]):
+    """Diagonal gradient (top-left → bottom-right)."""
+    y, x = np.mgrid[0:size, 0:size] / max(size - 1, 1)
+    t = (x + y) / 2
+    a, b = np.array(c1, float), np.array(c2, float)
+    arr = a[None, None, :] * (1 - t[..., None]) + b[None, None, :] * t[..., None]
+    return Image.fromarray(arr.astype(np.uint8), 'RGB').convert('RGBA')
+
+
+class Grid:
+    """Maps the 1024 design grid onto a master canvas, scaled about the centre."""
+
+    def __init__(self, scale):
+        self.s = scale
+
+    def x(self, v):
+        return (S / 2 + (v - S / 2) * self.s) * K
+
+    def l(self, v):
+        return v * self.s * K
+
+    def box(self, x1, y1, x2, y2):
+        return (self.x(x1), self.x(y1), self.x(x2), self.x(y2))
+
+
+def draw_op(d, g, kind, cx, cy, s, fill):
+    """+, −, × drawn as geometry; s is the half-length on the design grid."""
+    w = s * 0.32
+    r = w / 2
+    if kind in '+−':
+        d.rounded_rectangle(g.box(cx - s, cy - r, cx + s, cy + r), radius=g.l(r), fill=fill)
+    if kind == '+':
+        d.rounded_rectangle(g.box(cx - r, cy - s, cx + r, cy + s), radius=g.l(r), fill=fill)
+    if kind == '×':
+        e = s * 0.78
+        for (x1, y1, x2, y2) in [(cx - e, cy - e, cx + e, cy + e), (cx - e, cy + e, cx + e, cy - e)]:
+            d.line([g.x(x1), g.x(y1), g.x(x2), g.x(y2)], fill=fill, width=round(g.l(w)))
+            for (px, py) in [(x1, y1), (x2, y2)]:
+                d.ellipse(g.box(px - r, py - r, px + r, py + r), fill=fill)
+
+
+def draw_flask(d, g, cx, cy, fill):
+    """Erlenmeyer flask centred in a key."""
+    top, h, neck, body = cy - 120, 250, 64, 220
+    neck_h = h * 0.38
+    pts = [(cx - neck / 2, top), (cx + neck / 2, top), (cx + neck / 2, top + neck_h),
+           (cx + body / 2, top + h), (cx - body / 2, top + h), (cx - neck / 2, top + neck_h)]
+    d.polygon([(g.x(px), g.x(py)) for px, py in pts], fill=fill)
+    ext, rh = neck * 0.14, h * 0.07
+    d.rounded_rectangle(g.box(cx - neck / 2 - ext, top - rh * 0.6, cx + neck / 2 + ext, top + rh * 0.9),
+                        radius=g.l(rh * 0.6), fill=fill)
+    bh = h * 0.12
+    d.rounded_rectangle(g.box(cx - body / 2 - bh * 0.15, top + h - bh, cx + body / 2 + bh * 0.15, top + h + bh * 0.35),
+                        radius=g.l(bh * 0.6), fill=fill)
+
+
+def keypad(scale, background=True, shadow=True, mono=False):
+    """Master image (N × N). mono: white keys with the symbols cut out."""
+    g = Grid(scale)
+    img = gradient(N) if background else Image.new('RGBA', (N, N), CLEAR)
+    for (cx, cy), colour, sym in KEYS:
+        key = Image.new('RGBA', (N, N), CLEAR)
+        d = ImageDraw.Draw(key)
+        d.rounded_rectangle(g.box(cx - HALF, cy - HALF, cx + HALF, cy + HALF), radius=g.l(RADIUS),
+                            fill=WHITE if mono else colour + (255,))
+        if shadow and not mono:
+            a = key.split()[3].point(lambda v: v * 120 // 255)
+            sh = Image.new('RGBA', (N, N), (20, 0, 60, 0))
+            sh.putalpha(a)
+            sh = sh.transform(sh.size, Image.AFFINE, (1, 0, 0, 0, 1, -g.l(10))).filter(ImageFilter.GaussianBlur(g.l(16)))
+            img.alpha_composite(sh)
+        # ImageDraw writes pixels directly, so CLEAR punches holes in mono keys
+        glyph = CLEAR if mono else WHITE
+        if sym == 'flask':
+            draw_flask(d, g, cx, cy, glyph)
+        else:
+            draw_op(d, g, sym, cx, cy, 92, glyph)
+        img.alpha_composite(key)
     return img
 
 
-def flask_layer(size, scale=1.0, color=(255, 255, 255, 255), liquid=True):
-    """White Erlenmeyer flask with liquid and bubbles, centred."""
-    k = size / S * scale
-    off = size * (1 - scale) / 2
-    layer = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    d = ImageDraw.Draw(layer)
-
-    def p(x, y):
-        return (off + x * k, off + y * k)
-
-    # neck + body outline (polygon), rounded by drawing thick lines
-    body = [p(430, 230), p(594, 230), p(594, 430), p(800, 760), p(224, 760), p(430, 430)]
-    d.polygon(body, fill=color)
-    d.rounded_rectangle([p(395, 190), p(629, 250)], radius=28 * k, fill=color)
-    # rounded bottom corners
-    d.rounded_rectangle([p(210, 700), p(814, 810)], radius=55 * k, fill=color)
-    if liquid:
-        teal = (0, 191, 165, 255)
-        liq = [p(332, 590), p(692, 590), p(782, 735), p(242, 735)]
-        d.polygon(liq, fill=teal)
-        d.rounded_rectangle([p(236, 690), p(788, 772)], radius=40 * k, fill=teal)
-        # bubbles
-        for (cx, cy, r) in [(450, 655, 26), (560, 690, 18), (520, 520, 22), (545, 410, 16), (470, 300, 12)]:
-            fill = (255, 255, 255, 230) if cy > 590 else (255, 255, 255, 0)
-            if cy <= 590:
-                d.ellipse([p(cx - r, cy - r), p(cx + r, cy + r)], outline=(106, 76, 255, 255), width=int(8 * k) or 1)
-            else:
-                d.ellipse([p(cx - r, cy - r), p(cx + r, cy + r)], fill=fill)
-    return layer
+def rounded(img, radius=0.22):
+    """Applies the launcher-style rounded-square mask."""
+    n = img.size[0]
+    mask = Image.new('L', (n, n), 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, n - 1, n - 1], radius=n * radius, fill=255)
+    out = img.copy()
+    out.putalpha(mask)
+    return out
 
 
-def composite(size, scale, rounded=False, transparent_bg=False):
-    big = size * 4
-    if transparent_bg:
-        base = Image.new('RGBA', (big, big), (0, 0, 0, 0))
-    else:
-        base = gradient(256).resize((big, big), Image.BICUBIC).convert('RGBA')
-    shadow = flask_layer(big, scale, color=(40, 0, 90, 90), liquid=False)
-    shadow = shadow.transform(shadow.size, Image.AFFINE, (1, 0, 0, 0, 1, -big * 0.012))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(big * 0.01))
-    if not transparent_bg:
-        base.alpha_composite(shadow)
-    base.alpha_composite(flask_layer(big, scale))
-    if rounded:
-        mask = Image.new('L', (big, big), 0)
-        ImageDraw.Draw(mask).rounded_rectangle([0, 0, big - 1, big - 1], radius=big * 0.22, fill=255)
-        base.putalpha(mask)
-    return base.resize((size, size), Image.LANCZOS)
+def sized(master, px):
+    return master.resize((px, px), Image.LANCZOS)
+
+
+# Android adaptive icons: 108 dp layers, the launcher shows the inner 72 dp
+# and may mask it to a circle (66 dp safe zone), so the keypad (842/1024 of
+# the full-bleed icon) is drawn at 0.54 → 44 % of the layer.
+ADAPTIVE_SCALE = 0.54
+# Web maskable icons: 80 % safe circle.
+MASKABLE_SCALE = 0.72
 
 
 def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = keypad(1.0)
+    fore = keypad(ADAPTIVE_SCALE, background=False)
+    mono = keypad(ADAPTIVE_SCALE, background=False, mono=True)
+    back = gradient(N)
+    maskable = keypad(MASKABLE_SCALE)
+
     res = os.path.join(root, 'android/app/src/main/res')
     dens = {'mdpi': 1, 'hdpi': 1.5, 'xhdpi': 2, 'xxhdpi': 3, 'xxxhdpi': 4}
     for name, f in dens.items():
         d = os.path.join(res, f'mipmap-{name}')
         os.makedirs(d, exist_ok=True)
-        composite(int(48 * f), 0.86, rounded=True).save(os.path.join(d, 'ic_launcher.png'))
+        rounded(sized(full, int(48 * f))).save(os.path.join(d, 'ic_launcher.png'))
         n = int(108 * f)
-        composite(n, 0.56, transparent_bg=True).save(os.path.join(d, 'ic_launcher_foreground.png'))
-        gradient(256).resize((n, n), Image.BICUBIC).save(os.path.join(d, 'ic_launcher_background.png'))
-        mono = flask_layer(n * 4, 0.56, liquid=False).resize((n, n), Image.LANCZOS)
-        mono.save(os.path.join(d, 'ic_launcher_monochrome.png'))
+        sized(fore, n).save(os.path.join(d, 'ic_launcher_foreground.png'))
+        sized(back, n).convert('RGB').save(os.path.join(d, 'ic_launcher_background.png'))
+        sized(mono, n).save(os.path.join(d, 'ic_launcher_monochrome.png'))
     anydpi = os.path.join(res, 'mipmap-anydpi-v26')
     os.makedirs(anydpi, exist_ok=True)
     with open(os.path.join(anydpi, 'ic_launcher.xml'), 'w') as fh:
@@ -96,17 +159,21 @@ def main():
 </adaptive-icon>
 ''')
 
+    # iOS: full-bleed and opaque; the system applies its own mask
     ios = os.path.join(root, 'ios/Runner/Assets.xcassets/AppIcon.appiconset')
     for img in json.load(open(os.path.join(ios, 'Contents.json')))['images']:
         px = int(round(float(img['size'].split('x')[0]) * int(img['scale'][0])))
-        composite(px, 0.86).convert('RGB').save(os.path.join(ios, img['filename']))
+        sized(full, px).convert('RGB').save(os.path.join(ios, img['filename']))
 
     web = os.path.join(root, 'web')
     for n in (192, 512):
-        composite(n, 0.86, rounded=True).save(os.path.join(web, f'icons/Icon-{n}.png'))
-        composite(n, 0.62).save(os.path.join(web, f'icons/Icon-maskable-{n}.png'))
-    composite(32, 0.86, rounded=True).save(os.path.join(web, 'favicon.png'))
-    composite(1024, 0.86, rounded=True).save(os.path.join(root, 'assets/icon.png'))
+        rounded(sized(full, n)).save(os.path.join(web, f'icons/Icon-{n}.png'))
+        sized(maskable, n).save(os.path.join(web, f'icons/Icon-maskable-{n}.png'))
+    rounded(sized(full, 32)).save(os.path.join(web, 'favicon.png'))
+
+    rounded(sized(full, 1024)).save(os.path.join(root, 'assets/icon.png'))
+    # in-app logo (navigation rail), 48 dp at up to 4x
+    rounded(sized(full, 192), radius=0.3).save(os.path.join(root, 'assets/logo.png'))
 
 
 if __name__ == '__main__':

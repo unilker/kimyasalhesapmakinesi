@@ -48,8 +48,9 @@ Future<void> _loadFonts() async {
   await loader.load();
 }
 
-Future<void> _pump(WidgetTester tester, Size size, {String lang = 'tr', String theme = 'light'}) async {
-  SharedPreferences.setMockInitialValues({'lang': lang, 'theme': theme});
+Future<void> _pump(WidgetTester tester, Size size,
+    {String lang = 'tr', String theme = 'light', String layout = 'grid'}) async {
+  SharedPreferences.setMockInitialValues({'lang': lang, 'theme': theme, 'toolLayout': layout});
   final state = await AppState.create();
   tester.view.physicalSize = size * 2;
   tester.view.devicePixelRatio = 2;
@@ -88,6 +89,28 @@ void main() {
   testWidgets('phone home', (t) async {
     await _pump(t, phone);
     await _shot('phone_home');
+  });
+
+  for (final layout in ['grid', 'list']) {
+    testWidgets('phone home tools $layout', (t) async {
+      await _pump(t, phone, layout: layout);
+      final home = find.descendant(of: find.byType(HomeScreen), matching: find.byType(Scrollable)).first;
+      await t.drag(home, const Offset(0, -330));
+      await t.pumpAndSettle();
+      await _shot('phone_home_tools_$layout');
+    });
+    testWidgets('phone home tools $layout dark', (t) async {
+      await _pump(t, phone, layout: layout, theme: 'dark');
+      final home = find.descendant(of: find.byType(HomeScreen), matching: find.byType(Scrollable)).first;
+      await t.drag(home, const Offset(0, -1100));
+      await t.pumpAndSettle();
+      await _shot('phone_home_tools_${layout}_dark');
+    });
+  }
+
+  testWidgets('tablet home list', (t) async {
+    await _pump(t, tablet, layout: 'list');
+    await _shot('tablet_home_list');
   });
 
   testWidgets('phone molar mass', (t) async {

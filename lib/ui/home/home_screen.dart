@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/chem/element.dart';
+import '../../state/app_state.dart' show ToolLayout;
 import '../common.dart';
 import '../history/history_screen.dart';
 import '../periodic/periodic_table_screen.dart';
@@ -68,6 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          IconButton(
+            tooltip: context.t(context.app.toolLayout == ToolLayout.grid ? S.listView : S.gridView),
+            onPressed: () => context.app.setToolLayout(
+                context.app.toolLayout == ToolLayout.grid ? ToolLayout.list : ToolLayout.grid),
+            icon: Icon(context.app.toolLayout == ToolLayout.grid
+                ? Icons.view_agenda_rounded
+                : Icons.grid_view_rounded),
+          ),
           IconButton(
             tooltip: context.t(S.settings),
             onPressed: () => Navigator.of(context, rootNavigator: true).push(
@@ -150,25 +159,37 @@ class _HomeScreenState extends State<HomeScreen> {
         sliver: SliverToBoxAdapter(child: SectionTitle(title, trailing: trailing)),
       );
 
-  Widget _grid(List<ToolInfo> list) => SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 240,
-            mainAxisExtent: 132,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+  Widget _grid(List<ToolInfo> list) {
+    final wide = context.app.toolLayout == ToolLayout.list;
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverGrid(
+        // list: one full-width row per tool on phones, more columns on tablets
+        gridDelegate: wide
+            ? const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 560,
+                mainAxisExtent: 88,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 10,
+              )
+            : const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 240,
+                mainAxisExtent: 132,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+        delegate: SliverChildBuilderDelegate(
+          (context, i) => ToolCard(
+            tool: list[i],
+            wide: wide,
+            selected: list[i].id == widget.selectedToolId,
+            onTap: () => widget.onOpenTool(list[i]),
           ),
-          delegate: SliverChildBuilderDelegate(
-            (context, i) => ToolCard(
-              tool: list[i],
-              selected: list[i].id == widget.selectedToolId,
-              onTap: () => widget.onOpenTool(list[i]),
-            ),
-            childCount: list.length,
-          ),
+          childCount: list.length,
         ),
-      );
+      ),
+    );
+  }
 
   Widget _highlights(BuildContext context) {
     final element = PeriodicTable.elements[_dayIndex % PeriodicTable.elements.length];
@@ -194,11 +215,14 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ToolCard extends StatelessWidget {
-  const ToolCard({super.key, required this.tool, required this.onTap, this.selected = false});
+  const ToolCard({super.key, required this.tool, required this.onTap, this.selected = false, this.wide = false});
 
   final ToolInfo tool;
   final VoidCallback onTap;
   final bool selected;
+
+  /// A full-width row (icon, title, two-line subtitle) instead of a tile.
+  final bool wide;
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +241,7 @@ class ToolCard extends StatelessWidget {
           ),
           child: InkWell(
             onTap: onTap,
-            child: Stack(
+            child: wide ? _row(lang) : Stack(
               children: [
                 Positioned(
                   right: -18,
@@ -271,6 +295,60 @@ class ToolCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _row(String lang) => Stack(
+        children: [
+          Positioned(
+            right: 28,
+            top: -14,
+            child: Icon(tool.icon, size: 104, color: Colors.white.withValues(alpha: 0.13)),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+            child: Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.24),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Icon(tool.icon, color: Colors.white, size: 26),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tool.title.of(lang),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 17),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        tool.subtitle.of(lang),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12.5,
+                          height: 1.25,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 28),
+              ],
+            ),
+          ),
+        ],
+      );
 }
 
 class _ElementOfDay extends StatelessWidget {

@@ -15,6 +15,8 @@ class S {
   static const navPeriodic = Bi('Periodic Table', 'Periyodik Tablo');
   static const navPeriodicShort = Bi('Elements', 'Tablo');
   static const navHistory = Bi('History', 'Geçmiş');
+  static const listView = Bi('Show tools as a list', 'Araçları liste olarak göster');
+  static const gridView = Bi('Show tools as tiles', 'Araçları kutucuk olarak göster');
   static const settings = Bi('Settings', 'Ayarlar');
 
   // Common actions

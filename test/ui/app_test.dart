@@ -767,6 +767,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('home tools: full-width rows by default, tiles on request', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    expect(state.toolLayout, ToolLayout.list);
+    // one card per row: the row spans the content width (390 − 2 × 16)
+    final rowWidth = tester.getSize(find.byType(ToolCard).first).width;
+    expect(rowWidth, closeTo(358, 0.5));
+    await openTool(tester, 'Mol Kütlesi');
+    expect(find.text('Mol Kütlesi'), findsWidgets);
+    await back(tester);
+    await tester.tap(find.byTooltip('Araçları kutucuk olarak göster'));
+    await tester.pumpAndSettle();
+    expect(state.toolLayout, ToolLayout.grid);
+    expect(tester.getSize(find.byType(ToolCard).first).width, lessThan(rowWidth / 1.8));
+    await openTool(tester, 'Mol Kütlesi');
+    expect(find.text('Mol Kütlesi'), findsWidgets);
+    await back(tester);
+    await tester.tap(find.byTooltip('Araçları liste olarak göster'));
+    await tester.pumpAndSettle();
+    expect(state.toolLayout, ToolLayout.list);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);
