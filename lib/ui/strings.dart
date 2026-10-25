@@ -389,6 +389,7 @@ class S {
   static const monoisotopic = Bi('Monoisotopic (exact) mass', 'Monoizotopik (tam) kütle');
   static const monoisotopicMz = Bi('Monoisotopic m/z', 'Monoizotopik m/z');
   static const averageMass = Bi('Average mass', 'Ortalama kütle');
+  static const dbeLabel = Bi('Rings + double bonds (DBE)', 'Halka + çift bağ (DBE)');
   static const nominalMass = Bi('Nominal mass', 'Nominal kütle');
   static const isotopePeaks = Bi('Isotope peaks', 'İzotop tepeleri');
   static const relativeIntensity = Bi('Relative intensity (%)', 'Bağıl şiddet (%)');

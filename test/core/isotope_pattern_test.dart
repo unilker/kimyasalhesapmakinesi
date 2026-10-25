@@ -43,6 +43,10 @@ void main() {
     expect(pat('C6H12O6').monoisotopicMass, closeTo(180.06338810, 1e-7)); // glucose
     expect(pat('C9H8O4').monoisotopicMass, closeTo(180.04225873, 1e-7)); // aspirin
     expect(pat('CHCl3').monoisotopicMass, closeTo(117.914383, 1e-6)); // chloroform
+    for (final f in ['C8H10N4O2', 'C8H11N4O2^+', 'B', 'D2O', 'SnCl4', 'Br2']) {
+      final formula = ChemicalFormula.parse(f);
+      expect(monoisotopicMass(formula), isotopePattern(formula).monoisotopicMass, reason: f);
+    }
   });
 
   test('ions: [M+H]⁺ of caffeine at m/z 195.087652', () {

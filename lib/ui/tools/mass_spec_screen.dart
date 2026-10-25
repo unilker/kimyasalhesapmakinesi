@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/chem/dbe.dart';
 import '../../core/chem/formula.dart';
 import '../../core/format.dart';
 import '../../core/isotope_pattern.dart';
@@ -43,6 +44,7 @@ class _MassSpecScreenState extends State<MassSpecScreen> {
   final _formula = TextEditingController();
   int _ion = 0;
   IsotopePattern? _pattern;
+  double? _dbe;
   String? _shown;
   String? _error;
 
@@ -82,6 +84,7 @@ class _MassSpecScreenState extends State<MassSpecScreen> {
       );
       setState(() {
         _pattern = p;
+        _dbe = doubleBondEquivalents(target);
         _shown = shown;
         _error = null;
       });
@@ -184,6 +187,7 @@ class _MassSpecScreenState extends State<MassSpecScreen> {
           const SizedBox(height: 6),
           InfoRow(context.t(S.averageMass), mass(p.averageMass)),
           InfoRow(context.t(S.nominalMass), '${p.nominalMass}'),
+          if (_dbe != null) InfoRow(context.t(S.dbeLabel), nf.format(_dbe!)),
         ],
       ),
       Card(

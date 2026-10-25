@@ -90,6 +90,19 @@ class _Dist {
   }
 }
 
+/// Monoisotopic mass (u) or m/z of [formula] without building the pattern.
+double monoisotopicMass(ChemicalFormula formula) {
+  var mono = 0.0;
+  for (final e in formula.atoms.entries) {
+    final iso = _isotopes(e.key);
+    final n = e.value.round();
+    if (iso == null || (e.value - n).abs() > 1e-9 || n < 0) throw IsotopeException(e.key);
+    mono += n * iso.reduce((a, b) => b.$3 > a.$3 ? b : a).$2;
+  }
+  final z = formula.charge;
+  return z == 0 ? mono : (mono - z * electronMassU) / z.abs();
+}
+
 /// Isotope pattern of [formula] at unit mass resolution. Peaks below
 /// [minRelative] % of the largest one are left out of [IsotopePattern.peaks].
 IsotopePattern isotopePattern(ChemicalFormula formula, {double minRelative = 0.01}) {

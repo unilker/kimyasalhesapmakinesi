@@ -186,6 +186,17 @@ void main() {
     expect(state.history.first.result, '98,072 g/mol');
   });
 
+  testWidgets('molar mass also shows exact mass and DBE', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Mol Kütlesi');
+    await tester.enterText(find.byType(TextField).first, 'C8H10N4O2');
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('194,080376'));
+    expect(find.text('Halka + çift bağ (DBE)'), findsOneWidget);
+    expect(find.text('6'), findsWidgets);
+  });
+
   testWidgets('calculator evaluates and records history', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     await tester.tap(find.byIcon(Icons.calculate_outlined));
