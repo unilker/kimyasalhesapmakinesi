@@ -319,6 +319,54 @@ void main() {
     await seek(tester, find.textContaining('= 1.33041 × 10⁻⁵'));
   });
 
+  testWidgets('galvanic cell: Daniell cell, then permanganate via the picker', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Piller ve E° Tablosu');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('1,1037 V'));
+    expect(find.text('Cu²⁺ + Zn(s) → Cu(s) + Zn²⁺'), findsOneWidget);
+    expect(state.history.first.toolId, 'cell');
+
+    // Pick MnO4⁻/Mn²⁺ as the cathode by searching.
+    for (var k = 0; k < 10; k++) {
+      await tester.drag(find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first,
+          const Offset(0, 400));
+      await tester.pumpAndSettle();
+    }
+    await tester.tap(find.text('Cu²⁺ + 2e⁻ ⇌ Cu(s)'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'MnO4');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('MnO₄⁻ + 8H⁺ + 5e⁻ ⇌ Mn²⁺ + 4H₂O(l)'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // E° = 1.507 − (−0.7618) = 2.2688 V, n = 10
+    await seek(tester, find.text('2,2688 V'));
+    expect(find.text('2MnO₄⁻ + 16H⁺ + 5Zn(s) → 2Mn²⁺ + 8H₂O(l) + 5Zn²⁺'), findsOneWidget);
+    expect(find.text('10'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final name in ['small phone', 'small phone landscape']) {
+    testWidgets('E° table opens and filters on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Piller ve E° Tablosu');
+      await seek(tester, find.text('E° tablosunu göster'));
+      await tester.tap(find.text('E° tablosunu göster'));
+      await tester.pumpAndSettle();
+      expect(find.text('F₂(g) + 2e⁻ ⇌ 2F⁻'), findsOneWidget); // highest E° first
+      await tester.enterText(find.byType(TextField), 'Ag');
+      await tester.pumpAndSettle();
+      expect(find.text('AgCl(s) + e⁻ ⇌ Ag(s) + Cl⁻'), findsOneWidget);
+      expect(find.text('F₂(g) + 2e⁻ ⇌ 2F⁻'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

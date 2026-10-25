@@ -336,6 +336,27 @@ class S {
   );
   static const invalidPKa = Bi('Check the pKa values', 'pKa değerlerini kontrol edin');
 
+  // Galvanic cell
+  static const cathodeLabel = Bi('Cathode (reduction)', 'Katot (indirgenme)');
+  static const anodeLabel = Bi('Anode (oxidation)', 'Anot (yükseltgenme)');
+  static const swapElectrodes = Bi('Swap electrodes', 'Elektrotları değiştir');
+  static const chooseHalfReaction = Bi('Choose a half-reaction', 'Yarı tepkime seçin');
+  static const searchHalfReaction = Bi('Search: Cu, MnO4, Cl2 …', 'Ara: Cu, MnO4, Cl2 …');
+  static const potentialTable = Bi('Standard reduction potentials', 'Standart indirgenme potansiyelleri');
+  static const showTable = Bi('Show the E° table', 'E° tablosunu göster');
+  static const cellPotential = Bi('Standard cell potential E°', 'Standart pil potansiyeli E°');
+  static const overallReaction = Bi('Overall reaction', 'Toplam tepkime');
+  static const electronsTransferred = Bi('Electrons transferred n', 'Aktarılan elektron n');
+  static const spontaneousYes = Bi('E° > 0: spontaneous as written (galvanic cell)',
+      'E° > 0: yazıldığı yönde istemli (galvanik pil)');
+  static const spontaneousNo = Bi('E° < 0: not spontaneous – swap the electrodes or apply this voltage (electrolysis)',
+      'E° < 0: istemsiz – elektrotları değiştirin ya da bu gerilimi uygulayın (elektroliz)');
+  static const sameHalfReaction = Bi('Choose two different half-reactions', 'İki farklı yarı tepkime seçin');
+  static const reactionQuotient = Bi('Reaction quotient Q (optional, for E)', 'Tepkime oranı Q (isteğe bağlı, E için)');
+  static const cellPotentialAtQ = Bi('Cell potential E at this Q', 'Bu Q değerinde pil potansiyeli E');
+  static const cellNote = Bi('25 °C, 1 atm; E° values: P. Vanýsek, CRC Handbook of Chemistry and Physics.',
+      '25 °C, 1 atm; E° değerleri: P. Vanýsek, CRC Handbook of Chemistry and Physics.');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

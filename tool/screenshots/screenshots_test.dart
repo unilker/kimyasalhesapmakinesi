@@ -197,6 +197,31 @@ void main() {
     await _shot('tablet_calibration');
   });
 
+  testWidgets('small phone ICE', (t) async {
+    await _pump(t, const Size(320, 640));
+    await _openTool(t, 'Denge Tablosu (ICE)');
+    await seekText(t, find.text('H₂ + I₂ ⇌ 2HI'));
+    await t.tap(find.text('H₂ + I₂ ⇌ 2HI'));
+    await t.pumpAndSettle();
+    await seekText(t, find.text('Denge bileşimi'));
+    await _shot('small_ice');
+  });
+
+  testWidgets('phone cell', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Piller ve E° Tablosu');
+    await _shot('phone_cell_inputs');
+    await seekText(t, find.text('Hesapla'));
+    await t.tap(find.text('Hesapla'));
+    await t.pumpAndSettle();
+    await seekText(t, find.text('1,1037 V'));
+    await _shot('phone_cell');
+    await seekText(t, find.text('E° tablosunu göster'));
+    await t.tap(find.text('E° tablosunu göster'));
+    await t.pumpAndSettle();
+    await _shot('phone_cell_table');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

@@ -4,6 +4,7 @@ import '../../core/bi.dart';
 import '../../core/solver_catalog.dart';
 import '../theme.dart';
 import 'balancer_screen.dart';
+import 'cell_screen.dart';
 import 'constants_screen.dart';
 import 'empirical_screen.dart';
 import 'ice_screen.dart';
@@ -202,6 +203,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'nernst faraday electrolysis elektroliz cell hücre potential potansiyel',
     builder: (t) => SolverScreen(tool: t, equations: electroEquations),
+  ),
+  ToolInfo(
+    id: 'cell',
+    title: const Bi('Galvanic Cells & E° Table', 'Piller ve E° Tablosu'),
+    subtitle: const Bi('E°cell, overall reaction, ΔG°, K', 'E°pil, toplam tepkime, ΔG°, K'),
+    icon: Icons.battery_charging_full_rounded,
+    color: Palette.blue,
+    category: ToolCategory.physical,
+    keywords: 'galvanic galvanik voltaic pil cell battery batarya electrode elektrot standard reduction potential indirgenme potansiyeli redox daniell anode anot cathode katot',
+    builder: (t) => CellScreen(tool: t),
   ),
   ToolInfo(
     id: 'spectro',
