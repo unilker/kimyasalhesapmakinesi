@@ -254,6 +254,46 @@ void main() {
     await _shot('phone_rate_data');
   });
 
+  testWidgets('tablet dark cell', (t) async {
+    await _pump(t, tablet, theme: 'dark');
+    await _openTool(t, 'Piller ve E° Tablosu');
+    await _tapText(t, 'Hesapla');
+    await _shot('tablet_dark_cell');
+  });
+
+  testWidgets('landscape ice english', (t) async {
+    await _pump(t, const Size(844, 390), lang: 'en');
+    await _openTool(t, 'ICE Table');
+    await seekText(t, find.text('N₂O₄ ⇌ 2NO₂'));
+    await t.tap(find.text('N₂O₄ ⇌ 2NO₂'));
+    await t.pumpAndSettle();
+    await seekText(t, find.text('Equilibrium composition'));
+    await _shot('landscape_ice_en');
+  });
+
+  testWidgets('phone nuclides', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Radyonüklitler');
+    await t.enterText(find.byType(TextField).first, '5730');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.text('Kalan'));
+    await _shot('phone_nuclides');
+  });
+
+  testWidgets('tall home overview', (t) async {
+    await _pump(t, const Size(390, 2600));
+    await _shot('tall_home');
+  });
+
+  testWidgets('phone speciation', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Tür Dağılımı');
+    await t.enterText(find.byType(TextField).at(1), '7');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.byType(XyChart));
+    await _shot('phone_speciation');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

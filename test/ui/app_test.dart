@@ -53,6 +53,15 @@ Future<void> seek(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// Leaves a tool on compact layouts (list–detail layouts have no back button).
+Future<void> back(WidgetTester tester) async {
+  final b = find.byType(BackButton);
+  if (b.evaluate().isNotEmpty) {
+    await tester.tap(b.first);
+    await tester.pumpAndSettle();
+  }
+}
+
 Future<void> openTool(WidgetTester tester, String title) async {
   final card = find.descendant(of: find.byType(ToolCard), matching: find.text(title));
   final scrollable =
@@ -362,7 +371,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final name in ['small phone', 'small phone landscape']) {
+  for (final name in ['small phone', 'small phone landscape', 'fold inner', 'tablet landscape']) {
     testWidgets('E° table opens and filters on $name', (tester) async {
       await pumpApp(tester, sizes[name]!);
       await openTool(tester, 'Piller ve E° Tablosu');
@@ -515,6 +524,92 @@ void main() {
     await seek(tester, find.text('hız = k[A]²[B]'));
     await seek(tester, find.textContaining('M⁻² s⁻¹'));
     expect(find.textContaining('7096 ± 13'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('ICE table: CaF2 from the Ksp table gives its solubility', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Denge Tablosu (ICE)');
+    await seek(tester, find.text('Ksp tablosundan tuz seç'));
+    await tester.tap(find.text('Ksp tablosundan tuz seç'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'CaF2');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Kalsiyum florür'));
+    await tester.pumpAndSettle();
+    // s = (Ksp/4)^(1/3) = 2.05078e-4 M, × 78.0748 g/mol
+    await seek(tester, find.text('2,05078 × 10⁻⁴ mol/L'));
+    expect(find.text('0,0160114 g/L'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('radionuclides: ¹³¹I after 24 days is 12.5 %', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Radyonüklitler');
+    await tester.tap(find.text('¹⁴C  Karbon'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '131');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('¹³¹I  İyot'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).first, '24,0747');
+    await tester.tap(find.text('d'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // 3 × 8.0249 d = 24.0747 d → (½)³
+    await seek(tester, find.text('12,5 %'));
+    expect(state.history.first.toolId, 'nuclides');
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final name in ['tablet landscape', 'fold cover landscape']) {
+    testWidgets('pKa, Ksp and nuclide pickers work on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Titrasyon Eğrisi');
+      await seek(tester, find.text('pKa tablosundan seç'));
+      await tester.tap(find.text('pKa tablosundan seç'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('Asetik asit'));
+      await tester.pumpAndSettle();
+      expect(find.text('4,756'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await back(tester);
+      await openTool(tester, 'Denge Tablosu (ICE)');
+      await seek(tester, find.text('Ksp tablosundan tuz seç'));
+      await tester.tap(find.text('Ksp tablosundan tuz seç'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'AgCl');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Gümüş klorür'));
+      await tester.pumpAndSettle();
+      await seek(tester, find.text('Molar çözünürlük s'));
+      expect(tester.takeException(), isNull);
+      await back(tester);
+      await openTool(tester, 'Radyonüklitler');
+      await tester.tap(find.text('¹⁴C  Karbon'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Tc');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('⁹⁹ᵐTc  Teknesyum'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('6,0066 ± 0,0002 saat'), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('species distribution: phosphate at pH 7', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Tür Dağılımı');
+    await tester.enterText(find.byType(TextField).at(1), '7');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('61,858 %'));
+    expect(find.text('38,141 %'), findsOneWidget);
+    expect(find.text('H₂A⁻'), findsWidgets);
+    expect(state.history.first.toolId, 'speciation');
     expect(tester.takeException(), isNull);
   });
 

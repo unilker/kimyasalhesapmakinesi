@@ -439,6 +439,37 @@ class S {
   static const needPositive = Bi('Concentrations must be positive and at least 3 pairs are needed',
       'Derişimler pozitif olmalı ve en az 3 çift gerekir');
 
+  // Radionuclides
+  static const nuclideNote = Bi(
+    'Half-lives, decay modes and masses: NUBASE2020 / AME2020 (1 y = 365.2422 d).',
+    'Yarılanma süreleri, bozunma türleri ve kütleler: NUBASE2020 / AME2020 (1 yıl = 365,2422 gün).',
+  );
+  static const chooseNuclide = Bi('Choose a radionuclide', 'Radyonüklit seçin');
+  static const searchNuclide = Bi('Search: 14C, iodine, 131 …', 'Ara: 14C, iyot, 131 …');
+  static const halfLife = Bi('Half-life t½', 'Yarılanma süresi t½');
+  static const decayModes = Bi('Decay modes', 'Bozunma türleri');
+  static const decayConstant = Bi('Decay constant λ', 'Bozunma sabiti λ');
+  static const meanLife = Bi('Mean life τ = 1/λ', 'Ortalama ömür τ = 1/λ');
+  static const specificActivity = Bi('Specific activity', 'Özgül aktivite');
+  static const atomicMassLabel = Bi('Atomic mass', 'Atom kütlesi');
+  static const naturalAbundance = Bi('Natural abundance', 'Doğal bolluk');
+  static const elapsedTime = Bi('Elapsed time', 'Geçen süre');
+  static const initialAmountOptional = Bi('Initial amount (optional)', 'Başlangıç miktarı (isteğe bağlı)');
+  static const remainingFraction = Bi('Remaining', 'Kalan');
+  static const decayedFraction = Bi('Decayed', 'Bozunan');
+  static const remainingAmount = Bi('Remaining amount', 'Kalan miktar');
+  static Bi halfLivesElapsed(String n) => Bi('$n half-lives', '$n yarılanma süresi');
+
+  // Speciation
+  static const speciationNote = Bi(
+    'αⱼ = (Ka₁⋯Kaⱼ/[H⁺]ʲ) / Σ; independent of the total concentration (ideal solution).',
+    'αⱼ = (Ka₁⋯Kaⱼ/[H⁺]ʲ) / Σ; toplam derişimden bağımsızdır (ideal çözelti).',
+  );
+  static const atPH = Bi('pH (optional)', 'pH (isteğe bağlı)');
+  static const fractionsAt = Bi('Species fractions', 'Tür kesirleri');
+  static const dominantSpecies = Bi('Dominant species', 'Baskın tür');
+  static const meanProtonsRemoved = Bi('Protons removed per molecule', 'Molekül başına ayrılan proton');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',
@@ -450,6 +481,15 @@ class S {
   static const initialAmounts = Bi('Initial concentrations', 'Başlangıç derişimleri');
   static const initialOf = Bi('Initial', 'Başlangıç');
   static const changeOf = Bi('Change', 'Değişim');
+  static const pickSalt = Bi('Choose a salt from the Ksp table', 'Ksp tablosundan tuz seç');
+  static const kspTableTitle = Bi('Solubility products (25 °C)', 'Çözünürlük çarpımları (25 °C)');
+  static const searchSalt = Bi('Search: AgCl, fluoride, calcium …', 'Ara: AgCl, florür, kalsiyum …');
+  static const kspSource = Bi(
+    'Source: CRC Handbook of Chemistry and Physics, 84th ed. Ideal solutions: activity coefficients, ion pairing and hydrolysis are ignored.',
+    'Kaynak: CRC Handbook of Chemistry and Physics, 84. baskı. İdeal çözelti: aktiflik katsayıları, iyon çiftleşmesi ve hidroliz ihmal edilir.',
+  );
+  static const molarSolubilityLabel = Bi('Molar solubility s', 'Molar çözünürlük s');
+  static const massSolubilityLabel = Bi('Solubility', 'Çözünürlük');
   static const equilibriumOf = Bi('Equilibrium', 'Denge');
   static const equilibriumComposition = Bi('Equilibrium composition', 'Denge bileşimi');
   static const extentLabel = Bi('Extent of reaction x', 'Tepkime ilerleme miktarı x');
