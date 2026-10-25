@@ -335,6 +335,13 @@ class S {
     'Tam yük denkliği, 25 °C (Kw = 10⁻¹⁴); aktiflikler derişime eşit alınır.',
   );
   static const invalidPKa = Bi('Check the pKa values', 'pKa değerlerini kontrol edin');
+  static const acidTableTitle = Bi('Weak acids and bases (25 °C)', 'Zayıf asit ve bazlar (25 °C)');
+  static const pickFromTable = Bi('Choose from the pKa table', 'pKa tablosundan seç');
+  static const searchAcid = Bi('Search: acetic, NH3, phosphoric …', 'Ara: asetik, NH3, fosforik …');
+  static const acidTableSource = Bi(
+    'Source: CRC Handbook of Chemistry and Physics, 84th ed. Bases are listed with pKb; the titration uses pKa(BH⁺) = 14.00 − pKb.',
+    'Kaynak: CRC Handbook of Chemistry and Physics, 84. baskı. Bazlar pKb ile verilir; titrasyonda pKa(BH⁺) = 14,00 − pKb kullanılır.',
+  );
 
   // Galvanic cell
   static const cathodeLabel = Bi('Cathode (reduction)', 'Katot (indirgenme)');

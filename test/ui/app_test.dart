@@ -474,6 +474,24 @@ void main() {
     });
   }
 
+  testWidgets('titration: phosphoric acid from the CRC pKa table', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Titrasyon Eğrisi');
+    await seek(tester, find.text('pKa tablosundan seç'));
+    await tester.tap(find.text('pKa tablosundan seç'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'fosforik');
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Fosforik asit'));
+    await tester.pumpAndSettle();
+    expect(find.text('2,16 7,21 12,32'), findsOneWidget);
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Eşdeğerlik noktası 3'));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

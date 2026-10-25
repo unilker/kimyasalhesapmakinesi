@@ -43,10 +43,11 @@ jobs:
           git diff --exit-code lib/core/chem/isotopes_data.dart
           flutter test tool/crosscheck/dump_isotopes_test.dart
           python3 tool/crosscheck/check_isotopes.py tool/crosscheck/out_isotopes.json
-      - name: Thermodynamic data table is generated from tool/data
+      - name: Data tables are generated from tool/data
         run: |
           python3 tool/gen_thermo.py
-          git diff --exit-code lib/core/thermo_data.dart
+          python3 tool/gen_pka.py
+          git diff --exit-code lib/core/thermo_data.dart lib/core/acid_data.dart
       - name: Cross-check equilibrium (ICE) solutions against 300-digit mpmath
         run: |
           pip install mpmath
