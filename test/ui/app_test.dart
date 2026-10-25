@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/app.dart';
 import 'package:kimya_hesap/state/app_state.dart';
+import 'package:kimya_hesap/ui/common.dart' show ToolScaffold;
 import 'package:kimya_hesap/ui/home/home_screen.dart';
 import 'package:kimya_hesap/ui/tools/registry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +37,19 @@ Future<AppState> pumpApp(WidgetTester tester, Size size,
   await tester.pumpWidget(AppScope(state: state, child: const KimyaApp()));
   await tester.pumpAndSettle();
   return state;
+}
+
+/// Scrolls the open tool until [finder] is built and visible.
+Future<void> seek(WidgetTester tester, Finder finder) async {
+  final scrollable =
+      find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first;
+  for (var i = 0; i < 40 && finder.evaluate().isEmpty; i++) {
+    await tester.drag(scrollable, const Offset(0, -200));
+    await tester.pumpAndSettle();
+  }
+  expect(finder, findsWidgets);
+  await tester.ensureVisible(finder.first);
+  await tester.pumpAndSettle();
 }
 
 Future<void> openTool(WidgetTester tester, String title) async {
@@ -117,9 +131,23 @@ void main() {
           await tester.enterText(field, '12');
           await tester.pumpAndSettle();
           final rect = tester.getRect(field);
-          expect(rect.bottom, lessThanOrEqualTo(size.height - kb + 0.5),
-              reason: '${tool.id}: field bottom ${rect.bottom} hidden by keyboard at ${size.height - kb}');
-          expect(rect.top, greaterThanOrEqualTo(0), reason: tool.id);
+          final visibleBottom = size.height - kb + 0.5;
+          if (rect.height <= (size.height - kb) * 0.5) {
+            // Single-line fields must be entirely above the keyboard.
+            expect(rect.bottom, lessThanOrEqualTo(visibleBottom),
+                reason: '${tool.id}: field bottom ${rect.bottom} hidden by keyboard at ${size.height - kb}');
+            expect(rect.top, greaterThanOrEqualTo(0), reason: tool.id);
+          } else {
+            // A multi-line field taller than the free space cannot fit; the
+            // line being edited (the caret) must still be visible.
+            final editable = tester
+                .state<EditableTextState>(find.descendant(of: field, matching: find.byType(EditableText)))
+                .renderEditable;
+            final caret = editable.localToGlobal(
+                editable.getLocalRectForCaret(editable.selection!.extent).bottomLeft);
+            expect(caret.dy, lessThanOrEqualTo(visibleBottom), reason: '${tool.id}: caret hidden');
+            expect(caret.dy, greaterThan(0), reason: tool.id);
+          }
           expect(tester.takeException(), isNull, reason: tool.id);
           tester.view.viewInsets = FakeViewPadding.zero;
           FocusManager.instance.primaryFocus?.unfocus();
@@ -181,6 +209,44 @@ void main() {
     await tester.tap(find.text('Calculate'));
     await tester.pumpAndSettle();
     expect(find.text('20.8333'), findsOneWidget);
+  });
+
+  testWidgets('statistics: example data gives mean and outlier verdicts', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'İstatistik ve Kalibrasyon');
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // mean of 0.403 0.410 0.401 0.380 0.400 0.413 0.408 = 0.402143
+    await seek(tester, find.textContaining('0,402143'));
+    await seek(tester, find.text('Aykırı değer – atılabilir').last);
+    expect(find.text('Aykırı değer – atılabilir'), findsNWidgets(2)); // Q and Grubbs at 95 %
+    expect(state.history.first.toolId, 'stats');
+  });
+
+  testWidgets('statistics: calibration predicts the unknown', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'İstatistik ve Kalibrasyon');
+    await tester.tap(find.text('Kalibrasyon doğrusu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('1,93036')); // slope
+    await seek(tester, find.textContaining('6,20722')); // x0 for y0 = 13.5
+  });
+
+  testWidgets('titration: acetic acid equivalence point', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Titrasyon Eğrisi');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // 25 mL of 0.1 M HA (pKa 4.76) with 0.1 M NaOH → EP at 25 mL, pH 8.730
+    await seek(tester, find.text('25 mL · pH 8,73'));
+    await seek(tester, find.textContaining('Fenolftalein'));
   });
 
   testWidgets('history limit trims old entries', (tester) async {

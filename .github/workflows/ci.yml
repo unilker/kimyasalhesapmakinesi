@@ -30,6 +30,13 @@ jobs:
         run: |
           pip install pint
           python3 tool/crosscheck/check_units.py
+      - name: Cross-check statistics and titration curves against scipy
+        run: |
+          pip install scipy numpy
+          flutter test tool/crosscheck/dump_stats_test.dart
+          python3 tool/crosscheck/check_stats.py tool/crosscheck/out_stats.json
+          flutter test tool/crosscheck/dump_titration_test.dart
+          python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json
 
   android:
     needs: test

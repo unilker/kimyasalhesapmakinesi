@@ -9,15 +9,18 @@ import 'empirical_screen.dart';
 import 'molar_mass_screen.dart';
 import 'ph_scale.dart';
 import 'solver_screen.dart';
+import 'stats_screen.dart';
+import 'titration_screen.dart';
 import 'unit_converter_screen.dart';
 
-enum ToolCategory { basics, solutions, reactions, physical, reference }
+enum ToolCategory { basics, solutions, reactions, physical, analysis, reference }
 
 Bi categoryTitle(ToolCategory c) => switch (c) {
       ToolCategory.basics => const Bi('Basics', 'Temel'),
       ToolCategory.solutions => const Bi('Solutions & acids', 'Çözeltiler ve asitler'),
       ToolCategory.reactions => const Bi('Reactions', 'Tepkimeler'),
       ToolCategory.physical => const Bi('Physical chemistry', 'Fizikokimya'),
+      ToolCategory.analysis => const Bi('Analytical chemistry', 'Analitik kimya'),
       ToolCategory.reference => const Bi('Reference', 'Başvuru'),
     };
 
@@ -120,6 +123,16 @@ final List<ToolInfo> tools = [
     ),
   ),
   ToolInfo(
+    id: 'titration',
+    title: const Bi('Titration Curve', 'Titrasyon Eğrisi'),
+    subtitle: const Bi('pH curve, equivalence points, indicators', 'pH eğrisi, eşdeğerlik, gösterge'),
+    icon: Icons.show_chart_rounded,
+    color: Palette.pink,
+    category: ToolCategory.solutions,
+    keywords: 'titration titrasyon curve eğri equivalence eşdeğerlik indicator gösterge indikatör phenolphthalein fenolftalein polyprotic',
+    builder: (t) => TitrationScreen(tool: t),
+  ),
+  ToolInfo(
     id: 'balancer',
     title: const Bi('Equations & Stoichiometry', 'Denklem ve Stokiyometri'),
     subtitle: const Bi('Balance, limiting reactant', 'Denkleştir, sınırlayıcı bileşen'),
@@ -218,6 +231,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'hydrogen hidrojen spectrum spektrum rydberg balmer bohr de broglie crystal kristal lattice örgü unit cell birim hücre',
     builder: (t) => SolverScreen(tool: t, equations: atomicEquations),
+  ),
+  ToolInfo(
+    id: 'stats',
+    title: const Bi('Statistics & Calibration', 'İstatistik ve Kalibrasyon'),
+    subtitle: const Bi('Mean ± CI, Q/Grubbs, LOD/LOQ', 'Ortalama ± GA, Q/Grubbs, LOD/LOQ'),
+    icon: Icons.query_stats_rounded,
+    color: Palette.indigo,
+    category: ToolCategory.analysis,
+    keywords: 'statistics istatistik mean ortalama standard deviation standart sapma confidence güven outlier aykırı q test grubbs calibration kalibrasyon regression regresyon lod loq',
+    builder: (t) => StatsScreen(tool: t),
   ),
   ToolInfo(
     id: 'units',
