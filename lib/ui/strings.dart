@@ -497,6 +497,25 @@ class S {
   static const angleRad = Bi('Angles in radians', 'Açılar radyan');
   static const angleDeg = Bi('Angles in degrees', 'Açılar derece');
 
+  // NMR
+  static const nmrNote = Bi(
+    'Frequencies from the IUPAC 2001 Ξ scale (reference compounds relative to TMS ¹H); receptivities from γ, I and natural abundance.',
+    'Frekanslar IUPAC 2001 Ξ ölçeğinden (TMS ¹H’ye göre referans bileşikleri); alıcılıklar γ, I ve doğal bolluktan hesaplanır.',
+  );
+  static const spectrometer = Bi('Spectrometer ¹H frequency', 'Spektrometre ¹H frekansı');
+  static const nucleusLabel = Bi('Nucleus', 'Çekirdek');
+  static const moreNuclei = Bi('All nuclei', 'Tüm çekirdekler');
+  static const shiftPpm = Bi('Chemical shift difference (ppm, optional)', 'Kimyasal kayma farkı (ppm, isteğe bağlı)');
+  static const referenceFrequency = Bi('Reference frequency', 'Referans frekansı');
+  static const fieldLabel = Bi('Magnetic field B₀', 'Manyetik alan B₀');
+  static const spinLabel = Bi('Spin I', 'Spin I');
+  static const quadrupolar = Bi('quadrupolar', 'kuadrupolar');
+  static const receptivityH = Bi('Receptivity vs ¹H', '¹H’ye göre alıcılık');
+  static const receptivityC = Bi('Receptivity vs ¹³C', '¹³C’ye göre alıcılık');
+  static const referenceCompound = Bi('Reference compound', 'Referans bileşiği');
+  static const allAtField = Bi('All nuclei at this field', 'Bu alanda tüm çekirdekler');
+  static const errSpectrometer = Bi('Enter the ¹H frequency in MHz', '¹H frekansını MHz olarak girin');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

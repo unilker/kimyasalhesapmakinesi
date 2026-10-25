@@ -29,6 +29,7 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
 | **Nükleer, atom ve kristal** | Radyoaktif bozunma ve aktivite; **radyonüklit tablosu** (NUBASE2020: 86 nüklit, yarılanma ± belirsizlik, bozunma türleri, özgül aktivite); Rydberg, Bohr, de Broglie, birim hücre |
 | **Analitik kimya** | İstatistik (ortalama ± t-güven aralığı, %RSD, Dixon Q, Grubbs), kalibrasyon doğrusu (LOD/LOQ, bilinmeyen ± güven aralığı); **kütle spektrometrisi** (tam kütle, izotop deseni, [M+H]⁺ vb. iyonlar) |
+| **NMR frekansları** | IUPAC 2001 Ξ ölçeğiyle 49 çekirdeğin her alandaki frekansı, ppm ⇄ Hz, spin, doğal bolluk, alıcılık |
 | **Belirsizlik yayılımı** | Herhangi bir formül ve değişkenler (x ± u) için GUM yöntemiyle y ± u, genişletilmiş belirsizlik, belirsizlik bütçesi; isteğe bağlı Monte Carlo (%95 aralığı) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
@@ -150,6 +151,7 @@ Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanm
 - Atom kütleleri: IUPAC/CIAAW 2024 standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
 - Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2022 / SI 2019.
 - İzotop kütleleri ve bollukları: NIST Atomic Weights and Isotopic Compositions.
+- NMR çekirdek özellikleri: Harris ve ark., IUPAC Recommendations 2001, Pure Appl. Chem. 73, 1795.
 - Yarılanma süreleri ve bozunma türleri: NUBASE2020 (Kondev ve ark., Chin. Phys. C 45, 030001, 2021); nüklit kütleleri AME2020.
 - pKa/pKb ve Ksp değerleri: CRC Handbook of Chemistry and Physics, 84. baskı.
 - Standart elektrot potansiyelleri: P. Vanýsek, "Electrochemical Series", CRC Handbook of Chemistry and Physics.

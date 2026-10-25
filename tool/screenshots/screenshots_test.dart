@@ -302,6 +302,12 @@ void main() {
     await _shot('phone_uncertainty');
   });
 
+  testWidgets('tablet nmr', (t) async {
+    await _pump(t, tablet);
+    await _openTool(t, 'NMR Frekansları');
+    await _shot('tablet_nmr');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

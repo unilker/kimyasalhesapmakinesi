@@ -56,7 +56,8 @@ jobs:
           python3 tool/gen_pka.py
           python3 tool/gen_ksp.py
           python3 tool/gen_nuclides.py
-          git diff --exit-code lib/core/thermo_data.dart lib/core/acid_data.dart lib/core/ksp_data.dart lib/core/nuclide_data.dart
+          python3 tool/gen_nmr.py
+          git diff --exit-code lib/core/thermo_data.dart lib/core/acid_data.dart lib/core/ksp_data.dart lib/core/nuclide_data.dart lib/core/nmr_data.dart
       - name: Cross-check equilibrium (ICE) solutions against 300-digit mpmath
         run: |
           pip install mpmath

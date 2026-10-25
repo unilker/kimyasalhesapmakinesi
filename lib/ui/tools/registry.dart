@@ -11,6 +11,7 @@ import 'hess_screen.dart';
 import 'ice_screen.dart';
 import 'mass_spec_screen.dart';
 import 'molar_mass_screen.dart';
+import 'nmr_screen.dart';
 import 'nuclide_screen.dart';
 import 'ph_scale.dart';
 import 'rate_data_screen.dart';
@@ -329,6 +330,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.analysis,
     keywords: 'mass spectrometry kütle spektrometrisi ms hrms exact mass tam kütle monoisotopic monoizotopik isotope izotop pattern desen m/z adduct esi',
     builder: (t) => MassSpecScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'nmr',
+    title: const Bi('NMR Frequencies', 'NMR Frekansları'),
+    subtitle: const Bi('Nuclei at any field, ppm ⇄ Hz', 'Her alanda çekirdekler, ppm ⇄ Hz'),
+    icon: Icons.graphic_eq_rounded,
+    color: Palette.cyan,
+    category: ToolCategory.analysis,
+    keywords: 'nmr nuclear magnetic resonance nükleer manyetik rezonans larmor frequency frekans ppm hz chemical shift kimyasal kayma spectrometer spektrometre receptivity alıcılık 13c 31p 19f',
+    builder: (t) => NmrScreen(tool: t),
   ),
   ToolInfo(
     id: 'units',
