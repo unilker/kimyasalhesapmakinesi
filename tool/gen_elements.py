@@ -9,7 +9,7 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 6|C|Carbon|Karbon|12.011|0|nonmetal|2.55|s
 7|N|Nitrogen|Azot|14.007|0|nonmetal|3.04|g
 8|O|Oxygen|Oksijen|15.999|0|nonmetal|3.44|g
-9|F|Fluorine|Flor|18.998403163|0|halogen|3.98|g
+9|F|Fluorine|Flor|18.998403162|0|halogen|3.98|g
 10|Ne|Neon|Neon|20.1797|0|nobleGas||g
 11|Na|Sodium|Sodyum|22.98976928|0|alkaliMetal|0.93|s
 12|Mg|Magnesium|Magnezyum|24.305|0|alkalineEarthMetal|1.31|s
@@ -18,7 +18,7 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 15|P|Phosphorus|Fosfor|30.973761998|0|nonmetal|2.19|s
 16|S|Sulfur|Kükürt|32.06|0|nonmetal|2.58|s
 17|Cl|Chlorine|Klor|35.45|0|halogen|3.16|g
-18|Ar|Argon|Argon|39.948|0|nobleGas||g
+18|Ar|Argon|Argon|39.95|0|nobleGas||g
 19|K|Potassium|Potasyum|39.0983|0|alkaliMetal|0.82|s
 20|Ca|Calcium|Kalsiyum|40.078|0|alkalineEarthMetal|1.00|s
 21|Sc|Scandium|Skandiyum|44.955907|0|transitionMetal|1.36|s
@@ -40,7 +40,7 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 37|Rb|Rubidium|Rubidyum|85.4678|0|alkaliMetal|0.82|s
 38|Sr|Strontium|Stronsiyum|87.62|0|alkalineEarthMetal|0.95|s
 39|Y|Yttrium|İtriyum|88.905838|0|transitionMetal|1.22|s
-40|Zr|Zirconium|Zirkonyum|91.224|0|transitionMetal|1.33|s
+40|Zr|Zirconium|Zirkonyum|91.222|0|transitionMetal|1.33|s
 41|Nb|Niobium|Niyobyum|92.90637|0|transitionMetal|1.6|s
 42|Mo|Molybdenum|Molibden|95.95|0|transitionMetal|2.16|s
 43|Tc|Technetium|Teknesyum|97|1|transitionMetal|1.9|s
@@ -64,15 +64,15 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 61|Pm|Promethium|Prometyum|145|1|lanthanide|1.13|s
 62|Sm|Samarium|Samaryum|150.36|0|lanthanide|1.17|s
 63|Eu|Europium|Evropiyum|151.964|0|lanthanide|1.2|s
-64|Gd|Gadolinium|Gadolinyum|157.25|0|lanthanide|1.20|s
+64|Gd|Gadolinium|Gadolinyum|157.249|0|lanthanide|1.20|s
 65|Tb|Terbium|Terbiyum|158.925354|0|lanthanide|1.1|s
 66|Dy|Dysprosium|Disprosyum|162.500|0|lanthanide|1.22|s
 67|Ho|Holmium|Holmiyum|164.930329|0|lanthanide|1.23|s
 68|Er|Erbium|Erbiyum|167.259|0|lanthanide|1.24|s
 69|Tm|Thulium|Tulyum|168.934219|0|lanthanide|1.25|s
 70|Yb|Ytterbium|İterbiyum|173.045|0|lanthanide|1.1|s
-71|Lu|Lutetium|Lutesyum|174.9668|0|lanthanide|1.27|s
-72|Hf|Hafnium|Hafniyum|178.49|0|transitionMetal|1.3|s
+71|Lu|Lutetium|Lutesyum|174.96669|0|lanthanide|1.27|s
+72|Hf|Hafnium|Hafniyum|178.486|0|transitionMetal|1.3|s
 73|Ta|Tantalum|Tantal|180.94788|0|transitionMetal|1.5|s
 74|W|Tungsten|Tungsten|183.84|0|transitionMetal|2.36|s
 75|Re|Rhenium|Renyum|186.207|0|transitionMetal|1.9|s
@@ -82,7 +82,7 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 79|Au|Gold|Altın|196.966570|0|transitionMetal|2.54|s
 80|Hg|Mercury|Cıva|200.592|0|transitionMetal|2.00|l
 81|Tl|Thallium|Talyum|204.38|0|postTransitionMetal|1.62|s
-82|Pb|Lead|Kurşun|207.2|0|postTransitionMetal|1.87|s
+82|Pb|Lead|Kurşun|207.2|0|postTransitionMetal|2.33|s
 83|Bi|Bismuth|Bizmut|208.98040|0|postTransitionMetal|2.02|s
 84|Po|Polonium|Polonyum|209|1|postTransitionMetal|2.0|s
 85|At|Astatine|Astatin|210|1|halogen|2.2|s
@@ -95,8 +95,8 @@ rows = """1|H|Hydrogen|Hidrojen|1.008|0|nonmetal|2.20|g
 92|U|Uranium|Uranyum|238.02891|0|actinide|1.38|s
 93|Np|Neptunium|Neptünyum|237|1|actinide|1.36|s
 94|Pu|Plutonium|Plütonyum|244|1|actinide|1.28|s
-95|Am|Americium|Amerikyum|243|1|actinide|1.13|s
-96|Cm|Curium|Küriyum|247|1|actinide|1.28|s
+95|Am|Americium|Amerikyum|243|1|actinide|1.3|s
+96|Cm|Curium|Küriyum|247|1|actinide|1.3|s
 97|Bk|Berkelium|Berkelyum|247|1|actinide|1.3|s
 98|Cf|Californium|Kaliforniyum|251|1|actinide|1.3|s
 99|Es|Einsteinium|Aynştaynyum|252|1|actinide|1.3|s

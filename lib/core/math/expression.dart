@@ -288,8 +288,6 @@ class _Parser {
     throw ExpressionException(ExpressionErrorKind.unknownName, name);
   }
 
-  double _toRad(double x) =>
-      angleMode == AngleMode.degrees ? x * math.pi / 180 : x;
   double _fromRad(double x) =>
       angleMode == AngleMode.degrees ? x * 180 / math.pi : x;
 
@@ -301,12 +299,16 @@ class _Parser {
 
     switch (f) {
       case 'sin':
-        return _clean(math.sin(_toRad(x)));
+        return angleMode == AngleMode.degrees ? sinDeg(x) : _clean(math.sin(x));
       case 'cos':
-        return _clean(math.cos(_toRad(x)));
+        return angleMode == AngleMode.degrees ? cosDeg(x) : _clean(math.cos(x));
       case 'tan':
-        final c = _clean(math.cos(_toRad(x)));
-        return domain(c != 0, () => _clean(math.tan(_toRad(x))));
+        if (angleMode == AngleMode.degrees) {
+          final t = tanDeg(x);
+          return domain(t != null, () => t!);
+        }
+        final c = _clean(math.cos(x));
+        return domain(c != 0, () => _clean(math.tan(x)));
       case 'asin':
         return domain(x.abs() <= 1, () => _fromRad(math.asin(x)));
       case 'acos':
@@ -341,6 +343,55 @@ class _Parser {
     }
     throw ExpressionException(ExpressionErrorKind.unknownName, f);
   }
+}
+
+/// Sine of an angle in degrees. The angle is first reduced exactly modulo
+/// 360° (so huge arguments stay accurate) and the textbook angles give exact
+/// results: sin 30° = 0.5, sin 180° = 0.
+double sinDeg(double x) {
+  final r = x % 360; // exact for doubles, in [0, 360)
+  switch (r) {
+    case 0 || 180:
+      return 0;
+    case 30 || 150:
+      return 0.5;
+    case 90:
+      return 1;
+    case 210 || 330:
+      return -0.5;
+    case 270:
+      return -1;
+    case 45 || 135:
+      return math.sqrt1_2;
+    case 225 || 315:
+      return -math.sqrt1_2;
+    case 60 || 120:
+      return _sqrt3Half;
+    case 240 || 300:
+      return -_sqrt3Half;
+  }
+  return math.sin(r * (math.pi / 180));
+}
+
+const double _sqrt3Half = 0.8660254037844386; // √3 / 2, correctly rounded
+
+/// Cosine in degrees (cos x = sin(x + 90°), with exact reduction).
+double cosDeg(double x) => sinDeg((x % 360) + 90);
+
+/// Tangent in degrees; null where it is undefined (90°, 270°).
+double? tanDeg(double x) {
+  final r = x % 360;
+  switch (r) {
+    case 90 || 270:
+      return null;
+    case 0 || 180:
+      return 0;
+    case 45 || 225:
+      return 1;
+    case 135 || 315:
+      return -1;
+  }
+  return math.tan(r * (math.pi / 180));
 }
 
 /// log10 that returns exact integers for exact powers of ten.
