@@ -32,6 +32,11 @@ Future<void> _loadFonts() async {
     await l.load();
   }
   // resolvedExecutable: <flutter>/bin/cache/dart-sdk/bin/dart (or similar)
+  const emoji = '/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf';
+  if (File(emoji).existsSync()) {
+    final l = FontLoader('NotoColorEmoji')..addFont(Future.value(ByteData.sublistView(File(emoji).readAsBytesSync())));
+    await l.load();
+  }
   var dir = File(Platform.resolvedExecutable).parent;
   while (!File('${dir.path}/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf').existsSync() &&
       dir.parent.path != dir.path) {
