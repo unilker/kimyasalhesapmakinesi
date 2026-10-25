@@ -10,6 +10,7 @@ They run in CI on every push.
 | All unit conversion factors | [pint](https://pint.readthedocs.io) | `pip install pint && python3 tool/crosscheck/check_units.py` |
 | Student t quantiles (1 200), Grubbs critical values (294), 300 random regressions and summaries | scipy / numpy | `flutter test tool/crosscheck/dump_stats_test.dart && python3 tool/crosscheck/check_stats.py tool/crosscheck/out_stats.json` |
 | 400 random titrations (strong/weak, polyprotic acids, bases, salts) | Charge balance solved independently with `scipy.optimize.brentq` | `flutter test tool/crosscheck/dump_titration_test.dart && python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json` |
+| 1 000 random equilibria (ICE tables, K from 1e-30 to 1e30, solids/liquids, every concentration to 1e-9 relative) | Q(x) = K solved by 300-digit [mpmath](https://mpmath.org) bisection | `pip install mpmath && flutter test tool/crosscheck/dump_ice_test.dart && python3 tool/crosscheck/check_ice.py tool/crosscheck/out_ice.json` |
 
 Further reference tests live in `test/core/`:
 `atomic_weights_test.dart` (CIAAW 2024), `pubchem_mw_test.dart` (PubChem

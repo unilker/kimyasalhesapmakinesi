@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/app.dart';
+import 'package:kimya_hesap/core/chem/formula.dart' show prettyEquation;
 import 'package:kimya_hesap/state/app_state.dart';
 import 'package:kimya_hesap/ui/common.dart' show ToolScaffold;
 import 'package:kimya_hesap/ui/home/home_screen.dart';
@@ -247,6 +248,75 @@ void main() {
     // 25 mL of 0.1 M HA (pKa 4.76) with 0.1 M NaOH → EP at 25 mL, pH 8.730
     await seek(tester, find.text('25 mL · pH 8,73'));
     await seek(tester, find.textContaining('Fenolftalein'));
+  });
+
+  testWidgets('ICE table: H2 + I2 ⇌ 2HI example', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Denge Tablosu (ICE)');
+    await seek(tester, find.text('H₂ + I₂ ⇌ 2HI'));
+    await tester.tap(find.text('H₂ + I₂ ⇌ 2HI'));
+    await tester.pumpAndSettle();
+    // Kc = 54.3, 0.500 M each → [H2] = 0.106737, [HI] = 0.786527 (Chang)
+    await seek(tester, find.textContaining('[HI] = 0,786527'));
+    expect(find.textContaining('[H₂] = 0,106737'), findsWidgets);
+    expect(state.history.first.toolId, 'ice');
+  });
+
+  for (final name in ['small phone', 'small phone landscape']) {
+    testWidgets('ICE table: every example renders on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Denge Tablosu (ICE)');
+      for (final eq in ['H2 + I2 ⇌ 2HI', 'N2O4 ⇌ 2NO2', 'CH3COOH ⇌ H^+ + CH3COO^-',
+          'NH3 + H2O(l) ⇌ NH4^+ + OH^-', 'AgCl(s) ⇌ Ag^+ + Cl^-', 'N2 + 3H2 ⇌ 2NH3']) {
+        final chip = find.widgetWithText(ActionChip, prettyEquation(eq));
+        await seek(tester, chip);
+        await tester.tap(chip);
+        await tester.pumpAndSettle();
+        await seek(tester, find.text('Denge bileşimi'));
+        expect(tester.takeException(), isNull);
+        tester
+            .state<ScrollableState>(
+                find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+            .position
+            .jumpTo(0);
+        await tester.pumpAndSettle();
+      }
+    });
+  }
+
+  for (final title in ['Denge Tablosu (ICE)', 'Denklem ve Stokiyometri', 'İstatistik ve Kalibrasyon']) {
+    testWidgets('dragging on the equation field scrolls the page ($title)', (tester) async {
+      await pumpApp(tester, sizes['small phone']!);
+      await openTool(tester, title);
+      final field = find.byType(TextField).first;
+      await tester.enterText(field, 'NH3 + H2O(l) ⇌ NH4^+ + OH^- + CH3COOH');
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+      final page = tester.state<ScrollableState>(
+          find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first);
+      final before = page.position.pixels;
+      await tester.dragFrom(tester.getCenter(field), const Offset(0, -150));
+      await tester.pumpAndSettle();
+      expect(page.position.pixels, greaterThan(before + 50));
+    });
+  }
+
+  testWidgets('ICE table: typed reaction with a pure solid', (tester) async {
+    await pumpApp(tester, const Size(390, 844), lang: 'en');
+    await openTool(tester, 'ICE Table');
+    await tester.enterText(find.byType(TextField).first, 'AgCl(s) = Ag+ + Cl-');
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('not in K'));
+    Finder field(String label) => find.ancestor(of: find.text(label), matching: find.byType(TextField));
+    await seek(tester, field('Equilibrium constant K'));
+    await tester.enterText(field('Equilibrium constant K'), '1.77e-10');
+    await seek(tester, field('[Cl⁻]₀'));
+    await tester.enterText(field('[Cl⁻]₀'), '0');
+    await seek(tester, find.text('Calculate'));
+    await tester.tap(find.text('Calculate'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('= 1.33041 × 10⁻⁵'));
   });
 
   testWidgets('history limit trims old entries', (tester) async {

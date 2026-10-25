@@ -140,7 +140,10 @@ class _StatsScreenState extends State<StatsScreen> {
         TextField(
           controller: _values,
           minLines: 3,
-          maxLines: 8,
+          maxLines: null,
+          // The field grows with the data and the page scrolls; vertical
+          // drags on it must reach the page.
+          scrollPhysics: const NeverScrollableScrollPhysics(),
           keyboardType: TextInputType.multiline,
           onChanged: (_) => setState(_reset),
           style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
@@ -155,7 +158,10 @@ class _StatsScreenState extends State<StatsScreen> {
         TextField(
           controller: _pairs,
           minLines: 4,
-          maxLines: 12,
+          maxLines: null,
+          // The field grows with the data and the page scrolls; vertical
+          // drags on it must reach the page.
+          scrollPhysics: const NeverScrollableScrollPhysics(),
           keyboardType: TextInputType.multiline,
           onChanged: (_) => setState(_reset),
           style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),

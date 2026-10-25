@@ -135,9 +135,61 @@ BalancedEquation balanceEquation(String input) {
   return BalancedEquation(left, right, [for (final n in ints) n.toInt()]);
 }
 
-List<Species> _parseSide(String side) {
+/// An equation with the coefficients exactly as written (1 when omitted).
+class WrittenEquation {
+  const WrittenEquation(this.reactants, this.products, this.coefficients, this.hasCoefficients);
+
+  final List<Species> reactants;
+  final List<Species> products;
+  final List<double> coefficients;
+
+  /// Whether any coefficient was written explicitly.
+  final bool hasCoefficients;
+
+  List<Species> get species => [...reactants, ...products];
+
+  /// Atoms and charge are conserved with the written coefficients.
+  bool get isBalanced {
+    final all = species;
+    final net = <String, double>{};
+    var charge = 0.0;
+    for (var j = 0; j < all.length; j++) {
+      final sign = j < reactants.length ? 1.0 : -1.0;
+      all[j].formula.atoms.forEach((s, n) {
+        net[s] = (net[s] ?? 0) + sign * coefficients[j] * n;
+      });
+      charge += sign * coefficients[j] * all[j].formula.charge;
+    }
+    return charge.abs() < 1e-9 && net.values.every((v) => v.abs() < 1e-9);
+  }
+}
+
+/// Parses an equation keeping its written coefficients (decimals allowed,
+/// e.g. `0.5N2 + 1.5H2 = NH3`) without balancing it.
+WrittenEquation parseWrittenEquation(String input) {
+  final normalized = input.replaceAll('−', '-').replaceAll('–', '-');
+  final m = _arrow.firstMatch(normalized);
+  if (m == null) throw const EquationException(EquationErrorKind.noArrow);
+  final left = _parseSideWithCoefficients(normalized.substring(0, m.start));
+  final right = _parseSideWithCoefficients(normalized.substring(m.end));
+  if (left.isEmpty || right.isEmpty) {
+    throw const EquationException(EquationErrorKind.emptySide);
+  }
+  final all = [...left, ...right];
+  return WrittenEquation(
+    [for (final e in left) e.$1],
+    [for (final e in right) e.$1],
+    [for (final e in all) e.$2 ?? 1],
+    all.any((e) => e.$2 != null),
+  );
+}
+
+List<Species> _parseSide(String side) =>
+    [for (final e in _parseSideWithCoefficients(side)) e.$1];
+
+List<(Species, double?)> _parseSideWithCoefficients(String side) {
   final parts = _splitSpecies(side.trim());
-  final result = <Species>[];
+  final result = <(Species, double?)>[];
   for (var raw in parts) {
     raw = raw.replaceAll(' ', '');
     if (raw.isEmpty) continue;
@@ -147,9 +199,14 @@ List<Species> _parseSide(String side) {
       state = sm.group(1)!;
       raw = raw.substring(0, sm.start);
     }
+    final cm = _leadingCoef.firstMatch(raw);
+    final coefficient = cm == null ? null : double.parse(cm.group(0)!);
+    if (coefficient != null && coefficient <= 0) {
+      throw EquationException(EquationErrorKind.invalidSpecies, detail: raw);
+    }
     raw = raw.replaceFirst(_leadingCoef, '');
     try {
-      result.add(Species(raw, ChemicalFormula.parse(raw), state));
+      result.add((Species(raw, ChemicalFormula.parse(raw), state), coefficient));
     } on FormulaException catch (e) {
       throw EquationException(
         EquationErrorKind.invalidSpecies,
