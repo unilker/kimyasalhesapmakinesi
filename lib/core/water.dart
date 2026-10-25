@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'constants.dart';
+
 /// Properties of liquid water and its vapour pressure.
 
 /// Relative permittivity of water at [celsius] (Malmberg & Maryott,
@@ -73,6 +75,37 @@ double? waterBoilingPoint(double pascal) {
     }
   }
   return (lo + hi) / 2;
+}
+
+/// Molar masses of water and of dry air (CIPM-2007, Picard et al. 2008),
+/// g/mol.
+const double waterMolarMass = 18.015268;
+const double dryAirMolarMass = 28.96546;
+
+/// Humidity of air at [celsius] and relative humidity [rhPercent] (with
+/// respect to liquid water), from the Wagner–Pruß saturation pressure.
+/// The enhancement factor of moist air (< 0.5 % near 1 atm) is neglected.
+class Humidity {
+  Humidity(this.celsius, this.rhPercent)
+      : partialPressure = rhPercent / 100 * waterVaporPressure(celsius + 273.15);
+
+  final double celsius, rhPercent;
+
+  /// Partial pressure of water vapour, Pa.
+  final double partialPressure;
+
+  /// Dew point in °C; null below the triple point (frost point instead).
+  double? get dewPoint {
+    final t = waterBoilingPoint(partialPressure);
+    return t == null ? null : t - 273.15;
+  }
+
+  /// Water vapour per volume of air, g/m³ (ideal gas).
+  double get absolute => partialPressure * waterMolarMass / (gasConstant * (celsius + 273.15));
+
+  /// Mixing ratio (g water per kg dry air) at total pressure [pascal].
+  double? mixingRatio(double pascal) =>
+      pascal > partialPressure ? 1000 * waterMolarMass / dryAirMolarMass * partialPressure / (pascal - partialPressure) : null;
 }
 
 double _log10(double x) => math.log(x) / math.ln10;

@@ -31,8 +31,8 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Analitik kimya** | İstatistik (ortalama ± t-güven aralığı, %RSD, Dixon Q, Grubbs), kalibrasyon doğrusu (LOD/LOQ, bilinmeyen ± güven aralığı); **kütle spektrometrisi** (tam kütle, izotop deseni, [M+H]⁺ vb. iyonlar) |
 | **NMR frekansları** | IUPAC 2001 Ξ ölçeğiyle 49 çekirdeğin her alandaki frekansı, ppm ⇄ Hz, spin, doğal bolluk, alıcılık |
 | **Belirsizlik yayılımı** | Herhangi bir formül ve değişkenler (x ± u) için GUM yöntemiyle y ± u, genişletilmiş belirsizlik, belirsizlik bütçesi; isteğe bağlı Monte Carlo (%95 aralığı) |
-| **İyonik şiddet ve aktiflik** | I = ½Σcz²; genişletilmiş Debye–Hückel (Kielland iyon boyutları), Davies ve limit yasası ile γ ve aktiflik; 0–100 °C için A ve B suyun dielektrik sabitinden; tuz hızlı ekleme |
-| **Suyun özellikleri** | 0–100 °C arasında Kw, pKw ve nötr pH (IAPWS R11-24), yoğunluk, buhar basıncı (Wagner–Pruß), dielektrik sabiti; verilen basınçta kaynama noktası |
+| **İyonik şiddet ve aktiflik** | I = ½Σcz²; genişletilmiş Debye–Hückel (Kielland iyon boyutları), Davies ve limit yasası ile γ ve aktiflik; 0–100 °C için A ve B suyun dielektrik sabitinden; 25 °C için Kohlrausch iletkenliği (κ) ve taşıma sayıları; tuz hızlı ekleme |
+| **Suyun özellikleri** | 0–100 °C arasında Kw, pKw ve nötr pH (IAPWS R11-24), yoğunluk, buhar basıncı (Wagner–Pruß), dielektrik sabiti; verilen basınçta kaynama noktası; havanın nemi (çiy noktası, mutlak nem, karışım oranı) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
 
@@ -156,6 +156,7 @@ Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanm
 - NMR çekirdek özellikleri: Harris ve ark., IUPAC Recommendations 2001, Pure Appl. Chem. 73, 1795.
 - X-ışını Kα₁ dalga boyları: Hölzer ve ark., Phys. Rev. A 56, 4554 (1997). İki atomlu ωₑ değerleri: Huber & Herzberg, NIST Chemistry WebBook.
 - İyon boyutları: Kielland, J. Am. Chem. Soc. 59, 1675 (1937) (Harris, Quantitative Chemical Analysis, Tablo 7-1); suyun dielektrik sabiti: Malmberg & Maryott, J. Res. NBS 56, 1 (1956); yoğunluğu: Kell, J. Chem. Eng. Data 20, 97 (1975).
+- Sınır iyon iletkenlikleri: P. Vanýsek, CRC Handbook of Chemistry and Physics (Ionic conductivity and diffusion at infinite dilution).
 - Suyun iyonlaşma sabiti: IAPWS R11-24 (Arcis ve ark., J. Phys. Chem. Ref. Data 53, 023103, 2024); buhar basıncı: Wagner & Pruß, J. Phys. Chem. Ref. Data 22, 783 (1993).
 - Yarılanma süreleri ve bozunma türleri: NUBASE2020 (Kondev ve ark., Chin. Phys. C 45, 030001, 2021); nüklit kütleleri AME2020.
 - pKa/pKb ve Ksp değerleri: CRC Handbook of Chemistry and Physics, 84. baskı.
