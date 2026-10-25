@@ -39,6 +39,11 @@ jobs:
           python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json
           flutter test tool/crosscheck/dump_kinetics_test.dart
           python3 tool/crosscheck/check_kinetics.py tool/crosscheck/out_kinetics.json
+      - name: Cross-check uncertainty propagation against the uncertainties package
+        run: |
+          pip install uncertainties
+          flutter test tool/crosscheck/dump_uncertainty_test.dart
+          python3 tool/crosscheck/check_uncertainty.py tool/crosscheck/out_uncertainty.json
       - name: Cross-check isotope patterns with an independent fine-structure algorithm
         run: |
           python3 tool/gen_isotopes.py

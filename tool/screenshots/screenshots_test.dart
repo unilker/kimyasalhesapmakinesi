@@ -294,6 +294,14 @@ void main() {
     await _shot('phone_speciation');
   });
 
+  testWidgets('phone uncertainty', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Belirsizlik Yayılımı');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.text('Belirsizlik bütçesi'));
+    await _shot('phone_uncertainty');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

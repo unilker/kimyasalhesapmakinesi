@@ -470,6 +470,33 @@ class S {
   static const dominantSpecies = Bi('Dominant species', 'Baskın tür');
   static const meanProtonsRemoved = Bi('Protons removed per molecule', 'Molekül başına ayrılan proton');
 
+  // Uncertainty propagation
+  static const uncNote = Bi(
+    'GUM law of propagation for independent inputs (first order, derivatives by Richardson-extrapolated differences); optional Monte Carlo check with normal inputs (GUM Supplement 1).',
+    'Bağımsız girdiler için GUM yayılım yasası (birinci derece, türevler Richardson ekstrapolasyonlu farklarla); isteğe bağlı Monte Carlo kontrolü, normal dağılımlı girdilerle (GUM Ek 1).',
+  );
+  static const uncExpression = Bi('Expression, e.g. m/(M*V)', 'İfade, ör. m/(M*V)');
+  static const uncVariables = Bi('Variables: value ± standard uncertainty', 'Değişkenler: değer ± standart belirsizlik');
+  static const uncName = Bi('Name', 'Ad');
+  static const uncValue = Bi('Value', 'Değer');
+  static const uncU = Bi('± u', '± u');
+  static const addVariable = Bi('Add variable', 'Değişken ekle');
+  static const combinedU = Bi('Combined standard uncertainty u', 'Birleşik standart belirsizlik u');
+  static const relativeU = Bi('Relative uncertainty', 'Bağıl belirsizlik');
+  static const expandedU = Bi('Expanded uncertainty U (k = 2, ≈95 %)', 'Genişletilmiş belirsizlik U (k = 2, ≈%95)');
+  static const budgetTitle = Bi('Uncertainty budget', 'Belirsizlik bütçesi');
+  static const monteCarloLabel = Bi('Monte Carlo check (20 000 draws)', 'Monte Carlo kontrolü (20 000 çekiliş)');
+  static const mcInterval = Bi('95 % coverage interval', '%95 kapsama aralığı');
+  static const mcMeanSd = Bi('Mean ± standard deviation', 'Ortalama ± standart sapma');
+  static const errVariableName = Bi(
+    'Variable names may contain letters only (no digits), and not sin, ln, e, pi …',
+    'Değişken adları yalnızca harflerden oluşabilir (rakam olmaz) ve sin, ln, e, pi … olamaz',
+  );
+  static const errVariableValue = Bi('Enter a value and an uncertainty ≥ 0 for every variable',
+      'Her değişken için bir değer ve ≥ 0 belirsizlik girin');
+  static const angleRad = Bi('Angles in radians', 'Açılar radyan');
+  static const angleDeg = Bi('Angles in degrees', 'Açılar derece');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

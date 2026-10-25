@@ -29,6 +29,7 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
 | **Nükleer, atom ve kristal** | Radyoaktif bozunma ve aktivite; **radyonüklit tablosu** (NUBASE2020: 86 nüklit, yarılanma ± belirsizlik, bozunma türleri, özgül aktivite); Rydberg, Bohr, de Broglie, birim hücre |
 | **Analitik kimya** | İstatistik (ortalama ± t-güven aralığı, %RSD, Dixon Q, Grubbs), kalibrasyon doğrusu (LOD/LOQ, bilinmeyen ± güven aralığı); **kütle spektrometrisi** (tam kütle, izotop deseni, [M+H]⁺ vb. iyonlar) |
+| **Belirsizlik yayılımı** | Herhangi bir formül ve değişkenler (x ± u) için GUM yöntemiyle y ± u, genişletilmiş belirsizlik, belirsizlik bütçesi; isteğe bağlı Monte Carlo (%95 aralığı) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
 
