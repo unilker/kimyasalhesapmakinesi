@@ -6,6 +6,7 @@ import '../theme.dart';
 import 'balancer_screen.dart';
 import 'constants_screen.dart';
 import 'empirical_screen.dart';
+import 'ice_screen.dart';
 import 'molar_mass_screen.dart';
 import 'ph_scale.dart';
 import 'solver_screen.dart';
@@ -151,6 +152,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.reactions,
     keywords: 'equilibrium denge kp kc ksp solubility çözünürlük çökelme precipitate',
     builder: (t) => SolverScreen(tool: t, equations: equilibriumEquations),
+  ),
+  ToolInfo(
+    id: 'ice',
+    title: const Bi('ICE Table', 'Denge Tablosu (ICE)'),
+    subtitle: const Bi('Equilibrium composition from K', 'K’den denge derişimleri'),
+    icon: Icons.table_chart_rounded,
+    color: Palette.indigo,
+    category: ToolCategory.reactions,
+    keywords: 'ice table equilibrium denge kc kp concentration derişim başlangıç değişim extent le chatelier common ion ortak iyon',
+    builder: (t) => IceScreen(tool: t),
   ),
   ToolInfo(
     id: 'gas',

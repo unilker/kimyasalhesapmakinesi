@@ -336,6 +336,37 @@ class S {
   );
   static const invalidPKa = Bi('Check the pKa values', 'pKa değerlerini kontrol edin');
 
+  // ICE table
+  static const iceNote = Bi(
+    'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',
+    'K’yi denklemin yazıldığı hâline göre girin. Kc için mol/L, Kp için kısmi basınç kullanın; (s) veya (l) ile işaretli saf katı ve sıvılar ifadeye girmez.',
+  );
+  static const reactionLabel = Bi('Reaction', 'Tepkime');
+  static const iceReactionHint = Bi('e.g. H2 + I2 = 2HI', 'ör. H2 + I2 = 2HI');
+  static const equilibriumConstant = Bi('Equilibrium constant K', 'Denge sabiti K');
+  static const initialAmounts = Bi('Initial concentrations', 'Başlangıç derişimleri');
+  static const initialOf = Bi('Initial', 'Başlangıç');
+  static const changeOf = Bi('Change', 'Değişim');
+  static const equilibriumOf = Bi('Equilibrium', 'Denge');
+  static const equilibriumComposition = Bi('Equilibrium composition', 'Denge bileşimi');
+  static const extentLabel = Bi('Extent of reaction x', 'Tepkime ilerleme miktarı x');
+  static const shiftsRight = Bi('Q < K: the reaction proceeds to the right', 'Q < K: tepkime sağa (ürünlere) ilerler');
+  static const shiftsLeft = Bi('Q > K: the reaction proceeds to the left', 'Q > K: tepkime sola (girenlere) ilerler');
+  static const atEquilibrium = Bi('Q = K: already at equilibrium', 'Q = K: sistem zaten dengede');
+  static const initialQ = Bi('Initial Q', 'Başlangıç Q');
+  static const pureSolidLiquid = Bi('pure solid/liquid – not in K', 'saf katı/sıvı – K’ye girmez');
+  static const autoBalancedNote = Bi('Balanced automatically – K must refer to this equation',
+      'Otomatik denkleştirildi – K bu denkleme ait olmalı');
+  static const errUnbalancedWritten = Bi('The written coefficients do not balance the equation',
+      'Yazılan katsayılar denklemi denkleştirmiyor');
+  static const errNoIceSpecies = Bi('At least one dissolved or gaseous species is needed',
+      'En az bir çözünmüş veya gaz hâlinde tür gerekli');
+  static const errNoReaction = Bi(
+      'The reaction cannot proceed in either direction: add some reactant or product',
+      'Tepkime iki yönde de ilerleyemiyor: biraz giren ya da ürün ekleyin');
+  static const errPositiveK = Bi('K must be a positive number; concentrations cannot be negative',
+      'K pozitif bir sayı olmalı; derişimler negatif olamaz');
+
   // pH scale
   static const acidic = Bi('Acidic', 'Asidik');
   static const neutral = Bi('Neutral', 'Nötr');

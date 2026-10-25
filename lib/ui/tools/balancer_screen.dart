@@ -125,6 +125,9 @@ class _BalancerScreenState extends State<BalancerScreen> {
         enableSuggestions: false,
         minLines: 1,
         maxLines: 3,
+        // Let vertical drags on the field scroll the page; the field still
+        // follows the caret when an equation is longer than three lines.
+        scrollPhysics: const NeverScrollableScrollPhysics(),
         textInputAction: TextInputAction.done,
         onSubmitted: (_) => _balance(),
         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),

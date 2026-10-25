@@ -37,6 +37,11 @@ jobs:
           python3 tool/crosscheck/check_stats.py tool/crosscheck/out_stats.json
           flutter test tool/crosscheck/dump_titration_test.dart
           python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json
+      - name: Cross-check equilibrium (ICE) solutions against 300-digit mpmath
+        run: |
+          pip install mpmath
+          flutter test tool/crosscheck/dump_ice_test.dart
+          python3 tool/crosscheck/check_ice.py tool/crosscheck/out_ice.json
 
   android:
     needs: test
