@@ -49,4 +49,20 @@ void main() {
     expect(waterDensity(3.98), greaterThan(waterDensity(6)));
     expect(waterDensity(3.98), closeTo(999.972, 0.002));
   });
+
+  test('humidity: dew point, absolute humidity and mixing ratio', () {
+    final h = Humidity(25, 50);
+    expect(h.partialPressure, closeTo(1584.9, 0.1));
+    // psychrometric tables: 25 °C / 50 % → dew point 13.9 °C, 11.5 g/m³, 9.9 g/kg
+    expect(h.dewPoint!, closeTo(13.86, 0.02));
+    expect(h.absolute, closeTo(11.52, 0.02));
+    expect(h.mixingRatio(101325)!, closeTo(9.88, 0.02));
+    // saturated air: the dew point is the air temperature
+    expect(Humidity(30, 100).dewPoint!, closeTo(30, 1e-9));
+    // saturated at 20 °C: 17.3 g/m³ (CRC humidity table 17.30)
+    expect(Humidity(20, 100).absolute, closeTo(17.3, 0.05));
+    // dew point below 0 °C is a frost point: not given
+    expect(Humidity(5, 20).dewPoint, isNull);
+    expect(Humidity(25, 50).mixingRatio(1000), isNull);
+  });
 }

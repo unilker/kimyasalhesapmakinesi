@@ -565,6 +565,12 @@ class S {
   static const waterTable = Bi('Water from 0 to 100 °C', '0–100 °C arasında su');
   static const errBoilingPressure = Bi('Enter a pressure between 0.612 and 22 064 kPa',
       '0,612 ile 22 064 kPa arasında bir basınç girin');
+  static const relativeHumidity = Bi('Relative humidity of air', 'Havanın bağıl nemi');
+  static const dewPoint = Bi('Dew point', 'Çiy noktası');
+  static const vapourPartialPressure = Bi('Partial pressure of water vapour', 'Su buharının kısmi basıncı');
+  static const absoluteHumidity = Bi('Absolute humidity', 'Mutlak nem');
+  static const mixingRatio = Bi('Mixing ratio', 'Karışım oranı');
+  static const errHumidity = Bi('Enter a relative humidity between 0 and 100 %', '0 ile 100 arasında bir bağıl nem (%) girin');
 
   // ICE table
   static const iceNote = Bi(

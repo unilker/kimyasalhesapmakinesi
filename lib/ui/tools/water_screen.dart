@@ -20,6 +20,7 @@ class WaterScreen extends StatefulWidget {
 class _WaterScreenState extends State<WaterScreen> {
   final _t = TextEditingController(text: '25');
   final _p = TextEditingController();
+  final _rh = TextEditingController(text: '50');
 
   @override
   void didChangeDependencies() {
@@ -31,6 +32,7 @@ class _WaterScreenState extends State<WaterScreen> {
   void dispose() {
     _t.dispose();
     _p.dispose();
+    _rh.dispose();
     super.dispose();
   }
 
@@ -80,6 +82,12 @@ class _WaterScreenState extends State<WaterScreen> {
         onChanged: (_) => setState(() {}),
         trailing: unit('kPa'),
       ),
+      NumberField(
+        controller: _rh,
+        label: context.t(S.relativeHumidity),
+        onChanged: (_) => setState(() {}),
+        trailing: unit('%'),
+      ),
       FilledButton.icon(
         onPressed: _save,
         icon: const Icon(Icons.calculate_rounded),
@@ -92,6 +100,7 @@ class _WaterScreenState extends State<WaterScreen> {
     final results = <Widget>[
       if (t == null || t < 0 || t > 100) ErrorBanner(context.t(S.errWaterTemperature)) else _atTemperature(t),
       _boiling(p),
+      if (t != null && t >= 0 && t <= 100) _humidity(t, parseNumberInput(_rh.text), p),
       _table(),
     ];
     return ToolScaffold(
@@ -136,6 +145,26 @@ class _WaterScreenState extends State<WaterScreen> {
       children: [
         const Divider(height: 18),
         InfoRow('T', '${nf.format(tb, digits: 6)} K'),
+      ],
+    );
+  }
+
+  Widget _humidity(double t, double? rh, double? kpa) {
+    if (rh == null || rh <= 0 || rh > 100) return ErrorBanner(context.t(S.errHumidity));
+    final nf = context.nf;
+    final h = Humidity(t, rh);
+    final dew = h.dewPoint;
+    final w = kpa == null ? null : h.mixingRatio(kpa * 1000);
+    return ResultCard(
+      color: widget.tool.color,
+      label: '${context.t(S.dewPoint)} (${nf.format(t)} °C, ${context.percent(rh)})',
+      value: dew == null ? '< 0 °C' : '${nf.format(dew, digits: 4)} °C',
+      copyValue: dew == null ? '' : nf.plain(dew, digits: 4),
+      children: [
+        const Divider(height: 18),
+        InfoRow(context.t(S.vapourPartialPressure), '${nf.format(h.partialPressure / 1000, digits: 4)} kPa'),
+        InfoRow(context.t(S.absoluteHumidity), '${nf.format(h.absolute, digits: 4)} g/m³'),
+        if (w != null) InfoRow('${context.t(S.mixingRatio)} (${nf.format(kpa!)} kPa)', '${nf.format(w, digits: 4)} g/kg'),
       ],
     );
   }

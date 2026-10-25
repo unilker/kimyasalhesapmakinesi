@@ -748,6 +748,8 @@ void main() {
     await openTool(tester, 'Suyun Özellikleri');
     await seek(tester, find.text('6,997'));
     await seek(tester, find.text('99,974 °C'));
+    // 25 °C, 50 % relative humidity
+    await seek(tester, find.text('13,86 °C'));
     tester
         .state<ScrollableState>(
             find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)

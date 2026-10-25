@@ -32,7 +32,7 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **NMR frekansları** | IUPAC 2001 Ξ ölçeğiyle 49 çekirdeğin her alandaki frekansı, ppm ⇄ Hz, spin, doğal bolluk, alıcılık |
 | **Belirsizlik yayılımı** | Herhangi bir formül ve değişkenler (x ± u) için GUM yöntemiyle y ± u, genişletilmiş belirsizlik, belirsizlik bütçesi; isteğe bağlı Monte Carlo (%95 aralığı) |
 | **İyonik şiddet ve aktiflik** | I = ½Σcz²; genişletilmiş Debye–Hückel (Kielland iyon boyutları), Davies ve limit yasası ile γ ve aktiflik; 0–100 °C için A ve B suyun dielektrik sabitinden; 25 °C için Kohlrausch iletkenliği (κ) ve taşıma sayıları; tuz hızlı ekleme |
-| **Suyun özellikleri** | 0–100 °C arasında Kw, pKw ve nötr pH (IAPWS R11-24), yoğunluk, buhar basıncı (Wagner–Pruß), dielektrik sabiti; verilen basınçta kaynama noktası |
+| **Suyun özellikleri** | 0–100 °C arasında Kw, pKw ve nötr pH (IAPWS R11-24), yoğunluk, buhar basıncı (Wagner–Pruß), dielektrik sabiti; verilen basınçta kaynama noktası; havanın nemi (çiy noktası, mutlak nem, karışım oranı) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
 
