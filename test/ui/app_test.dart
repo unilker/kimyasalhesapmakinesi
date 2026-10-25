@@ -767,23 +767,25 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('home tools switch between tiles and full-width rows', (tester) async {
+  testWidgets('home tools: full-width rows by default, tiles on request', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
-    expect(state.toolLayout, ToolLayout.grid);
-    final card = find.byType(ToolCard).first;
-    final tileWidth = tester.getSize(card).width;
-    await tester.tap(find.byTooltip('Araçları liste olarak göster'));
-    await tester.pumpAndSettle();
     expect(state.toolLayout, ToolLayout.list);
     // one card per row: the row spans the content width (390 − 2 × 16)
-    expect(tester.getSize(find.byType(ToolCard).first).width, closeTo(358, 0.5));
-    expect(tester.getSize(find.byType(ToolCard).first).width, greaterThan(tileWidth * 1.8));
+    final rowWidth = tester.getSize(find.byType(ToolCard).first).width;
+    expect(rowWidth, closeTo(358, 0.5));
     await openTool(tester, 'Mol Kütlesi');
     expect(find.text('Mol Kütlesi'), findsWidgets);
     await back(tester);
     await tester.tap(find.byTooltip('Araçları kutucuk olarak göster'));
     await tester.pumpAndSettle();
     expect(state.toolLayout, ToolLayout.grid);
+    expect(tester.getSize(find.byType(ToolCard).first).width, lessThan(rowWidth / 1.8));
+    await openTool(tester, 'Mol Kütlesi');
+    expect(find.text('Mol Kütlesi'), findsWidgets);
+    await back(tester);
+    await tester.tap(find.byTooltip('Araçları liste olarak göster'));
+    await tester.pumpAndSettle();
+    expect(state.toolLayout, ToolLayout.list);
     expect(tester.takeException(), isNull);
   });
 

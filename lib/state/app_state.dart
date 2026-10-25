@@ -97,7 +97,7 @@ class AppState extends ChangeNotifier {
   bool _showRotateButton = true;
   double _rotateButtonY = 0.2;
   bool _rotateButtonLeft = false;
-  ToolLayout _toolLayout = ToolLayout.grid;
+  ToolLayout _toolLayout = ToolLayout.list;
 
   LanguagePref get language => _language;
   ThemeMode get themeMode => _themeMode;
@@ -145,7 +145,7 @@ class AppState extends ChangeNotifier {
     _rotateButtonLeft = _prefs.getBool(_kRotateLeft) ?? false;
     _toolLayout = ToolLayout.values.firstWhere(
       (l) => l.name == _prefs.getString(_kToolLayout),
-      orElse: () => ToolLayout.grid,
+      orElse: () => ToolLayout.list,
     );
     SystemChrome.setPreferredOrientations(orientationsFor(_orientation));
     final raw = _prefs.getString(_kHistory);
