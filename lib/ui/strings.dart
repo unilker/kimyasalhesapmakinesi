@@ -250,6 +250,7 @@ class S {
 
   // Solver
   static const solveFor = Bi('Solve for', 'Bilinmeyen');
+  static const presets = Bi('Ready values', 'Hazır değerler');
   static const equation = Bi('Equation', 'Denklem');
   static Bi errMissing(String v) =>
       Bi('Enter a value for $v', '$v için bir değer girin');
@@ -322,6 +323,11 @@ class S {
         Quantity.molality => const Bi('Molality', 'Molalite'),
         Quantity.absorptivity => const Bi('Molar absorptivity', 'Molar absorptivite'),
         Quantity.cryoscopic => const Bi('Constant', 'Sabit'),
+        Quantity.speed => const Bi('Speed', 'Hız'),
+        Quantity.activity => const Bi('Activity', 'Aktivite'),
+        Quantity.henry => const Bi("Henry's constant", 'Henry sabiti'),
+        Quantity.vdwA => const Bi('van der Waals a', 'van der Waals a'),
+        Quantity.vdwB => const Bi('van der Waals b', 'van der Waals b'),
         Quantity.percent => const Bi('Percent', 'Yüzde'),
         Quantity.dimensionless => const Bi('Number', 'Sayı'),
       };

@@ -72,6 +72,15 @@ class SolverExtra {
       : unitById(quantity, unit!);
 }
 
+/// Ready-made values (e.g. van der Waals constants of a gas), expressed in
+/// each variable's default unit.
+class SolverPreset {
+  const SolverPreset(this.label, this.values);
+
+  final Bi label;
+  final Map<String, double> values;
+}
+
 class SolverEquation {
   const SolverEquation({
     required this.id,
@@ -83,6 +92,7 @@ class SolverEquation {
     this.extras = const [],
     this.note,
     this.defaultTarget,
+    this.presets = const [],
   });
 
   final String id;
@@ -101,6 +111,7 @@ class SolverEquation {
   final List<SolverExtra> extras;
   final Bi? note;
   final String? defaultTarget;
+  final List<SolverPreset> presets;
 
   List<SolverVar> get solvable =>
       variables.where((v) => solvers.containsKey(v.id)).toList();

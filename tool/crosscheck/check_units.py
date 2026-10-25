@@ -19,10 +19,18 @@ BASE = {
     'voltage': 'V', 'rateConstant': '1/s', 'zeroOrderRate': 'mol/L/s',
     'secondOrderRate': 'L/mol/s', 'frequency': 'Hz', 'molality': 'mol/kg',
     'absorptivity': 'L/(mol*cm)', 'cryoscopic': 'K*kg/mol',
+    'speed': 'm/s', 'activity': 'Bq', 'henry': 'mol/(L*atm)',
+    'vdwA': 'L**2*bar/mol**2', 'vdwB': 'L/mol',
 }
 # app unit id -> pint expression
 PINT = {
-    'mass': {'g': 'g', 'kg': 'kg', 'mg': 'mg', 'ug': 'ug', 'ng': 'ng', 't': 'metric_ton', 'lb': 'lb', 'oz': 'oz'},
+    'mass': {'g': 'g', 'kg': 'kg', 'mg': 'mg', 'ug': 'ug', 'ng': 'ng', 't': 'metric_ton', 'lb': 'lb', 'oz': 'oz',
+             'u': 'dalton'},
+    'speed': {'ms': 'm/s', 'kms': 'km/s', 'kmh': 'km/h'},
+    'activity': {'Bq': 'Bq', 'kBq': 'kBq', 'MBq': 'MBq', 'GBq': 'GBq', 'Ci': 'Ci', 'mCi': 'mCi', 'uCi': 'uCi'},
+    'henry': {'Matm': 'mol/(L*atm)', 'Mbar': 'mol/(L*bar)'},
+    'vdwA': {'L2barmol2': 'L**2*bar/mol**2', 'L2atmmol2': 'L**2*atm/mol**2', 'Pam6mol2': 'Pa*m**6/mol**2'},
+    'vdwB': {'Lmol': 'L/mol', 'cm3mol': 'cm**3/mol', 'm3mol': 'm**3/mol'},
     'volume': {'L': 'L', 'mL': 'mL', 'uL': 'uL', 'dL': 'dL', 'm3': 'm**3', 'cm3': 'cm**3', 'dm3': 'dm**3', 'gal': 'gallon'},
     'amount': {'mol': 'mol', 'mmol': 'mmol', 'umol': 'umol', 'nmol': 'nmol', 'kmol': 'kmol'},
     'pressure': {'atm': 'atm', 'Pa': 'Pa', 'kPa': 'kPa', 'MPa': 'MPa', 'bar': 'bar', 'mbar': 'mbar',
