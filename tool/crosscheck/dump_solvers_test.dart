@@ -35,6 +35,11 @@ import 'package:kimya_hesap/core/units.dart';
       Quantity.molality => (1e-3, 5),
       Quantity.cryoscopic => (0.3, 30),
       Quantity.percent => (1, 99),
+      Quantity.speed => (1, 3000),
+      Quantity.activity => (1, 1e12),
+      Quantity.henry => (1e-4, 0.1),
+      Quantity.vdwA => (0.03, 20),
+      Quantity.vdwB => (0.01, 0.15),
       _ => (0.1, 10),
     };
 
@@ -46,7 +51,9 @@ void main() {
       'dilution': dilutionEquations, 'acidBase': acidBaseEquations,
       'thermo': thermoEquations, 'kinetics': kineticsEquations,
       'electro': electroEquations, 'spectro': spectroEquations,
-      'colligative': colligativeEquations,
+      'colligative': colligativeEquations, 'realGas': realGasEquations,
+      'equilibrium': equilibriumEquations, 'nuclear': nuclearEquations,
+      'atomic': atomicEquations,
     };
     final out = <Map<String, Object?>>[];
     all.forEach((group, eqs) {

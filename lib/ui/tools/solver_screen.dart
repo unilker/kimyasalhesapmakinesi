@@ -104,6 +104,23 @@ class _SolverScreenState extends State<SolverScreen> {
 
   String _sym(SolverVar v) => v.symbolOf(context.lang);
 
+  /// Fills the preset's values (given in each variable's default unit).
+  void _applyPreset(SolverPreset p) {
+    setState(() {
+      p.values.forEach((id, value) {
+        final v = _eq.variable(id);
+        _units[_key(v)] = v.defaultUnit;
+        _controller(v).text = context.nf.plain(value, digits: 10);
+        if (_target == id) {
+          // The preset defines this value, so solve for something else.
+          _targets[_eq.id] = _eq.solvable.firstWhere((s) => !p.values.containsKey(s.id)).id;
+        }
+      });
+      _outcome = null;
+      _error = null;
+    });
+  }
+
   /// `P · Pressure`, or just `pH` when the name repeats the symbol.
   String _label(String symbol, String name) => symbol == name ? symbol : '$symbol · $name';
 
@@ -202,6 +219,21 @@ class _SolverScreenState extends State<SolverScreen> {
         formula: eq.formulaOf(lang),
         note: eq.note?.of(lang),
       ),
+      if (eq.presets.isNotEmpty) ...[
+        SectionTitle(context.t(S.presets)),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final p in eq.presets)
+              ActionChip(
+                avatar: const Icon(Icons.bolt_rounded, size: 18),
+                label: Text(p.label.of(lang)),
+                onPressed: () => _applyPreset(p),
+              ),
+          ],
+        ),
+      ],
       SectionTitle(context.t(S.solveFor)),
       Wrap(
         spacing: 8,

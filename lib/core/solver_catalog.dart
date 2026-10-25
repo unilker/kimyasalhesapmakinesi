@@ -6,6 +6,9 @@ import 'solver.dart';
 import 'units.dart';
 
 const double _r = gasConstant;
+
+/// Molar mass of water from the app's atomic weights (H 1.008, O 15.999).
+const double _mWater = 2 * 1.008 + 15.999;
 const double _f = faraday;
 
 /// Ion product of water at 25 °C.
@@ -229,6 +232,31 @@ final moleEquations = <SolverEquation>[
     note: const Bi('STP: 0 °C and 1 atm.', 'NŞA: 0 °C ve 1 atm.'),
   ),
   SolverEquation(
+    id: 'hydrate',
+    title: const Bi('Water of crystallisation', 'Kristal suyu sayısı'),
+    formula: 'x = (m_water / M_H₂O) / (m_anhydrous / M)',
+    formulaTr: 'x = (m_su / M_H₂O) / (m_susuz / M)',
+    defaultTarget: 'x',
+    variables: [
+      _num('x', 'x', const Bi('Water molecules per formula unit', 'Formül başına su molekülü')),
+      _m('mh', 'm_hydrate',
+          symTr: 'm_hidrat', name: const Bi('Mass of hydrate', 'Hidrat kütlesi')),
+      _m('ma', 'm_anhydrous',
+          symTr: 'm_susuz', name: const Bi('Mass after heating', 'Isıtma sonrası kütle')),
+      _mm('M', 'M', name: const Bi('Molar mass of anhydrous salt', 'Susuz tuzun mol kütlesi')),
+    ],
+    solvers: {
+      'x': (v) => (v['mh']! - v['ma']!) / _mWater / (v['ma']! / v['M']!),
+      'mh': (v) => v['ma']! * (1 + v['x']! * _mWater / v['M']!),
+      'ma': (v) => v['mh']! / (1 + v['x']! * _mWater / v['M']!),
+      'M': (v) => v['x']! * _mWater * v['ma']! / (v['mh']! - v['ma']!),
+    },
+    note: const Bi(
+      'E.g. 2.50 g CuSO₄·xH₂O → 1.60 g CuSO₄ gives x ≈ 5.',
+      'Ör. 2,50 g CuSO₄·xH₂O → 1,60 g CuSO₄ için x ≈ 5.',
+    ),
+  ),
+  SolverEquation(
     id: 'percentYield',
     title: const Bi('Percent yield', 'Yüzde verim'),
     formula: '% yield = actual / theoretical × 100',
@@ -330,6 +358,31 @@ final solutionEquations = <SolverEquation>[
     ),
   ),
   SolverEquation(
+    id: 'henry',
+    title: const Bi("Henry's law (gas solubility)", 'Henry yasası (gaz çözünürlüğü)'),
+    formula: 'C = k_H · P',
+    defaultTarget: 'C',
+    variables: [
+      _c('C', 'C', name: const Bi('Dissolved gas concentration', 'Çözünmüş gaz derişimi'), unit: 'mM'),
+      const SolverVar('kH', 'k_H', Bi("Henry's constant", 'Henry sabiti'), Quantity.henry),
+      _p('P', 'P', name: const Bi('Partial pressure of the gas', 'Gazın kısmi basıncı')),
+    ],
+    solvers: {
+      'C': (v) => v['kH']! * v['P']! / standardPressure,
+      'kH': (v) => v['C']! / (v['P']! / standardPressure),
+      'P': (v) => v['C']! / v['kH']! * standardPressure,
+    },
+    note: const Bi(
+      'Water at 25 °C (Sander, 2015): O₂ 1.3 × 10⁻³, N₂ 6.4 × 10⁻⁴, CO₂ 3.4 × 10⁻² mol/(L·atm).',
+      'Su, 25 °C (Sander, 2015): O₂ 1,3 × 10⁻³, N₂ 6,4 × 10⁻⁴, CO₂ 3,4 × 10⁻² mol/(L·atm).',
+    ),
+    presets: const [
+      SolverPreset(Bi('O₂ (25 °C)', 'O₂ (25 °C)'), {'kH': 1.3e-3}),
+      SolverPreset(Bi('N₂ (25 °C)', 'N₂ (25 °C)'), {'kH': 6.4e-4}),
+      SolverPreset(Bi('CO₂ (25 °C)', 'CO₂ (25 °C)'), {'kH': 3.4e-2}),
+    ],
+  ),
+  SolverEquation(
     id: 'massPercent',
     title: const Bi('Mass percent', 'Kütlece yüzde'),
     formula: 'w = m_solute / m_solution × 100',
@@ -404,6 +457,34 @@ final dilutionEquations = <SolverEquation>[
       SolverExtra('SF', const Bi('Dilution factor', 'Seyreltme faktörü'),
           Quantity.dimensionless, (v) => v['V2']! / v['V1']!),
     ],
+  ),
+  SolverEquation(
+    id: 'serial',
+    title: const Bi('Serial dilution', 'Seri seyreltme'),
+    formula: 'Cₖ = C₀ / SFᵏ',
+    formulaTr: 'Cₖ = C₀ / SFᵏ',
+    defaultTarget: 'Ck',
+    variables: [
+      _c('Ck', 'Cₖ', name: const Bi('Concentration after k steps', 'k adım sonraki derişim')),
+      _c('C0', 'C₀', name: const Bi('Starting concentration', 'Başlangıç derişimi')),
+      _num('DF', 'SF', const Bi('Dilution factor per step', 'Adım başına seyreltme faktörü'),
+          def: 10),
+      _num('k', 'k', const Bi('Number of steps', 'Adım sayısı'), def: 3),
+    ],
+    solvers: {
+      'Ck': (v) => v['C0']! / math.pow(v['DF']!, v['k']!),
+      'C0': (v) => v['Ck']! * math.pow(v['DF']!, v['k']!),
+      'DF': (v) => math.pow(v['C0']! / v['Ck']!, 1 / v['k']!).toDouble(),
+      'k': (v) => math.log(v['C0']! / v['Ck']!) / math.log(v['DF']!),
+    },
+    extras: [
+      SolverExtra('SF_total', const Bi('Total dilution factor', 'Toplam seyreltme faktörü'),
+          Quantity.dimensionless, (v) => v['C0']! / v['Ck']!),
+    ],
+    note: const Bi(
+      'E.g. 1 mL + 9 mL solvent per step is a factor of 10.',
+      'Ör. her adımda 1 mL + 9 mL çözücü, 10 katlık seyreltmedir.',
+    ),
   ),
   SolverEquation(
     id: 'mixing',
@@ -617,6 +698,48 @@ final acidBaseEquations = <SolverEquation>[
     },
   ),
   SolverEquation(
+    id: 'bufferPrep',
+    title: const Bi('Prepare a buffer', 'Tampon hazırlama'),
+    formula: 'pH = pKa + log([A⁻]/[HA]),  [HA] + [A⁻] = C',
+    defaultTarget: 'mHA',
+    variables: [
+      _m('mHA', 'm_HA', name: const Bi('Mass of weak acid', 'Zayıf asit kütlesi')),
+      _ph(),
+      _num('pKa', 'pKa', const Bi('pKa', 'pKa'), neg: true),
+      _c('C', 'C', name: const Bi('Total buffer concentration', 'Toplam tampon derişimi')),
+      _v('V', 'V', name: const Bi('Buffer volume', 'Tampon hacmi'), unit: 'mL'),
+      _mm('Mha', 'M_HA', name: const Bi('Molar mass of the acid', 'Asidin mol kütlesi')),
+      _mm('Ma', 'M_A⁻', name: const Bi('Molar mass of the salt', 'Tuzun mol kütlesi')),
+    ],
+    solvers: {
+      'mHA': (v) => v['C']! / (1 + _pow10(v['pH']! - v['pKa']!)) * v['V']! * v['Mha']!,
+    },
+    extras: [
+      SolverExtra('m_A⁻', const Bi('Mass of the salt (conjugate base)', 'Tuzun (eşlenik baz) kütlesi'),
+          Quantity.mass, (v) {
+        final r = _pow10(v['pH']! - v['pKa']!);
+        return v['C']! * r / (1 + r) * v['V']! * v['Ma']!;
+      }),
+      SolverExtra('[HA]', const Bi('Acid concentration', 'Asit derişimi'), Quantity.concentration,
+          (v) => v['C']! / (1 + _pow10(v['pH']! - v['pKa']!))),
+      SolverExtra('[A⁻]', const Bi('Conjugate base concentration', 'Eşlenik baz derişimi'),
+          Quantity.concentration, (v) {
+        final r = _pow10(v['pH']! - v['pKa']!);
+        return v['C']! * r / (1 + r);
+      }),
+    ],
+    note: const Bi(
+      'Henderson–Hasselbalch; best within pKa ± 1. Check the final pH with a pH meter.',
+      'Henderson–Hasselbalch; pKa ± 1 aralığında en iyisidir. Son pH’ı pH metreyle kontrol edin.',
+    ),
+    presets: const [
+      SolverPreset(Bi('Acetate (pKa 4.76)', 'Asetat (pKa 4,76)'), {'pKa': 4.76}),
+      SolverPreset(Bi('Phosphate (pKa₂ 7.20)', 'Fosfat (pKa₂ 7,20)'), {'pKa': 7.20}),
+      SolverPreset(Bi('Ammonia (pKa 9.25)', 'Amonyak (pKa 9,25)'), {'pKa': 9.25}),
+      SolverPreset(Bi('Tris (pKa 8.07)', 'Tris (pKa 8,07)'), {'pKa': 8.07}),
+    ],
+  ),
+  SolverEquation(
     id: 'pKa',
     title: const Bi('Ka ⇄ pKa', 'Ka ⇄ pKa'),
     formula: 'pKa = −log Ka',
@@ -694,6 +817,40 @@ final thermoEquations = <SolverEquation>[
       'dT': (v) => v['q']! / (v['m']! * v['c']!),
     },
     note: const Bi('Water: c = 4.184 J/(g·K).', 'Su: c = 4,184 J/(g·K).'),
+  ),
+  SolverEquation(
+    id: 'mixTemp',
+    title: const Bi('Final temperature of mixing', 'Karışımın son sıcaklığı'),
+    formula: 'm₁c₁(T_f − T₁) + m₂c₂(T_f − T₂) = 0',
+    formulaTr: 'm₁c₁(T_s − T₁) + m₂c₂(T_s − T₂) = 0',
+    defaultTarget: 'Tf',
+    variables: [
+      _t('Tf', 'T_f', unit: 'C', name: const Bi('Final temperature', 'Son sıcaklık')),
+      _m('m1', 'm₁', name: const Bi('Mass 1', '1. kütle')),
+      const SolverVar('c1', 'c₁', Bi('Specific heat 1', '1. öz ısı'), Quantity.specificHeat,
+          defaultValue: 4.184),
+      _t('T1', 'T₁', unit: 'C', name: const Bi('Temperature 1', '1. sıcaklık')),
+      _m('m2', 'm₂', name: const Bi('Mass 2', '2. kütle')),
+      const SolverVar('c2', 'c₂', Bi('Specific heat 2', '2. öz ısı'), Quantity.specificHeat,
+          defaultValue: 4.184),
+      _t('T2', 'T₂', unit: 'C', name: const Bi('Temperature 2', '2. sıcaklık')),
+    ],
+    solvers: {
+      'Tf': (v) {
+        final a = v['m1']! * v['c1']!, b = v['m2']! * v['c2']!;
+        return (a * v['T1']! + b * v['T2']!) / (a + b);
+      },
+      'T1': (v) => v['Tf']! + v['m2']! * v['c2']! * (v['Tf']! - v['T2']!) / (v['m1']! * v['c1']!),
+      'T2': (v) => v['Tf']! + v['m1']! * v['c1']! * (v['Tf']! - v['T1']!) / (v['m2']! * v['c2']!),
+      'm1': (v) => v['m2']! * v['c2']! * (v['T2']! - v['Tf']!) / (v['c1']! * (v['Tf']! - v['T1']!)),
+      'm2': (v) => v['m1']! * v['c1']! * (v['T1']! - v['Tf']!) / (v['c2']! * (v['Tf']! - v['T2']!)),
+      'c1': (v) => v['m2']! * v['c2']! * (v['T2']! - v['Tf']!) / (v['m1']! * (v['Tf']! - v['T1']!)),
+      'c2': (v) => v['m1']! * v['c1']! * (v['T1']! - v['Tf']!) / (v['m2']! * (v['Tf']! - v['T2']!)),
+    },
+    note: const Bi(
+      'No heat loss and no phase change. Water: c = 4.184 J/(g·K).',
+      'Isı kaybı ve hal değişimi yok sayılır. Su: c = 4,184 J/(g·K).',
+    ),
   ),
   SolverEquation(
     id: 'gibbs',
@@ -1081,6 +1238,14 @@ final colligativeEquations = <SolverEquation>[
       'b': (v) => v['dT']! / (v['i']! * v['K']!),
     },
     note: const Bi('Water: K_b = 0.512 K·kg/mol.', 'Su: K_k = 0,512 K·kg/mol.'),
+    presets: const [
+      SolverPreset(Bi('Water', 'Su'), {'K': 0.512}),
+      SolverPreset(Bi('Benzene', 'Benzen'), {'K': 2.53}),
+      SolverPreset(Bi('Ethanol', 'Etanol'), {'K': 1.22}),
+      SolverPreset(Bi('Acetic acid', 'Asetik asit'), {'K': 3.07}),
+      SolverPreset(Bi('Chloroform', 'Kloroform'), {'K': 3.63}),
+      SolverPreset(Bi('Cyclohexane', 'Siklohekzan'), {'K': 2.79}),
+    ],
   ),
   SolverEquation(
     id: 'freezing',
@@ -1107,6 +1272,14 @@ final colligativeEquations = <SolverEquation>[
       'b': (v) => v['dT']! / (v['i']! * v['K']!),
     },
     note: const Bi('Water: K_f = 1.86 K·kg/mol.', 'Su: K_d = 1,86 K·kg/mol.'),
+    presets: const [
+      SolverPreset(Bi('Water', 'Su'), {'K': 1.86}),
+      SolverPreset(Bi('Benzene', 'Benzen'), {'K': 5.12}),
+      SolverPreset(Bi('Ethanol', 'Etanol'), {'K': 1.99}),
+      SolverPreset(Bi('Acetic acid', 'Asetik asit'), {'K': 3.90}),
+      SolverPreset(Bi('Chloroform', 'Kloroform'), {'K': 4.68}),
+      SolverPreset(Bi('Cyclohexane', 'Siklohekzan'), {'K': 20.0}),
+    ],
   ),
   SolverEquation(
     id: 'osmotic',
@@ -1142,5 +1315,418 @@ final colligativeEquations = <SolverEquation>[
       'x': (v) => v['P']! / v['P0']!,
       'P0': (v) => v['P']! / v['x']!,
     },
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Numerical helpers
+// ---------------------------------------------------------------------------
+
+/// Bisection on [lo, hi] where f(lo) and f(hi) have opposite signs.
+double _bisect(double Function(double) f, double lo, double hi) {
+  var flo = f(lo);
+  for (var i = 0; i < 300; i++) {
+    final mid = lo + (hi - lo) / 2;
+    final fm = f(mid);
+    if (fm == 0 || (hi - lo).abs() <= 1e-15 * mid.abs()) return mid;
+    if ((fm < 0) == (flo < 0)) {
+      lo = mid;
+      flo = fm;
+    } else {
+      hi = mid;
+    }
+  }
+  return lo + (hi - lo) / 2;
+}
+
+/// Largest root of f in (lo, hi], scanning down from hi on a log grid.
+/// Used for the van der Waals volume, whose largest root is the gas phase.
+double _largestRoot(double Function(double) f, double lo, double hi) {
+  var x = hi;
+  var fx = f(x);
+  const steps = 4000;
+  final ratio = math.pow(lo / hi, 1 / steps).toDouble();
+  for (var i = 0; i < steps; i++) {
+    final y = math.max(x * ratio, lo * (1 + 1e-12));
+    final fy = f(y);
+    if ((fy < 0) != (fx < 0)) return _bisect(f, y, x);
+    x = y;
+    fx = fy;
+  }
+  throw StateError('no root');
+}
+
+/// Smallest root of f in [lo, hi), scanning up from lo on a log grid.
+double _smallestRoot(double Function(double) f, double lo, double hi) {
+  var x = lo;
+  var fx = f(x);
+  const steps = 4000;
+  final ratio = math.pow(hi / lo, 1 / steps).toDouble();
+  for (var i = 0; i < steps; i++) {
+    final y = math.min(x * ratio, hi * (1 - 1e-12));
+    final fy = f(y);
+    if ((fy < 0) != (fx < 0)) return _bisect(f, x, y);
+    x = y;
+    fx = fy;
+  }
+  throw StateError('no root');
+}
+
+// ---------------------------------------------------------------------------
+// Real gases & kinetic theory
+// ---------------------------------------------------------------------------
+
+/// van der Waals pressure in Pa; a in L²·bar/mol², b in L/mol, V in L.
+double _vdwP(double n, double v, double t, double a, double b) =>
+    n * _r * t / ((v - n * b) / 1000) - 1e5 * a * n * n / (v * v);
+
+final realGasEquations = <SolverEquation>[
+  SolverEquation(
+    id: 'vdw',
+    title: const Bi('van der Waals equation', 'van der Waals denklemi'),
+    formula: '(P + a·n²/V²)(V − n·b) = nRT',
+    defaultTarget: 'P',
+    variables: [
+      _p('P', 'P', unit: 'bar'),
+      _v('V', 'V'),
+      _n('n', 'n'),
+      _t('T', 'T', unit: 'C'),
+      const SolverVar('a', 'a', Bi('Attraction constant', 'Çekim sabiti'), Quantity.vdwA),
+      const SolverVar('b', 'b', Bi('Excluded volume', 'Molar hacim düzeltmesi'), Quantity.vdwB),
+    ],
+    solvers: {
+      'P': (v) => v['V']! > v['n']! * v['b']!
+          ? _vdwP(v['n']!, v['V']!, v['T']!, v['a']!, v['b']!)
+          : double.nan,
+      'T': (v) => v['V']! > v['n']! * v['b']!
+          ? (v['P']! + 1e5 * v['a']! * v['n']! * v['n']! / (v['V']! * v['V']!)) *
+              ((v['V']! - v['n']! * v['b']!) / 1000) /
+              (v['n']! * _r)
+          : double.nan,
+      'V': (v) {
+        final n = v['n']!, t = v['T']!, a = v['a']!, b = v['b']!, p = v['P']!;
+        final ideal = n * _r * t / p * 1000;
+        return _largestRoot((x) => _vdwP(n, x, t, a, b) - p, n * b, 1000 * ideal + n * b + 1);
+      },
+      'n': (v) {
+        final vol = v['V']!, t = v['T']!, a = v['a']!, b = v['b']!, p = v['P']!;
+        final nmax = b > 0 ? vol / b : 1e12;
+        return _smallestRoot((x) => _vdwP(x, vol, t, a, b) - p, 1e-15 * nmax, nmax);
+      },
+    },
+    extras: [
+      SolverExtra('Z', const Bi('Compressibility factor PV/nRT', 'Sıkıştırılabilirlik faktörü PV/nRT'),
+          Quantity.dimensionless, (v) => v['P']! * v['V']! / 1000 / (v['n']! * _r * v['T']!)),
+      SolverExtra('P_ideal', const Bi('Ideal-gas pressure', 'İdeal gaz basıncı'), Quantity.pressure,
+          (v) => v['n']! * _r * v['T']! / (v['V']! / 1000),
+          unit: 'bar'),
+    ],
+    note: const Bi(
+      'When solving for V or n the gas-phase root is returned. Constants: CRC Handbook.',
+      'V veya n çözülürken gaz fazına ait kök verilir. Sabitler: CRC El Kitabı.',
+    ),
+    presets: const [
+      SolverPreset(Bi('He', 'He'), {'a': 0.0346, 'b': 0.0238}),
+      SolverPreset(Bi('H₂', 'H₂'), {'a': 0.2476, 'b': 0.02661}),
+      SolverPreset(Bi('N₂', 'N₂'), {'a': 1.370, 'b': 0.0387}),
+      SolverPreset(Bi('O₂', 'O₂'), {'a': 1.382, 'b': 0.03186}),
+      SolverPreset(Bi('Ar', 'Ar'), {'a': 1.355, 'b': 0.03201}),
+      SolverPreset(Bi('CO₂', 'CO₂'), {'a': 3.640, 'b': 0.04267}),
+      SolverPreset(Bi('CH₄', 'CH₄'), {'a': 2.283, 'b': 0.04278}),
+      SolverPreset(Bi('NH₃', 'NH₃'), {'a': 4.225, 'b': 0.0371}),
+      SolverPreset(Bi('H₂O', 'H₂O'), {'a': 5.536, 'b': 0.03049}),
+      SolverPreset(Bi('Cl₂', 'Cl₂'), {'a': 6.579, 'b': 0.05622}),
+    ],
+  ),
+  SolverEquation(
+    id: 'gasSpeed',
+    title: const Bi('Molecular speeds', 'Molekül hızları'),
+    formula: 'u_rms = √(3RT / M)',
+    defaultTarget: 'u',
+    variables: [
+      const SolverVar('u', 'u_rms', Bi('Root-mean-square speed', 'Kök ortalama kare hız'),
+          Quantity.speed),
+      _t('T', 'T', unit: 'C', def: 25),
+      _mm('M', 'M'),
+    ],
+    solvers: {
+      'u': (v) => math.sqrt(3 * _r * v['T']! / (v['M']! / 1000)),
+      'T': (v) => v['u']! * v['u']! * (v['M']! / 1000) / (3 * _r),
+      'M': (v) => 3 * _r * v['T']! / (v['u']! * v['u']!) * 1000,
+    },
+    extras: [
+      SolverExtra('ū', const Bi('Mean speed √(8RT/πM)', 'Ortalama hız √(8RT/πM)'), Quantity.speed,
+          (v) => math.sqrt(8 * _r * v['T']! / (math.pi * v['M']! / 1000))),
+      SolverExtra('u_mp', const Bi('Most probable speed √(2RT/M)', 'En olası hız √(2RT/M)'),
+          Quantity.speed, (v) => math.sqrt(2 * _r * v['T']! / (v['M']! / 1000))),
+      SolverExtra('E_k', const Bi('Mean kinetic energy (3/2)RT', 'Ortalama kinetik enerji (3/2)RT'),
+          Quantity.molarEnergy, (v) => 1.5 * _r * v['T']!),
+    ],
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Equilibrium & solubility
+// ---------------------------------------------------------------------------
+
+/// R in L·atm/(mol·K) for Kp (atm) ⇄ Kc (mol/L).
+const double _rLatm = gasConstant / 101.325;
+
+final equilibriumEquations = <SolverEquation>[
+  SolverEquation(
+    id: 'kpkc',
+    title: const Bi('Kp ⇄ Kc', 'Kp ⇄ Kc'),
+    formula: 'Kp = Kc·(RT)^Δn',
+    defaultTarget: 'Kp',
+    variables: [
+      _num('Kp', 'Kp', const Bi('Equilibrium constant (pressures in atm)', 'Denge sabiti (basınçlar atm)')),
+      _num('Kc', 'Kc', const Bi('Equilibrium constant (mol/L)', 'Denge sabiti (mol/L)')),
+      _t('T', 'T', unit: 'C', def: 25),
+      _num('dn', 'Δn', const Bi('Δn of gases (products − reactants)', 'Gazların Δn’i (ürünler − girenler)'),
+          neg: true),
+    ],
+    solvers: {
+      'Kp': (v) => v['Kc']! * math.pow(_rLatm * v['T']!, v['dn']!),
+      'Kc': (v) => v['Kp']! / math.pow(_rLatm * v['T']!, v['dn']!),
+      'T': (v) => math.pow(v['Kp']! / v['Kc']!, 1 / v['dn']!) / _rLatm,
+      'dn': (v) => math.log(v['Kp']! / v['Kc']!) / math.log(_rLatm * v['T']!),
+    },
+    note: const Bi(
+      'R = 0.082057 L·atm/(mol·K); e.g. N₂ + 3H₂ ⇌ 2NH₃ has Δn = −2.',
+      'R = 0,082057 L·atm/(mol·K); ör. N₂ + 3H₂ ⇌ 2NH₃ için Δn = −2.',
+    ),
+  ),
+  SolverEquation(
+    id: 'ksp',
+    title: const Bi('Solubility product', 'Çözünürlük çarpımı'),
+    formula: 'MₓAᵧ ⇌ xM + yA,  Ksp = xˣ·yʸ·s^(x+y)',
+    defaultTarget: 's',
+    variables: [
+      _num('Ksp', 'Ksp', const Bi('Solubility product', 'Çözünürlük çarpımı')),
+      _c('s', 's', name: const Bi('Molar solubility', 'Molar çözünürlük')),
+      _num('x', 'x', const Bi('Cations per formula', 'Formüldeki katyon sayısı'), def: 1),
+      _num('y', 'y', const Bi('Anions per formula', 'Formüldeki anyon sayısı'), def: 1),
+    ],
+    solvers: {
+      'Ksp': (v) {
+        final x = v['x']!, y = v['y']!;
+        return math.pow(x, x) * math.pow(y, y) * math.pow(v['s']!, x + y).toDouble();
+      },
+      's': (v) {
+        final x = v['x']!, y = v['y']!;
+        return math.pow(v['Ksp']! / (math.pow(x, x) * math.pow(y, y)), 1 / (x + y)).toDouble();
+      },
+    },
+    extras: [
+      SolverExtra('[M]', const Bi('Cation concentration', 'Katyon derişimi'), Quantity.concentration,
+          (v) => v['x']! * v['s']!),
+      SolverExtra('[A]', const Bi('Anion concentration', 'Anyon derişimi'), Quantity.concentration,
+          (v) => v['y']! * v['s']!),
+    ],
+    note: const Bi(
+      'In pure water, neglecting activity coefficients and hydrolysis. CaF₂: x = 1, y = 2.',
+      'Saf suda; aktiflik katsayıları ve hidroliz ihmal edilir. CaF₂: x = 1, y = 2.',
+    ),
+    presets: const [
+      SolverPreset(Bi('AgCl (25 °C)', 'AgCl (25 °C)'), {'Ksp': 1.77e-10, 'x': 1, 'y': 1}),
+      SolverPreset(Bi('BaSO₄', 'BaSO₄'), {'Ksp': 1.08e-10, 'x': 1, 'y': 1}),
+      SolverPreset(Bi('CaF₂', 'CaF₂'), {'Ksp': 3.45e-11, 'x': 1, 'y': 2}),
+      SolverPreset(Bi('Ag₂CrO₄', 'Ag₂CrO₄'), {'Ksp': 1.12e-12, 'x': 2, 'y': 1}),
+      SolverPreset(Bi('PbI₂', 'PbI₂'), {'Ksp': 9.8e-9, 'x': 1, 'y': 2}),
+      SolverPreset(Bi('Ca₃(PO₄)₂', 'Ca₃(PO₄)₂'), {'Ksp': 2.07e-33, 'x': 3, 'y': 2}),
+    ],
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Nuclear chemistry
+// ---------------------------------------------------------------------------
+
+SolverVar _halfLife() => const SolverVar(
+    'th', 't½', Bi('Half-life', 'Yarılanma süresi'), Quantity.time,
+    unit: 'y');
+
+final nuclearEquations = <SolverEquation>[
+  SolverEquation(
+    id: 'decay',
+    title: const Bi('Radioactive decay', 'Radyoaktif bozunma'),
+    formula: 'm = m₀·(½)^(t / t½)',
+    defaultTarget: 'm',
+    variables: [
+      _m('m', 'm', name: const Bi('Amount remaining', 'Kalan miktar')),
+      _m('m0', 'm₀', name: const Bi('Initial amount', 'Başlangıç miktarı')),
+      const SolverVar('t', 't', Bi('Elapsed time', 'Geçen süre'), Quantity.time, unit: 'y'),
+      _halfLife(),
+    ],
+    solvers: {
+      'm': (v) => v['m0']! * math.pow(0.5, v['t']! / v['th']!),
+      'm0': (v) => v['m']! / math.pow(0.5, v['t']! / v['th']!),
+      't': (v) => v['th']! * math.log(v['m0']! / v['m']!) / math.ln2,
+      'th': (v) => v['t']! * math.ln2 / math.log(v['m0']! / v['m']!),
+    },
+    extras: [
+      SolverExtra('m/m₀', const Bi('Fraction remaining', 'Kalan oran'), Quantity.percent,
+          (v) => v['m']! / v['m0']! * 100),
+      SolverExtra('λ', const Bi('Decay constant ln2/t½', 'Bozunma sabiti ln2/t½'),
+          Quantity.rateConstant, (v) => math.ln2 / v['th']!,
+          unit: 'h-1'),
+    ],
+    note: const Bi(
+      'Works with any amount unit (mass, moles, atoms, activity) as long as both are the same. Half-lives: NNDC.',
+      'Her iki miktar aynı birimde olduğu sürece kütle, mol, atom sayısı veya aktiviteyle çalışır. Yarılanma süreleri: NNDC.',
+    ),
+    presets: const [
+      SolverPreset(Bi('¹⁴C', '¹⁴C'), {'th': 5700}),
+      SolverPreset(Bi('³H', '³H'), {'th': 12.32}),
+      SolverPreset(Bi('⁶⁰Co', '⁶⁰Co'), {'th': 5.2714}),
+      SolverPreset(Bi('¹³⁷Cs', '¹³⁷Cs'), {'th': 30.08}),
+      SolverPreset(Bi('⁹⁰Sr', '⁹⁰Sr'), {'th': 28.79}),
+      SolverPreset(Bi('²²⁶Ra', '²²⁶Ra'), {'th': 1600}),
+      SolverPreset(Bi('²³⁸U', '²³⁸U'), {'th': 4.468e9}),
+      SolverPreset(Bi('⁴⁰K', '⁴⁰K'), {'th': 1.248e9}),
+    ],
+  ),
+  SolverEquation(
+    id: 'activity',
+    title: const Bi('Activity of a sample', 'Numunenin aktivitesi'),
+    formula: 'A = (ln 2 / t½)·(m / M)·Nₐ',
+    defaultTarget: 'A',
+    variables: [
+      const SolverVar('A', 'A', Bi('Activity', 'Aktivite'), Quantity.activity),
+      _halfLife(),
+      _m('m', 'm', name: const Bi('Mass of the nuclide', 'Çekirdeğin kütlesi')),
+      _mm('M', 'M', name: const Bi('Molar mass of the nuclide', 'Çekirdeğin mol kütlesi')),
+    ],
+    solvers: {
+      'A': (v) => math.ln2 / v['th']! * v['m']! / v['M']! * avogadro,
+      'th': (v) => math.ln2 * v['m']! / v['M']! * avogadro / v['A']!,
+      'm': (v) => v['A']! * v['th']! / math.ln2 * v['M']! / avogadro,
+      'M': (v) => math.ln2 / v['th']! * v['m']! * avogadro / v['A']!,
+    },
+    extras: [
+      SolverExtra('N', const Bi('Number of nuclei', 'Çekirdek sayısı'), Quantity.dimensionless,
+          (v) => v['m']! / v['M']! * avogadro),
+    ],
+    presets: const [
+      SolverPreset(Bi('¹⁴C', '¹⁴C'), {'th': 5700, 'M': 14.003241989}),
+      SolverPreset(Bi('⁶⁰Co', '⁶⁰Co'), {'th': 5.2714, 'M': 59.9338222}),
+      SolverPreset(Bi('¹³⁷Cs', '¹³⁷Cs'), {'th': 30.08, 'M': 136.9070895}),
+      SolverPreset(Bi('²²⁶Ra', '²²⁶Ra'), {'th': 1600, 'M': 226.0254098}),
+      SolverPreset(Bi('²³⁸U', '²³⁸U'), {'th': 4.468e9, 'M': 238.0507884}),
+    ],
+    note: const Bi(
+      '1 g of ²²⁶Ra ≈ 1 Ci (the historical definition of the curie).',
+      '1 g ²²⁶Ra ≈ 1 Ci (curie biriminin tarihsel tanımı).',
+    ),
+  ),
+];
+
+// ---------------------------------------------------------------------------
+// Atomic structure & crystals
+// ---------------------------------------------------------------------------
+
+/// Rydberg constant for hydrogen (reduced-mass corrected), m⁻¹.
+const double rydbergH = 10973731.568157 / (1 + 9.1093837139e-31 / 1.67262192595e-27);
+
+final atomicEquations = <SolverEquation>[
+  SolverEquation(
+    id: 'rydberg',
+    title: const Bi('Hydrogen spectrum (Rydberg)', 'Hidrojen spektrumu (Rydberg)'),
+    formula: '1/λ = R_H·(1/n₁² − 1/n₂²)',
+    defaultTarget: 'l',
+    variables: [
+      const SolverVar('l', 'λ', Bi('Wavelength (vacuum)', 'Dalga boyu (vakum)'), Quantity.length,
+          unit: 'nm'),
+      _num('n1', 'n₁', const Bi('Lower level', 'Alt seviye'), def: 2),
+      _num('n2', 'n₂', const Bi('Upper level', 'Üst seviye'), def: 3),
+    ],
+    solvers: {
+      'l': (v) => 1 / (rydbergH * (1 / (v['n1']! * v['n1']!) - 1 / (v['n2']! * v['n2']!))),
+      'n2': (v) => 1 / math.sqrt(1 / (v['n1']! * v['n1']!) - 1 / (v['l']! * rydbergH)),
+    },
+    extras: [
+      SolverExtra('E', const Bi('Photon energy', 'Foton enerjisi'), Quantity.energy,
+          (v) => planck * speedOfLight / v['l']!,
+          unit: 'eV'),
+      SolverExtra('ν', const Bi('Frequency', 'Frekans'), Quantity.frequency,
+          (v) => speedOfLight / v['l']!,
+          unit: 'THz'),
+    ],
+    note: const Bi(
+      'n₁ = 1 Lyman, 2 Balmer (visible), 3 Paschen. R_H = 1.0967758 × 10⁷ m⁻¹.',
+      'n₁ = 1 Lyman, 2 Balmer (görünür), 3 Paschen. R_H = 1,0967758 × 10⁷ m⁻¹.',
+    ),
+  ),
+  SolverEquation(
+    id: 'bohr',
+    title: const Bi('Hydrogen-like energy levels', 'Hidrojen benzeri enerji seviyeleri'),
+    formula: 'Eₙ = −R_H·h·c·Z² / n²',
+    defaultTarget: 'E',
+    variables: [
+      const SolverVar('E', 'Eₙ', Bi('Energy of level n', 'n seviyesinin enerjisi'), Quantity.energy,
+          unit: 'eV', allowNegative: true),
+      _num('n', 'n', const Bi('Principal quantum number', 'Baş kuantum sayısı'), def: 1),
+      _num('Z', 'Z', const Bi('Nuclear charge', 'Çekirdek yükü'), def: 1),
+    ],
+    solvers: {
+      'E': (v) => -rydbergH * planck * speedOfLight * v['Z']! * v['Z']! / (v['n']! * v['n']!),
+      'n': (v) => math.sqrt(-rydbergH * planck * speedOfLight * v['Z']! * v['Z']! / v['E']!),
+    },
+    extras: [
+      SolverExtra('IE', const Bi('Ionization energy from this level', 'Bu seviyeden iyonlaşma enerjisi'),
+          Quantity.molarEnergy,
+          (v) => rydbergH * planck * speedOfLight * v['Z']! * v['Z']! / (v['n']! * v['n']!) * avogadro),
+    ],
+    note: const Bi('Hydrogen: E₁ = −13.598 eV.', 'Hidrojen: E₁ = −13,598 eV.'),
+  ),
+  SolverEquation(
+    id: 'deBroglie',
+    title: const Bi('de Broglie wavelength', 'de Broglie dalga boyu'),
+    formula: 'λ = h / (m·v)',
+    defaultTarget: 'l',
+    variables: [
+      const SolverVar('l', 'λ', Bi('Wavelength', 'Dalga boyu'), Quantity.length, unit: 'nm'),
+      _m('m', 'm', name: const Bi('Particle mass', 'Parçacık kütlesi'), unit: 'u'),
+      const SolverVar('v', 'v', Bi('Speed', 'Hız'), Quantity.speed),
+    ],
+    solvers: {
+      'l': (v) => planck / (v['m']! / 1000 * v['v']!),
+      'm': (v) => planck / (v['l']! * v['v']!) * 1000,
+      'v': (v) => planck / (v['l']! * v['m']! / 1000),
+    },
+    extras: [
+      SolverExtra('E_k', const Bi('Kinetic energy ½mv²', 'Kinetik enerji ½mv²'), Quantity.energy,
+          (v) => 0.5 * v['m']! / 1000 * v['v']! * v['v']!,
+          unit: 'eV'),
+    ],
+    presets: const [
+      SolverPreset(Bi('electron', 'elektron'), {'m': 9.1093837139e-31 / 1.66053906892e-27}),
+      SolverPreset(Bi('proton', 'proton'), {'m': 1.67262192595e-27 / 1.66053906892e-27}),
+      SolverPreset(Bi('neutron', 'nötron'), {'m': 1.67492750056e-27 / 1.66053906892e-27}),
+    ],
+  ),
+  SolverEquation(
+    id: 'crystal',
+    title: const Bi('Density of a cubic crystal', 'Kübik kristalin yoğunluğu'),
+    formula: 'ρ = Z·M / (Nₐ·a³)',
+    defaultTarget: 'rho',
+    variables: [
+      const SolverVar('rho', 'ρ', Bi('Density', 'Yoğunluk'), Quantity.density, unit: 'gcm3'),
+      _num('Z', 'Z', const Bi('Formula units per unit cell', 'Birim hücredeki formül birimi'), def: 4),
+      _mm('M', 'M'),
+      const SolverVar('a', 'a', Bi('Cell edge', 'Hücre kenarı'), Quantity.length, unit: 'pm'),
+    ],
+    solvers: {
+      'rho': (v) => v['Z']! * v['M']! / (avogadro * math.pow(v['a']! * 100, 3)),
+      'Z': (v) => v['rho']! * avogadro * math.pow(v['a']! * 100, 3) / v['M']!,
+      'M': (v) => v['rho']! * avogadro * math.pow(v['a']! * 100, 3) / v['Z']!,
+      'a': (v) => math.pow(v['Z']! * v['M']! / (avogadro * v['rho']!), 1 / 3) / 100,
+    },
+    presets: const [
+      SolverPreset(Bi('simple cubic (Z = 1)', 'basit kübik (Z = 1)'), {'Z': 1}),
+      SolverPreset(Bi('bcc (Z = 2)', 'hacim merkezli (Z = 2)'), {'Z': 2}),
+      SolverPreset(Bi('fcc / NaCl (Z = 4)', 'yüzey merkezli / NaCl (Z = 4)'), {'Z': 4}),
+      SolverPreset(Bi('diamond (Z = 8)', 'elmas (Z = 8)'), {'Z': 8}),
+    ],
   ),
 ];

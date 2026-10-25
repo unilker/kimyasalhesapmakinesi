@@ -19,6 +19,10 @@ C = 299792458.0
 KW = 1e-14
 VM = R * 273.15 / 101325 * 1000  # L/mol at 0 °C, 1 atm
 ln, log10, exp, sqrt = math.log, math.log10, math.exp, math.sqrt
+MW = 2 * 1.008 + 15.999                      # water
+R_LATM = R / 101.325                          # L atm/(mol K)
+RH = 10973731.568157 / (1 + 9.1093837139e-31 / 1.67262192595e-27)
+P0 = 101325.0
 
 # (lhs, rhs) of each equation; v holds base-unit values (Pa, L, mol, K, g,
 # mol/L, g/mL, g/mol, J/mol, J/(mol K), J/(g K), s, 1/s, V, A, m, …).
@@ -71,6 +75,24 @@ EQ = {
     'freezing': lambda v: (v['dT'], v['i'] * v['K'] * v['b']),
     'osmotic': lambda v: (v['pi'], v['i'] * v['M'] * 1000 * R * v['T']),
     'raoult': lambda v: (v['P'], v['x'] * v['P0']),
+    # new equations
+    'vdw': lambda v: ((v['P'] / 1e5 + v['a'] * v['n'] ** 2 / v['V'] ** 2) * (v['V'] - v['n'] * v['b']),
+                      v['n'] * (R / 100) * v['T']),           # bar·L = R/100 J
+    'gasSpeed': lambda v: (v['u'] ** 2 * v['M'] / 1000, 3 * R * v['T']),
+    'kpkc': lambda v: (ln(v['Kp']), ln(v['Kc']) + v['dn'] * ln(R_LATM * v['T'])),
+    'ksp': lambda v: (v['Ksp'], v['x'] ** v['x'] * v['y'] ** v['y'] * v['s'] ** (v['x'] + v['y'])),
+    'decay': lambda v: (ln(v['m'] / v['m0']), -ln(2) * v['t'] / v['th']),
+    'activity': lambda v: (v['A'] * v['th'], ln(2) * v['m'] / v['M'] * NA),
+    'rydberg': lambda v: (1 / v['l'], RH * (1 / v['n1'] ** 2 - 1 / v['n2'] ** 2)),
+    'bohr': lambda v: (v['E'] * v['n'] ** 2, -RH * H * C * v['Z'] ** 2),
+    'deBroglie': lambda v: (v['l'] * v['m'] / 1000 * v['v'], H),
+    'crystal': lambda v: (v['rho'] * NA * (v['a'] * 100) ** 3, v['Z'] * v['M']),
+    'hydrate': lambda v: (v['x'] * v['ma'] / v['M'], (v['mh'] - v['ma']) / MW),
+    'henry': lambda v: (v['C'], v['kH'] * v['P'] / P0),
+    'serial': lambda v: (v['C0'], v['Ck'] * v['DF'] ** v['k']),
+    # mass balance n_HA·(1 + [A⁻]/[HA]) = C·V (no cancellation far from pKa)
+    'bufferPrep': lambda v: (v['mHA'] / v['Mha'] * (1 + 10 ** (v['pH'] - v['pKa'])), v['C'] * v['V']),
+    'mixTemp': lambda v: (v['m1'] * v['c1'] * (v['Tf'] - v['T1']), -v['m2'] * v['c2'] * (v['Tf'] - v['T2'])),
 }
 
 # Derived extras, in the order the app lists them.
@@ -89,6 +111,19 @@ EXTRAS = {
     'secondOrder': [lambda v: 1 / (v['k'] * v['A0'])],
     'electrolysis': [lambda v: v['I'] * v['t']],
     'photon': [lambda v: C / v['l'], lambda v: 1 / (v['l'] * 100), lambda v: v['E'] * NA],
+    'vdw': [lambda v: v['P'] * v['V'] / 1000 / (v['n'] * R * v['T']), lambda v: v['n'] * R * v['T'] / (v['V'] / 1000)],
+    'gasSpeed': [lambda v: sqrt(8 * R * v['T'] / (math.pi * v['M'] / 1000)),
+                 lambda v: sqrt(2 * R * v['T'] / (v['M'] / 1000)), lambda v: 1.5 * R * v['T']],
+    'ksp': [lambda v: v['x'] * v['s'], lambda v: v['y'] * v['s']],
+    'decay': [lambda v: v['m'] / v['m0'] * 100, lambda v: ln(2) / v['th']],
+    'activity': [lambda v: v['m'] / v['M'] * NA],
+    'rydberg': [lambda v: H * C / v['l'], lambda v: C / v['l']],
+    'bohr': [lambda v: RH * H * C * v['Z'] ** 2 / v['n'] ** 2 * NA],
+    'deBroglie': [lambda v: 0.5 * v['m'] / 1000 * v['v'] ** 2],
+    'serial': [lambda v: v['C0'] / v['Ck']],
+    'bufferPrep': [lambda v: v['mHA'] / v['Mha'] * 10 ** (v['pH'] - v['pKa']) * v['Ma'],
+                   lambda v: v['mHA'] / v['Mha'] / v['V'],
+                   lambda v: v['mHA'] / v['Mha'] / v['V'] * 10 ** (v['pH'] - v['pKa'])],
 }
 
 

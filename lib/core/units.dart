@@ -26,6 +26,11 @@ enum Quantity {
   molality, // mol/kg
   absorptivity, // L/(mol·cm)
   cryoscopic, // K·kg/mol
+  speed, // m/s
+  activity, // Bq
+  henry, // mol/(L·atm)
+  vdwA, // L²·bar/mol²
+  vdwB, // L/mol
   percent,
   dimensionless,
 }
@@ -52,6 +57,7 @@ const Map<Quantity, List<Unit>> units = {
     Unit('t', 't', 1e6),
     Unit('lb', 'lb', 453.59237),
     Unit('oz', 'oz', 28.349523125),
+    Unit('u', 'u (Da)', 1.66053906892e-24),
   ],
   Quantity.volume: [
     Unit('L', 'L', 1),
@@ -202,6 +208,34 @@ const Map<Quantity, List<Unit>> units = {
   ],
   Quantity.cryoscopic: [
     Unit('Kkgmol', 'K·kg/mol', 1),
+  ],
+  Quantity.speed: [
+    Unit('ms', 'm/s', 1),
+    Unit('kms', 'km/s', 1000),
+    Unit('kmh', 'km/h', 1 / 3.6),
+  ],
+  Quantity.activity: [
+    Unit('Bq', 'Bq', 1),
+    Unit('kBq', 'kBq', 1e3),
+    Unit('MBq', 'MBq', 1e6),
+    Unit('GBq', 'GBq', 1e9),
+    Unit('Ci', 'Ci', 3.7e10),
+    Unit('mCi', 'mCi', 3.7e7),
+    Unit('uCi', 'µCi', 3.7e4),
+  ],
+  Quantity.henry: [
+    Unit('Matm', 'mol/(L·atm)', 1),
+    Unit('Mbar', 'mol/(L·bar)', 1.01325),
+  ],
+  Quantity.vdwA: [
+    Unit('L2barmol2', 'L²·bar/mol²', 1),
+    Unit('L2atmmol2', 'L²·atm/mol²', 1.01325),
+    Unit('Pam6mol2', 'Pa·m⁶/mol²', 10),
+  ],
+  Quantity.vdwB: [
+    Unit('Lmol', 'L/mol', 1),
+    Unit('cm3mol', 'cm³/mol', 1e-3),
+    Unit('m3mol', 'm³/mol', 1000),
   ],
   Quantity.percent: [
     Unit('pct', '%', 1),
