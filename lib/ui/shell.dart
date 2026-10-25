@@ -91,15 +91,7 @@ class _AppShellState extends State<AppShell> {
               onDestinationSelected: (i) => setState(() => _index = i),
               leading: short ? null : Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    gradient: accentGradient(Palette.violet),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: const Icon(Icons.science_rounded, color: Colors.white),
-                ),
+                child: Image.asset('assets/logo.png', width: 48, height: 48, filterQuality: FilterQuality.medium),
               ),
               trailing: Expanded(
                 child: Align(

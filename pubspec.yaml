@@ -60,6 +60,7 @@ flutter:
     - NOTICE
     - assets/fonts/OFL.txt
     - assets/fonts/OFL-Noto.txt
+    - assets/logo.png
 
   fonts:
     - family: Nunito
