@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/chem/dbe.dart';
 import '../../core/chem/element.dart';
 import '../../core/chem/formula.dart';
 import '../../core/constants.dart';
+import '../../core/isotope_pattern.dart';
 import '../../core/math/expression.dart';
 import '../common.dart';
 import '../errors.dart';
@@ -166,6 +168,11 @@ class _MolarMassScreenState extends State<MolarMassScreen> {
             InfoRow(context.t(S.totalAtoms), context.nf.format(f.totalAtoms)),
             if (f.charge != 0)
               InfoRow(context.t(S.charge), f.charge > 0 ? '+${f.charge}' : '${f.charge}'),
+            if (_exactMass(f) case final m?)
+              InfoRow(context.t(f.charge == 0 ? S.monoisotopic : S.monoisotopicMz),
+                  m.toStringAsFixed(6).replaceAll('.', context.lang == 'tr' ? ',' : '.')),
+            if (doubleBondEquivalents(f) case final d?)
+              InfoRow(context.t(S.dbeLabel), context.nf.format(d)),
           ],
         ),
         SectionTitle(context.t(S.composition)),
@@ -287,5 +294,15 @@ class _MolarMassScreenState extends State<MolarMassScreen> {
         ],
       ),
     );
+  }
+}
+
+/// Monoisotopic mass (or m/z), when every element has natural isotopes and
+/// the counts are whole numbers.
+double? _exactMass(ChemicalFormula f) {
+  try {
+    return monoisotopicMass(f);
+  } on IsotopeException {
+    return null;
   }
 }

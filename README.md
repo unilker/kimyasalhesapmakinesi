@@ -11,17 +11,23 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 |---|---|
 | **Hesap makinesi** | Bilimsel fonksiyonlar, DEG/RAD, `2nd` tuşu, `Ans`, EE (×10ⁿ), fiziksel sabitler, canlı önizleme, donanım klavyesi desteği |
 | **Mol kütlesi** | `CuSO4·5H2O`, `K4[Fe(CN)6]`, `Ca(OH)2`, `SO4^2-`, `D2O`; yüzde bileşim, kütle ⇄ mol ⇄ tanecik |
+| **Mol ve verim** | Kütle, tanecik sayısı, NŞA'da gaz hacmi, hidrat suyu, % verim |
+| **Basit formül** | Yüzde bileşimden basit ve (mol kütlesiyle) molekül formülü |
+| **Çözeltiler** | Çözelti hazırlama (m = C·V·M), molalite, %(k/k) → molarite, kütlece yüzde, ppm, Henry yasası |
+| **Seyreltme** | C₁V₁ = C₂V₂, seri seyreltme, iki çözeltiyi karıştırma |
+| **Asit–baz** | pH/pOH, kuvvetli asit/baz (suyun iyonlaşması dahil), zayıf asit/baz (tam çözüm), tampon ve tampon hazırlama, Ka/pKa, renkli pH skalası |
+| **Titrasyon eğrisi** | Kuvvetli/zayıf, mono/poliprotik asit ve bazlar, Na₂CO₃ gibi tuzlar; tam yük denkliğiyle pH eğrisi, eşdeğerlik ve yarı eşdeğerlik noktaları, uygun indikatörler |
 | **Denklem & stokiyometri** | Tam sayılı (kesin aritmetikle) denkleştirme, iyonik/redoks denklemler, sınırlayıcı bileşen, artan miktar, teorik verim |
-| **Çözeltiler** | Çözelti hazırlama (m = C·V·M), molalite, %(k/k) → molarite, kütlece yüzde, ppm |
-| **Seyreltme** | C₁V₁ = C₂V₂, iki çözeltiyi karıştırma, seyreltme faktörü |
-| **Asit–baz** | pH/pOH, kuvvetli asit/baz (suyun iyonlaşması dahil), zayıf asit/baz (ikinci derece denklemle tam çözüm), tampon, Ka/pKa, titrasyon, renkli pH skalası |
-| **Gaz yasaları** | İdeal gaz, birleşik gaz, gaz yoğunluğu, Dalton, Graham |
-| **Termokimya** | q = mcΔT, ΔG = ΔH − TΔS, ΔG° = −RT ln K, Clausius–Clapeyron, van 't Hoff |
+| **Denge** | Kp ⇄ Kc, Ksp ve çözünürlük; **ICE tablosu**: herhangi bir tepkime ve K için denge derişimleri (ortak iyon, saf katı/sıvı, uç K değerlerinde tam hassasiyet) |
+| **Gaz yasaları** | İdeal, birleşik, gaz yoğunluğu, Dalton, Graham; van der Waals gerçek gaz, molekül hızları |
+| **Termokimya** | q = mcΔT, karışım sıcaklığı, ΔG = ΔH − TΔS, ΔG° = −RT ln K, Clausius–Clapeyron, van 't Hoff |
+| **Tepkime termodinamiği** | 353 maddelik veri tablosundan (CODATA anahtar değerleri + doğrulanmış CRC/NBS/JANAF) ΔH°, ΔS°, ΔG°, K; sıcaklığa bağlılık ve dönüşüm sıcaklığı |
 | **Kinetik** | 0., 1., 2. derece, yarılanma süresi, Arrhenius (tek ve iki sıcaklık) |
-| **Elektrokimya** | Nernst, Faraday elektroliz, ΔG = −nFE, E° ⇄ K |
+| **Elektrokimya** | Nernst, Faraday elektroliz, ΔG = −nFE, E° ⇄ K; **piller**: 74 yarı tepkimelik aranabilir E° tablosu (Vanýsek, CRC), E°pil, denkleştirilmiş toplam tepkime, ΔG°, K |
 | **Spektroskopi** | Beer–Lambert, absorbans ⇄ %T, foton enerjisi / dalga boyu / frekans |
 | **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
-| **Basit formül** | Yüzde bileşimden basit ve (mol kütlesiyle) molekül formülü |
+| **Nükleer, atom ve kristal** | Radyoaktif bozunma ve aktivite; Rydberg, Bohr, de Broglie, birim hücre |
+| **Analitik kimya** | İstatistik (ortalama ± t-güven aralığı, %RSD, Dixon Q, Grubbs), kalibrasyon doğrusu (LOD/LOQ, bilinmeyen ± güven aralığı); **kütle spektrometrisi** (tam kütle, izotop deseni, [M+H]⁺ vb. iyonlar) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
 
@@ -75,7 +81,7 @@ tool/                   element verisi, simge ve ekran görüntüsü üreticiler
 flutter pub get
 flutter run                 # bağlı cihaz veya emülatörde
 flutter analyze
-flutter test                # 50+ test
+flutter test                # 170+ test
 ```
 
 Mağaza için ekran görüntüleri üretmek (gerçek yazı tipleriyle PNG):
@@ -139,6 +145,11 @@ Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanm
 
 ## Veri kaynakları ve üçüncü taraf lisanslar
 
-- Atom kütleleri: IUPAC standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
-- Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2022 / SI 2019. Atom kütleleri: CIAAW 2024.
+- Atom kütleleri: IUPAC/CIAAW 2024 standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
+- Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2022 / SI 2019.
+- İzotop kütleleri ve bollukları: NIST Atomic Weights and Isotopic Compositions.
+- Standart elektrot potansiyelleri: P. Vanýsek, "Electrochemical Series", CRC Handbook of Chemistry and Physics.
+- Termodinamik veriler: CODATA Key Values for Thermodynamics (Cox, Wagman, Medvedev, 1989); tamamlayıcı olarak CRC Handbook, NBS (OpenStax Chemistry 2e Ek G) ve NIST-JANAF. Her satırın geçtiği denetimler `tool/data` içindeki dosya başlıklarında yazılıdır.
+- İstatistik: Miller & Miller, *Statistics and Chemometrics for Analytical Chemistry*; Dixon Q kritik değerleri Rorabacher (1991); LOD/LOQ ICH Q2.
+- Tüm hesaplar bağımsız referans uygulamalarla çapraz kontrol edilir; ayrıntılar: [tool/crosscheck/README.md](tool/crosscheck/README.md).
 - Yazı tipleri: Nunito ve Noto Sans alt kümeleri. Her ikisi de SIL Open Font License 1.1 ile lisanslıdır (`assets/fonts/OFL*.txt`).

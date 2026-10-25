@@ -357,6 +357,47 @@ class S {
   static const cellNote = Bi('25 °C, 1 atm; E° values: P. Vanýsek, CRC Handbook of Chemistry and Physics.',
       '25 °C, 1 atm; E° değerleri: P. Vanýsek, CRC Handbook of Chemistry and Physics.');
 
+  // Reaction thermodynamics (Hess)
+  static const hessNote = Bi(
+    'ΔH° and ΔS° from standard formation data at 298.15 K, 1 bar (CODATA key values; CRC/NBS/JANAF for the rest). At other temperatures ΔH° and ΔS° are taken as constant.',
+    'ΔH° ve ΔS° 298,15 K ve 1 bar standart oluşum verilerinden (CODATA anahtar değerleri; diğerleri CRC/NBS/JANAF). Başka sıcaklıklarda ΔH° ve ΔS° sabit kabul edilir.',
+  );
+  static const speciesData = Bi('Species and table values', 'Türler ve tablo değerleri');
+  static const temperatureK = Bi('Temperature', 'Sıcaklık');
+  static const errNotInTable = Bi('Not in the data table: ', 'Veri tablosunda yok: ');
+  static const errUnbalancedThermo = Bi('The written coefficients do not balance the equation',
+      'Yazılan katsayılar denklemi denkleştirmiyor');
+  static const alwaysSpontaneous = Bi('ΔH° < 0 and ΔS° > 0: spontaneous at every temperature',
+      'ΔH° < 0 ve ΔS° > 0: her sıcaklıkta istemli');
+  static const neverSpontaneous = Bi('ΔH° > 0 and ΔS° < 0: not spontaneous at any temperature',
+      'ΔH° > 0 ve ΔS° < 0: hiçbir sıcaklıkta istemli değil');
+  static Bi spontaneousBelow(String t) =>
+      Bi('Spontaneous below $t (enthalpy-driven)', '$t altında istemli (entalpi kontrollü)');
+  static Bi spontaneousAbove(String t) =>
+      Bi('Spontaneous above $t (entropy-driven)', '$t üstünde istemli (entropi kontrollü)');
+  static const atTemperature = Bi('At the chosen temperature', 'Seçilen sıcaklıkta');
+  static const sourceLabel = Bi('Source', 'Kaynak');
+
+  // Mass spectrometry
+  static const msNote = Bi(
+    'Unit-resolution isotope pattern from NIST isotopic compositions; m/z includes the electron mass.',
+    'NIST izotop bileşimlerinden birim çözünürlüklü izotop deseni; m/z elektron kütlesini içerir.',
+  );
+  static const formulaOrIon = Bi('Molecular formula', 'Molekül formülü');
+  static const ionType = Bi('Ion', 'İyon');
+  static const neutralMolecule = Bi('Neutral M', 'Nötr M');
+  static const monoisotopic = Bi('Monoisotopic (exact) mass', 'Monoizotopik (tam) kütle');
+  static const monoisotopicMz = Bi('Monoisotopic m/z', 'Monoizotopik m/z');
+  static const averageMass = Bi('Average mass', 'Ortalama kütle');
+  static const dbeLabel = Bi('Rings + double bonds (DBE)', 'Halka + çift bağ (DBE)');
+  static const nominalMass = Bi('Nominal mass', 'Nominal kütle');
+  static const isotopePeaks = Bi('Isotope peaks', 'İzotop tepeleri');
+  static const relativeIntensity = Bi('Relative intensity (%)', 'Bağıl şiddet (%)');
+  static Bi errNoIsotopes(String el) =>
+      Bi('$el has no natural isotopic composition', '$el elementinin doğal izotop bileşimi yok');
+  static const errCannotRemove = Bi('The formula has no atom to remove for this ion',
+      'Bu iyon için formülden çıkarılacak atom yok');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

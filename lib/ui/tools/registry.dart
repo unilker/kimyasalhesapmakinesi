@@ -7,7 +7,9 @@ import 'balancer_screen.dart';
 import 'cell_screen.dart';
 import 'constants_screen.dart';
 import 'empirical_screen.dart';
+import 'hess_screen.dart';
 import 'ice_screen.dart';
+import 'mass_spec_screen.dart';
 import 'molar_mass_screen.dart';
 import 'ph_scale.dart';
 import 'solver_screen.dart';
@@ -185,6 +187,16 @@ final List<ToolInfo> tools = [
     builder: (t) => SolverScreen(tool: t, equations: thermoEquations),
   ),
   ToolInfo(
+    id: 'hess',
+    title: const Bi('Reaction Thermodynamics', 'Tepkime Termodinamiği'),
+    subtitle: const Bi('ΔH°, ΔS°, ΔG°, K from formation data', 'Oluşum verilerinden ΔH°, ΔS°, ΔG°, K'),
+    icon: Icons.whatshot_rounded,
+    color: Palette.orange,
+    category: ToolCategory.physical,
+    keywords: 'hess enthalpy entalpi entropy entropi gibbs formation oluşum combustion yanma spontaneous istemli codata thermodynamic termodinamik',
+    builder: (t) => HessScreen(tool: t),
+  ),
+  ToolInfo(
     id: 'kinetics',
     title: const Bi('Kinetics', 'Kinetik'),
     subtitle: const Bi('Rate laws, half-life, Arrhenius', 'Hız yasaları, yarılanma, Arrhenius'),
@@ -263,6 +275,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.analysis,
     keywords: 'statistics istatistik mean ortalama standard deviation standart sapma confidence güven outlier aykırı q test grubbs calibration kalibrasyon regression regresyon lod loq',
     builder: (t) => StatsScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'massSpec',
+    title: const Bi('Mass Spectrometry', 'Kütle Spektrometrisi'),
+    subtitle: const Bi('Exact mass, isotope pattern, m/z', 'Tam kütle, izotop deseni, m/z'),
+    icon: Icons.bar_chart_rounded,
+    color: Palette.violet,
+    category: ToolCategory.analysis,
+    keywords: 'mass spectrometry kütle spektrometrisi ms hrms exact mass tam kütle monoisotopic monoizotopik isotope izotop pattern desen m/z adduct esi',
+    builder: (t) => MassSpecScreen(tool: t),
   ),
   ToolInfo(
     id: 'units',
