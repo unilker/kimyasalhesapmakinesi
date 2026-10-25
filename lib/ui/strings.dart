@@ -420,6 +420,22 @@ class S {
   static const initialConc = Bi('[A]₀ from the fit', 'Uydurmadan [A]₀');
   static const halfLifeLabel = Bi('Half-life t½ (from [A]₀)', 'Yarılanma süresi t½ ([A]₀’dan)');
   static const allOrders = Bi('All three linear plots', 'Üç doğrusal grafik');
+  static const integratedLaw = Bi('Concentration vs time', 'Derişim – zaman');
+  static const initialRatesMode = Bi('Initial rates', 'Başlangıç hızları');
+  static const initialRatesData = Bi('One experiment per line: [A] [B] … rate',
+      'Her satıra bir deney: [A] [B] … hız');
+  static const initialRatesNote = Bi(
+    'ln rate = ln k + m·ln[A] + n·ln[B] … fitted by least squares; k is then averaged over the experiments with the rounded orders.',
+    'ln hız = ln k + m·ln[A] + n·ln[B] … en küçük karelerle uydurulur; k, yuvarlanmış derecelerle deneylerin ortalamasıdır.',
+  );
+  static const fittedOrders = Bi('Fitted order', 'Uydurulan derece');
+  static const rateWord = Bi('rate', 'hız');
+  static const rateLaw = Bi('Rate law', 'Hız kanunu');
+  static const overallOrderLabel = Bi('Overall order', 'Toplam derece');
+  static const errInitialRates = Bi(
+    'Each line needs the same number of positive values, with more experiments than reactants and independently varied concentrations',
+    'Her satırda aynı sayıda pozitif değer olmalı; deney sayısı tepken sayısından fazla olmalı ve derişimler bağımsız değişmeli',
+  );
   static const needPositive = Bi('Concentrations must be positive and at least 3 pairs are needed',
       'Derişimler pozitif olmalı ve en az 3 çift gerekir');
 

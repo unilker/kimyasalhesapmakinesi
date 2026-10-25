@@ -504,6 +504,20 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('rate law from initial rates: 2NO + O2 is k[A]²[B]', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Veriden Hız Kanunu');
+    await tester.tap(find.text('Başlangıç hızları'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Örnek veri'));
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('hız = k[A]²[B]'));
+    await seek(tester, find.textContaining('M⁻² s⁻¹'));
+    expect(find.textContaining('7096 ± 13'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

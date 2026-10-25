@@ -46,4 +46,44 @@ void main() {
     expect(() => fitRateLaws([0, 1], [1, 0.5]), throwsArgumentError);
     expect(() => fitRateLaws([0, 1, 2], [1, 0.5, 0]), throwsArgumentError);
   });
+
+  group('method of initial rates', () {
+    test('2NO + O2 (Chang): rate = k[NO]²[O2], k ≈ 7.1 × 10³ M⁻² s⁻¹', () {
+      final r = fitInitialRates([
+        [0.0125, 0.0253],
+        [0.0250, 0.0253],
+        [0.0125, 0.0506],
+      ], [0.0281, 0.112, 0.0561]);
+      expect(r.orders[0], closeTo(math.log(0.112 / 0.0281) / math.ln2, 1e-12));
+      expect(r.orders[1], closeTo(math.log(0.0561 / 0.0281) / math.ln2, 1e-12));
+      expect(r.roundedOrders, [2, 1]);
+      expect(r.overallOrder, 3);
+      expect(r.kRounded.mean, closeTo(7.1e3, 0.1e3));
+    });
+
+    test('over-determined synthetic data recover k and the orders', () {
+      final conc = <List<double>>[
+        [0.10, 0.10, 0.20],
+        [0.20, 0.10, 0.20],
+        [0.10, 0.30, 0.20],
+        [0.10, 0.10, 0.50],
+        [0.25, 0.40, 0.30],
+      ];
+      const k = 3.7;
+      final rates = [for (final c in conc) k * c[0] * math.pow(c[1], 2) * math.sqrt(c[2])];
+      final r = fitInitialRates(conc, rates);
+      expect(r.orders[0], closeTo(1, 1e-12));
+      expect(r.orders[1], closeTo(2, 1e-12));
+      expect(r.orders[2], closeTo(0.5, 1e-12));
+      expect(math.exp(r.logK), closeTo(k, 1e-10));
+      expect(r.kRounded.mean, closeTo(k, 1e-10));
+      expect(r.kRounded.sd, closeTo(0, 1e-10));
+    });
+
+    test('invalid designs are rejected', () {
+      expect(() => fitInitialRates([[0.1], [0.1]], [1, 2]), throwsArgumentError); // [A] never changes
+      expect(() => fitInitialRates([[0.1, 0.2]], [1]), throwsArgumentError);
+      expect(() => fitInitialRates([[0.1], [0.2]], [1, -2]), throwsArgumentError);
+    });
+  });
 }
