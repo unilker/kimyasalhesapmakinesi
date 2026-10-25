@@ -516,6 +516,37 @@ class S {
   static const allAtField = Bi('All nuclei at this field', 'Bu alanda tüm çekirdekler');
   static const errSpectrometer = Bi('Enter the ¹H frequency in MHz', '¹H frekansını MHz olarak girin');
 
+  // Ionic strength & activity
+  static const activityNote = Bi(
+    'Molar scale, water. A and B follow from the permittivity of water at the chosen temperature; ion sizes α from Kielland (1937). '
+        'Extended Debye–Hückel is reliable up to about I = 0.1 M, Davies up to about 0.5 M.',
+    'Molar ölçek, su. A ve B, seçilen sıcaklıkta suyun dielektrik sabitinden hesaplanır; iyon boyutları α Kielland (1937). '
+        'Genişletilmiş Debye–Hückel yaklaşık I = 0,1 M’ye, Davies yaklaşık 0,5 M’ye kadar güvenilirdir.',
+  );
+  static const temperatureC = Bi('Temperature (0–100 °C)', 'Sıcaklık (0–100 °C)');
+  static const ionsLabel = Bi('Ions', 'İyonlar');
+  static const customIon = Bi('Other ion', 'Diğer iyon');
+  static const customIonHint = Bi('Enter the charge z and, optionally, the size α', 'Yük z ve isteğe bağlı olarak boyut α girin');
+  static const addIon = Bi('Add ion', 'İyon ekle');
+  static const addSalt = Bi('Add a salt', 'Tuz ekle');
+  static const saltConcentration = Bi('Salt concentration', 'Tuz derişimi');
+  static const clearIons = Bi('Clear', 'Temizle');
+  static const ionicStrength = Bi('Ionic strength I', 'İyonik şiddet I');
+  static const notNeutral = Bi('The ions entered are not electrically neutral (Σ cᵢzᵢ ≠ 0).',
+      'Girilen iyonlar elektriksel olarak nötr değil (Σ cᵢzᵢ ≠ 0).');
+  static const ionicHigh = Bi('I > 0.1 M: extended Debye–Hückel becomes unreliable; prefer Davies.',
+      'I > 0,1 M: genişletilmiş Debye–Hückel güvenilirliğini yitirir; Davies tercih edin.');
+  static const ionicTooHigh = Bi('I > 0.5 M: all Debye–Hückel-type equations are outside their range (use Pitzer or SIT models).',
+      'I > 0,5 M: Debye–Hückel türü denklemlerin hepsi geçerlilik aralığı dışında (Pitzer veya SIT modelleri kullanın).');
+  static const extendedDH = Bi('γ extended Debye–Hückel', 'γ genişletilmiş Debye–Hückel');
+  static const daviesEq = Bi('γ Davies', 'γ Davies');
+  static const limitingDH = Bi('γ limiting law', 'γ limit yasası');
+  static const activityLabel = Bi('Activity a = γ·c', 'Aktiflik a = γ·c');
+  static const errWaterTemperature = Bi('Enter a temperature between 0 and 100 °C', '0 ile 100 °C arasında bir sıcaklık girin');
+  static const errIonRow = Bi('Each ion needs a concentration ≥ 0 and a non-zero integer charge',
+      'Her iyon için ≥ 0 derişim ve sıfırdan farklı tam sayı yük gerekir');
+  static const errSaltConc = Bi('Enter a positive salt concentration', 'Pozitif bir tuz derişimi girin');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

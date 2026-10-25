@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/bi.dart';
 import '../../core/solver_catalog.dart';
 import '../theme.dart';
+import 'activity_screen.dart';
 import 'balancer_screen.dart';
 import 'cell_screen.dart';
 import 'constants_screen.dart';
@@ -313,6 +314,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.analysis,
     keywords: 'statistics istatistik mean ortalama standard deviation standart sapma confidence güven outlier aykırı q test grubbs calibration kalibrasyon regression regresyon lod loq',
     builder: (t) => StatsScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'activity',
+    title: const Bi('Ionic Strength & Activity', 'İyonik Şiddet ve Aktiflik'),
+    subtitle: const Bi('Debye–Hückel, Davies, Kielland ion sizes', 'Debye–Hückel, Davies, Kielland iyon boyutları'),
+    icon: Icons.bubble_chart_rounded,
+    color: Palette.orange,
+    category: ToolCategory.analysis,
+    keywords: 'ionic strength iyonik şiddet activity aktiflik aktivite coefficient katsayı debye hückel huckel davies kielland ion size iyon boyutu salt tuz electrolyte elektrolit',
+    builder: (t) => ActivityScreen(tool: t),
   ),
   ToolInfo(
     id: 'uncertainty',
