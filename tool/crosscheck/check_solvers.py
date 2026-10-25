@@ -24,6 +24,19 @@ R_LATM = R / 101.325                          # L atm/(mol K)
 RH = 10973731.568157 / (1 + 9.1093837139e-31 / 1.67262192595e-27)
 P0 = 101325.0
 
+
+def bragg_angle(deg):
+    # the Bragg angle is defined on (0°, 90°]
+    if not 0 < deg <= 90:
+        raise ValueError('theta outside (0, 90]')
+    return math.radians(deg)
+
+
+def reduced(a, b):
+    if a <= 0 or b <= 0:
+        raise ValueError('masses must be positive')
+    return a * b / (a + b)
+
 # (lhs, rhs) of each equation; v holds base-unit values (Pa, L, mol, K, g,
 # mol/L, g/mL, g/mol, J/mol, J/(mol K), J/(g K), s, 1/s, V, A, m, …).
 EQ = {
@@ -87,6 +100,9 @@ EQ = {
     'bohr': lambda v: (v['E'] * v['n'] ** 2, -RH * H * C * v['Z'] ** 2),
     'deBroglie': lambda v: (v['l'] * v['m'] / 1000 * v['v'], H),
     'crystal': lambda v: (v['rho'] * NA * (v['a'] * 100) ** 3, v['Z'] * v['M']),
+    'bragg': lambda v: (v['n'] * v['l'], 2 * v['d'] * math.sin(bragg_angle(v['theta']))),
+    # (2π c ν̃)² μ = k with ν̃ in m⁻¹ and μ in kg (masses arrive in g)
+    'vibration': lambda v: ((2 * math.pi * C * 100 * v['wn']) ** 2 * reduced(v['m1'], v['m2']) / 1000, v['kf']),
     'hydrate': lambda v: (v['x'] * v['ma'] / v['M'], (v['mh'] - v['ma']) / MW),
     'henry': lambda v: (v['C'], v['kH'] * v['P'] / P0),
     'serial': lambda v: (v['C0'], v['Ck'] * v['DF'] ** v['k']),
@@ -120,6 +136,8 @@ EXTRAS = {
     'rydberg': [lambda v: H * C / v['l'], lambda v: C / v['l']],
     'bohr': [lambda v: RH * H * C * v['Z'] ** 2 / v['n'] ** 2 * NA],
     'deBroglie': [lambda v: 0.5 * v['m'] / 1000 * v['v'] ** 2],
+    'bragg': [lambda v: 2 * v['theta'], lambda v: v['d'] / v['n']],
+    'vibration': [lambda v: reduced(v['m1'], v['m2']), lambda v: C * 100 * v['wn'], lambda v: 0.01 / v['wn']],
     'serial': [lambda v: v['C0'] / v['Ck']],
     'bufferPrep': [lambda v: v['mHA'] / v['Mha'] * 10 ** (v['pH'] - v['pKa']) * v['Ma'],
                    lambda v: v['mHA'] / v['Mha'] / v['V'],

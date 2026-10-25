@@ -152,7 +152,8 @@ class _SolverScreenState extends State<SolverScreen> {
       final u = _unit(v);
       inputs[v.id] = u.toBase(x);
       final formula = _formulaController(v).text.trim();
-      final unitText = u.symbol.isEmpty ? '' : ' ${u.symbol}';
+      final us = v.unitLabel.isNotEmpty ? v.unitLabel : u.symbol;
+      final unitText = us.isEmpty ? '' : ' $us';
       parts.add('${_sym(v)} = ${context.nf.format(x)}$unitText'
           '${v.molarMassFromFormula && formula.isNotEmpty ? ' (${prettyFormula(formula)})' : ''}');
     }
@@ -174,7 +175,7 @@ class _SolverScreenState extends State<SolverScreen> {
     final tv = _eq.variable(_target);
     final ru = _resultUnit(tv);
     final resultText =
-        '${_sym(tv)} = ${_withUnit(ru.fromBase(outcome.value), ru, tv.quantity)}';
+        '${_sym(tv)} = ${_withUnit(ru.fromBase(outcome.value), ru, tv.quantity, label: tv.unitLabel)}';
     context.app.addHistory(
       toolId: widget.tool.id,
       input: '${_eq.title.of(lang)}: ${parts.join(', ')}',
@@ -305,14 +306,16 @@ class _SolverScreenState extends State<SolverScreen> {
       textInputAction: last ? TextInputAction.done : TextInputAction.next,
       onChanged: (_) => _invalidate(),
       onSubmitted: last ? (_) => _calculate() : null,
-      trailing: UnitDropdown(
-        quantity: v.quantity,
-        unit: _unit(v),
-        onChanged: (u) => setState(() {
-          _units[_key(v)] = u;
-          _outcome = null;
-        }),
-      ),
+      trailing: v.unitLabel.isNotEmpty
+          ? _UnitText(v.unitLabel)
+          : UnitDropdown(
+              quantity: v.quantity,
+              unit: _unit(v),
+              onChanged: (u) => setState(() {
+                _units[_key(v)] = u;
+                _outcome = null;
+              }),
+            ),
     );
     if (!v.molarMassFromFormula) return numberField;
     final fc = _formulaController(v);
@@ -367,11 +370,13 @@ class _SolverScreenState extends State<SolverScreen> {
             ? context.percent(shown, digits: context.app.significantDigits)
             : context.nf.format(shown),
         copyValue: context.nf.plain(shown),
-        trailing: UnitDropdown(
-          quantity: tv.quantity,
-          unit: ru,
-          onChanged: (u) => setState(() => _resultUnits[_key(tv)] = u),
-        ),
+        trailing: tv.unitLabel.isNotEmpty
+            ? _UnitText(tv.unitLabel)
+            : UnitDropdown(
+                quantity: tv.quantity,
+                unit: ru,
+                onChanged: (u) => setState(() => _resultUnits[_key(tv)] = u),
+              ),
         children: [
           if (extraRows.isNotEmpty) ...[
             const Divider(height: 18),
@@ -382,4 +387,17 @@ class _SolverScreenState extends State<SolverScreen> {
       ?extraWidget,
     ];
   }
+}
+
+/// Fixed unit text shown where a unit dropdown would be.
+class _UnitText extends StatelessWidget {
+  const _UnitText(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(top: 6, left: 4),
+        child: Text(text, style: const TextStyle(fontWeight: FontWeight.w800)),
+      );
 }

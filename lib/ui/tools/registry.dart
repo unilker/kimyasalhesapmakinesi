@@ -11,6 +11,7 @@ import 'hess_screen.dart';
 import 'ice_screen.dart';
 import 'mass_spec_screen.dart';
 import 'molar_mass_screen.dart';
+import 'nmr_screen.dart';
 import 'nuclide_screen.dart';
 import 'ph_scale.dart';
 import 'rate_data_screen.dart';
@@ -293,11 +294,14 @@ final List<ToolInfo> tools = [
   ToolInfo(
     id: 'atomic',
     title: const Bi('Atoms & Crystals', 'Atom ve Kristal'),
-    subtitle: const Bi('Rydberg, Bohr, de Broglie, unit cell', 'Rydberg, Bohr, de Broglie, birim hücre'),
+    subtitle: const Bi(
+      'Rydberg, Bohr, de Broglie, unit cell, Bragg, IR vibration',
+      'Rydberg, Bohr, de Broglie, birim hücre, Bragg, IR titreşimi',
+    ),
     icon: Icons.blur_circular_rounded,
     color: Palette.violet,
     category: ToolCategory.physical,
-    keywords: 'hydrogen hidrojen spectrum spektrum rydberg balmer bohr de broglie crystal kristal lattice örgü unit cell birim hücre',
+    keywords: 'hydrogen hidrojen spectrum spektrum rydberg balmer bohr de broglie crystal kristal lattice örgü unit cell birim hücre bragg xrd x-ray x-ışını kırınım diffraction ir infrared kızılötesi vibration titreşim force constant kuvvet sabiti reduced mass indirgenmiş kütle wavenumber dalga sayısı',
     builder: (t) => SolverScreen(tool: t, equations: atomicEquations),
   ),
   ToolInfo(
@@ -329,6 +333,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.analysis,
     keywords: 'mass spectrometry kütle spektrometrisi ms hrms exact mass tam kütle monoisotopic monoizotopik isotope izotop pattern desen m/z adduct esi',
     builder: (t) => MassSpecScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'nmr',
+    title: const Bi('NMR Frequencies', 'NMR Frekansları'),
+    subtitle: const Bi('Nuclei at any field, ppm ⇄ Hz', 'Her alanda çekirdekler, ppm ⇄ Hz'),
+    icon: Icons.graphic_eq_rounded,
+    color: Palette.cyan,
+    category: ToolCategory.analysis,
+    keywords: 'nmr nuclear magnetic resonance nükleer manyetik rezonans larmor frequency frekans ppm hz chemical shift kimyasal kayma spectrometer spektrometre receptivity alıcılık 13c 31p 19f',
+    builder: (t) => NmrScreen(tool: t),
   ),
   ToolInfo(
     id: 'units',

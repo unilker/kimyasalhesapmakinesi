@@ -653,6 +653,67 @@ void main() {
     });
   }
 
+  testWidgets('NMR: ¹³C and ³¹P on a 400 MHz spectrometer, ppm → Hz', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'NMR Frekansları');
+    await seek(tester, find.text('100,58008 MHz'));
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('³¹P'));
+    await tester.tap(find.text('³¹P'));
+    await tester.pumpAndSettle();
+    final ppmField = find.ancestor(
+        of: find.text('Kimyasal kayma farkı (ppm, isteğe bağlı)'), matching: find.byType(TextField));
+    await seek(tester, ppmField);
+    await tester.enterText(ppmField, '10');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('161,922968 MHz'));
+    expect(find.text('1619,23 Hz'), findsOneWidget);
+    expect(state.history.first.toolId, 'nmr');
+    // picker
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Tüm çekirdekler'));
+    await tester.tap(find.text('Tüm çekirdekler'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Pt');
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('¹⁹⁵Pt'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('85,987136'));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('IR vibration preset shows cm⁻¹ and N/m labels instead of unit menus', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Atom ve Kristal');
+    await seek(tester, find.text('İki atomlu titreşim (harmonik)'));
+    await tester.tap(find.text('İki atomlu titreşim (harmonik)'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('¹H³⁵Cl'));
+    await tester.tap(find.text('¹H³⁵Cl'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('N/m'));
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('2990,0'));
+    expect(find.text('cm⁻¹'), findsWidgets);
+    expect(state.history.first.result, contains('cm⁻¹'));
+    expect(state.history.first.input, contains('516 N/m'));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

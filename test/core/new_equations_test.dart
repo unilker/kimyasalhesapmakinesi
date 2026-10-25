@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/core/solver.dart';
 import 'package:kimya_hesap/core/solver_catalog.dart';
@@ -131,5 +133,47 @@ void main() {
         expect(e.solvable.any((v) => !p.values.containsKey(v.id)), isTrue, reason: e.id);
       }
     }
+  });
+
+  test("Bragg's law: NaCl (200) and Si (111) with Cu Kα₁", () {
+    // NaCl a = 564.02 pm → d(200) = 282.01 pm; PDF 05-0628 lists 2θ = 31.69°
+    final th = solve('bragg', 'theta', {'n': 1, 'l': 154.0593e-12, 'd': 282.01e-12});
+    expect(2 * th, closeTo(31.70, 0.01));
+    expect(solve('bragg', 'theta', {'n': 1, 'l': 154.0593e-12, 'd': 282.01e-12}, extra: 0), closeTo(2 * th, 1e-12));
+    // Si a = 543.102 pm → d(111) = a/√3; reference pattern 2θ = 28.443°
+    final d111 = 543.102e-12 / math.sqrt(3);
+    expect(2 * solve('bragg', 'theta', {'n': 1, 'l': 154.0593e-12, 'd': d111}), closeTo(28.443, 0.002));
+    // and back to the spacing
+    expect(solve('bragg', 'd', {'n': 1, 'l': 154.0593e-12, 'theta': 28.443 / 2}) * 1e12, closeTo(313.56, 0.02));
+    // second order of the same planes = first order of half the spacing
+    expect(solve('bragg', 'theta', {'n': 2, 'l': 154.0593e-12, 'd': 2 * 282.01e-12}), closeTo(th, 1e-9));
+    // nλ > 2d and θ outside (0, 90°] have no solution
+    expect(solveEquation(eq('bragg'), 'theta', {'n': 1, 'l': 300e-12, 'd': 100e-12}).ok, isFalse);
+    expect(solveEquation(eq('bragg'), 'd', {'n': 1, 'l': 154e-12, 'theta': 95}).ok, isFalse);
+    expect(solveEquation(eq('bragg'), 'd', {'n': 1, 'l': 154e-12, 'theta': 0}).ok, isFalse);
+  });
+
+  test('diatomic vibration reproduces ωe of HCl, DCl, CO, H2 (Huber & Herzberg)', () {
+    const u = 1.66053906892e-24; // g
+    double wn(double k, double m1, double m2) => solve('vibration', 'wn', {'kf': k, 'm1': m1 * u, 'm2': m2 * u});
+    expect(wn(516, 1.00782503, 34.96885268), closeTo(2990.95, 2));
+    // isotope substitution with the same force constant: D³⁵Cl ωe = 2145.2
+    expect(wn(516, 2.01410178, 34.96885268), closeTo(2145.2, 2));
+    expect(wn(1902, 12, 15.99491462), closeTo(2169.81, 1));
+    expect(wn(575, 1.00782503, 1.00782503), closeTo(4401.2, 2));
+    // inverse directions
+    expect(solve('vibration', 'kf', {'wn': 2169.81, 'm1': 12 * u, 'm2': 15.99491462 * u}), closeTo(1901.86, 0.01));
+    // μ ≈ m₁ for HCl, so m₂ is very sensitive to k: use the exact k for ωe
+    final k = solve('vibration', 'kf', {'wn': 2990.95, 'm1': 1.00782503 * u, 'm2': 34.96885268 * u});
+    expect(k, closeTo(516.31, 0.01));
+    final m2 = solve('vibration', 'm2', {'kf': k, 'wn': 2990.95, 'm1': 1.00782503 * u}) / u;
+    expect(m2, closeTo(34.96885268, 1e-6));
+    // reduced mass, frequency and wavelength
+    final r = solveEquation(eq('vibration'), 'wn', {'kf': 516, 'm1': 1.00782503 * u, 'm2': 34.96885268 * u});
+    expect(r.extras[0]! / u, closeTo(0.979593, 1e-6));
+    expect(r.extras[1]!, closeTo(299792458 * 100 * r.value, 1e-3));
+    expect(r.extras[2]! * 1e6, closeTo(1e4 / r.value, 1e-9));
+    // a single mass lighter than the needed reduced mass: no partner exists
+    expect(solveEquation(eq('vibration'), 'm2', {'kf': 516, 'wn': 2990.95, 'm1': 0.5 * u}).ok, isFalse);
   });
 }

@@ -1729,4 +1729,129 @@ final atomicEquations = <SolverEquation>[
       SolverPreset(Bi('diamond (Z = 8)', 'elmas (Z = 8)'), {'Z': 8}),
     ],
   ),
+  SolverEquation(
+    id: 'bragg',
+    title: const Bi("Bragg's law (X-ray diffraction)", 'Bragg yasası (X-ışını kırınımı)'),
+    formula: 'n·λ = 2·d·sin θ',
+    defaultTarget: 'd',
+    variables: [
+      _num('n', 'n', const Bi('Diffraction order', 'Kırınım mertebesi'), def: 1),
+      const SolverVar(
+        'l',
+        'λ',
+        Bi('X-ray wavelength', 'X-ışını dalga boyu'),
+        Quantity.length,
+        unit: 'pm',
+        defaultValue: 154.0593,
+      ),
+      const SolverVar('d', 'd', Bi('Interplanar spacing', 'Düzlemler arası uzaklık'), Quantity.length, unit: 'pm'),
+      const SolverVar(
+        'theta',
+        'θ',
+        Bi('Bragg angle (half of 2θ)', 'Bragg açısı (2θ’nın yarısı)'),
+        Quantity.dimensionless,
+        unitLabel: '°',
+      ),
+    ],
+    solvers: {
+      'd': (v) => v['n']! * v['l']! / (2 * math.sin(_braggRad(v['theta']!))),
+      'theta': (v) => math.asin(v['n']! * v['l']! / (2 * v['d']!)) * 180 / math.pi,
+      'l': (v) => 2 * v['d']! * math.sin(_braggRad(v['theta']!)) / v['n']!,
+      'n': (v) => 2 * v['d']! * math.sin(_braggRad(v['theta']!)) / v['l']!,
+    },
+    extras: [
+      SolverExtra(
+        '2θ',
+        const Bi('Diffractometer angle', 'Difraktometre açısı'),
+        Quantity.dimensionless,
+        (v) => 2 * v['theta']!,
+        unitLabel: '°',
+      ),
+      SolverExtra(
+        'd/n',
+        const Bi('Spacing of the first-order reflection', 'Birinci mertebe yansıma aralığı'),
+        Quantity.length,
+        (v) => v['d']! / v['n']!,
+        unit: 'A',
+      ),
+    ],
+    presets: const [
+      SolverPreset(Bi('Cu Kα₁', 'Cu Kα₁'), {'l': 154.0593}),
+      SolverPreset(Bi('Mo Kα₁', 'Mo Kα₁'), {'l': 70.9317}),
+      SolverPreset(Bi('Co Kα₁', 'Co Kα₁'), {'l': 178.8965}),
+      SolverPreset(Bi('Cr Kα₁', 'Cr Kα₁'), {'l': 228.9760}),
+    ],
+    note: const Bi(
+      'θ is the angle between the beam and the lattice planes; diffractometers report 2θ. '
+          'Kα₁ wavelengths: Hölzer et al., Phys. Rev. A 56, 4554 (1997).',
+      'θ, ışın ile örgü düzlemleri arasındaki açıdır; difraktometreler 2θ verir. '
+          'Kα₁ dalga boyları: Hölzer vd., Phys. Rev. A 56, 4554 (1997).',
+    ),
+  ),
+  SolverEquation(
+    id: 'vibration',
+    title: const Bi('Diatomic vibration (harmonic)', 'İki atomlu titreşim (harmonik)'),
+    formula: 'ν̃ = (1/2πc)·√(k/μ),  μ = m₁m₂/(m₁+m₂)',
+    defaultTarget: 'wn',
+    variables: [
+      const SolverVar('wn', 'ν̃', Bi('Wavenumber', 'Dalga sayısı'), Quantity.dimensionless, unitLabel: 'cm⁻¹'),
+      const SolverVar('kf', 'k', Bi('Force constant', 'Kuvvet sabiti'), Quantity.dimensionless, unitLabel: 'N/m'),
+      _m('m1', 'm₁', name: const Bi('Mass of atom 1', '1. atomun kütlesi'), unit: 'u'),
+      _m('m2', 'm₂', name: const Bi('Mass of atom 2', '2. atomun kütlesi'), unit: 'u'),
+    ],
+    solvers: {
+      'wn': (v) => math.sqrt(v['kf']! / _reducedKg(v['m1']!, v['m2']!)) / (2 * math.pi * speedOfLight * 100),
+      'kf': (v) => _reducedKg(v['m1']!, v['m2']!) * math.pow(2 * math.pi * speedOfLight * 100 * v['wn']!, 2),
+      'm2': (v) => _otherMass(v['kf']!, v['wn']!, v['m1']!),
+      'm1': (v) => _otherMass(v['kf']!, v['wn']!, v['m2']!),
+    },
+    extras: [
+      SolverExtra(
+        'μ',
+        const Bi('Reduced mass', 'İndirgenmiş kütle'),
+        Quantity.mass,
+        (v) => v['m1']! * v['m2']! / (v['m1']! + v['m2']!),
+        unit: 'u',
+      ),
+      SolverExtra(
+        'ν',
+        const Bi('Frequency', 'Frekans'),
+        Quantity.frequency,
+        (v) => speedOfLight * 100 * v['wn']!,
+        unit: 'THz',
+      ),
+      SolverExtra('λ', const Bi('Wavelength', 'Dalga boyu'), Quantity.length, (v) => 1 / (100 * v['wn']!), unit: 'um'),
+    ],
+    presets: const [
+      SolverPreset(Bi('¹H³⁵Cl', '¹H³⁵Cl'), {'kf': 516, 'm1': 1.00782503, 'm2': 34.96885268}),
+      SolverPreset(Bi('¹H¹⁹F', '¹H¹⁹F'), {'kf': 966, 'm1': 1.00782503, 'm2': 18.99840316}),
+      SolverPreset(Bi('¹²C¹⁶O', '¹²C¹⁶O'), {'kf': 1902, 'm1': 12, 'm2': 15.99491462}),
+      SolverPreset(Bi('¹⁴N₂', '¹⁴N₂'), {'kf': 2295, 'm1': 14.00307401, 'm2': 14.00307401}),
+      SolverPreset(Bi('¹H₂', '¹H₂'), {'kf': 575, 'm1': 1.00782503, 'm2': 1.00782503}),
+    ],
+    note: const Bi(
+      'Harmonic wavenumber ωₑ; the observed fundamental is lower because of anharmonicity '
+          '(¹H³⁵Cl: ωₑ = 2991, fundamental 2886 cm⁻¹). Replacing H by D lowers ν̃ by about √2.',
+      'Harmonik dalga sayısı ωₑ; gözlenen temel bant anharmoniklik nedeniyle daha düşüktür '
+          '(¹H³⁵Cl: ωₑ = 2991, temel bant 2886 cm⁻¹). H yerine D konunca ν̃ yaklaşık √2 kat düşer.',
+    ),
+  ),
 ];
+
+/// Bragg angle in radians; θ must lie in (0°, 90°].
+double _braggRad(double deg) {
+  if (deg <= 0 || deg > 90) throw ArgumentError('θ outside (0, 90]');
+  return deg * math.pi / 180;
+}
+
+/// Reduced mass in kg from atomic masses in grams (the solver's base unit).
+double _reducedKg(double m1, double m2) => m1 * m2 / (m1 + m2) / 1000;
+
+/// The second mass (g) from k, ν̃ and the first mass; none when the first
+/// mass alone is lighter than the required reduced mass.
+double _otherMass(double k, double wn, double m) {
+  final mu = k / math.pow(2 * math.pi * speedOfLight * 100 * wn, 2) * 1000;
+  final inv = 1 / mu - 1 / m;
+  if (inv <= 0) throw ArgumentError('no second mass');
+  return 1 / inv;
+}
