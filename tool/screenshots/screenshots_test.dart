@@ -10,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/app.dart';
 import 'package:kimya_hesap/state/app_state.dart';
+import 'package:kimya_hesap/ui/common.dart' show ToolScaffold;
 import 'package:kimya_hesap/ui/home/home_screen.dart';
+import 'package:kimya_hesap/ui/widgets/xy_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _loadFonts() async {
@@ -162,6 +164,37 @@ void main() {
     t.view.viewInsets = const FakeViewPadding(bottom: 200 * 2);
     await t.pumpAndSettle();
     await _shot('landscape_keyboard');
+  });
+
+  Future<void> seekText(WidgetTester t, Finder f) async {
+    final sc = find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first;
+    for (var i = 0; i < 40 && f.evaluate().isEmpty; i++) {
+      await t.drag(sc, const Offset(0, -200));
+      await t.pumpAndSettle();
+    }
+    await t.ensureVisible(f.first);
+    await t.pumpAndSettle();
+  }
+
+  testWidgets('phone titration H3PO4', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Titrasyon Eğrisi');
+    await _tapText(t, 'H₃PO₄');
+    await seekText(t, find.text('Hesapla'));
+    await t.tap(find.text('Hesapla'));
+    await t.pumpAndSettle();
+    await seekText(t, find.byType(XyChart));
+    await _shot('phone_titration');
+  });
+
+  testWidgets('tablet calibration', (t) async {
+    await _pump(t, tablet);
+    await _openTool(t, 'İstatistik ve Kalibrasyon');
+    await _tapText(t, 'Kalibrasyon doğrusu');
+    await _tapText(t, 'Örnek veri');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.byType(XyChart));
+    await _shot('tablet_calibration');
   });
 
   testWidgets('landscape calculator', (t) async {

@@ -263,6 +263,79 @@ class S {
   static const fromFormula = Bi('Formula (optional)', 'Formül (isteğe bağlı)');
   static const invalidNumber = Bi('Invalid number', 'Geçersiz sayı');
 
+  // Statistics & calibration
+  static const dataSet = Bi('Data set', 'Veri seti');
+  static const calibrationLine = Bi('Calibration line', 'Kalibrasyon doğrusu');
+  static const data = Bi('Values', 'Değerler');
+  static const dataHint = Bi(
+    'Separate values with spaces, new lines or ";". Decimal comma or point.',
+    'Değerleri boşluk, yeni satır veya “;” ile ayırın. Ondalık için virgül veya nokta kullanılabilir.',
+  );
+  static const confidence = Bi('Confidence level', 'Güven düzeyi');
+  static const count = Bi('Number of values n', 'Değer sayısı n');
+  static const mean = Bi('Mean', 'Ortalama');
+  static const median = Bi('Median', 'Medyan');
+  static const sd = Bi('Standard deviation s', 'Standart sapma s');
+  static const variance = Bi('Variance s²', 'Varyans s²');
+  static const rsd = Bi('Relative standard deviation', 'Bağıl standart sapma');
+  static const sem = Bi('Standard error of the mean', 'Ortalamanın standart hatası');
+  static const range = Bi('Range (min – max)', 'Aralık (en küçük – en büyük)');
+  static const ci = Bi('Confidence interval of the mean', 'Ortalamanın güven aralığı');
+  static const qTest = Bi('Dixon Q test', 'Dixon Q testi');
+  static const grubbsTest = Bi('Grubbs test', 'Grubbs testi');
+  static const suspect = Bi('Suspect value', 'Şüpheli değer');
+  static const statistic = Bi('Test value / critical value', 'Test değeri / kritik değer');
+  static const outlierYes = Bi('Outlier – may be rejected', 'Aykırı değer – atılabilir');
+  static const outlierNo = Bi('Not an outlier – keep it', 'Aykırı değil – korunmalı');
+  static const qRange = Bi('The Q test is defined for 3–10 values.', 'Q testi 3–10 değer için tanımlıdır.');
+  static const needTwo = Bi('Enter at least 2 numbers', 'En az 2 sayı girin');
+  static const invalidList = Bi('Some entries are not numbers', 'Bazı girdiler sayı değil');
+  static const pairs = Bi('Standards: one “x y” pair per line', 'Standartlar: her satıra bir “x y” çifti');
+  static const pairsHint = Bi('e.g. 2 5.0', 'ör. 2 5,0');
+  static const unknownSignal = Bi('Signal of the unknown y₀ (optional)', 'Bilinmeyenin sinyali y₀ (isteğe bağlı)');
+  static const replicates = Bi('Number of y₀ replicates', 'y₀ tekrar sayısı');
+  static const slope = Bi('Slope m ± s', 'Eğim m ± s');
+  static const intercept = Bi('Intercept b ± s', 'Kesim noktası b ± s');
+  static const correlation = Bi('Correlation r / R²', 'Korelasyon r / R²');
+  static const syx = Bi('Residual SD s_y/x', 'Artık standart sapma s_y/x');
+  static const lodLabel = Bi('Limit of detection 3.3·s_y/x/m', 'Gözlenebilme sınırı 3,3·s_y/x/m');
+  static const loqLabel = Bi('Limit of quantification 10·s_y/x/m', 'Tayin sınırı 10·s_y/x/m');
+  static const unknownX = Bi('Unknown x₀ (± confidence interval)', 'Bilinmeyen x₀ (± güven aralığı)');
+  static const needPairs = Bi(
+    'Enter at least 3 “x y” pairs with different x values',
+    'Farklı x değerlerine sahip en az 3 “x y” çifti girin',
+  );
+  static const exampleData = Bi('Example data', 'Örnek veri');
+  static const statsSource = Bi(
+    'Methods: Miller & Miller, Statistics and Chemometrics for Analytical Chemistry; Q values: Rorabacher (1991); LOD/LOQ: ICH Q2.',
+    'Yöntemler: Miller & Miller, Statistics and Chemometrics for Analytical Chemistry; Q değerleri: Rorabacher (1991); LOD/LOQ: ICH Q2.',
+  );
+
+  // Titration curve
+  static const analyte = Bi('Analyte (in the flask)', 'Analit (erlende)');
+  static const analyteAcid = Bi('Acid titrated with strong base', 'Kuvvetli bazla titre edilen asit');
+  static const analyteBase = Bi('Base titrated with strong acid', 'Kuvvetli asitle titre edilen baz');
+  static const pKaList = Bi('pKa values (empty = strong)', 'pKa değerleri (boş = kuvvetli)');
+  static const pKaListHint = Bi(
+    'e.g. 4.76, or 2.16 7.21 12.32 for H₃PO₄. For bases, the pKa of the conjugate acid.',
+    'ör. 4,76 veya H₃PO₄ için 2,16 7,21 12,32. Bazlar için eşlenik asidin pKa’sı.',
+  );
+  static const analyteConc = Bi('Analyte concentration', 'Analit derişimi');
+  static const analyteVol = Bi('Analyte volume', 'Analit hacmi');
+  static const titrantConc = Bi('Titrant concentration', 'Titrant derişimi');
+  static const volumeQuery = Bi('pH after adding (optional)', 'Şu kadar eklenince pH (isteğe bağlı)');
+  static const equivalencePoint = Bi('Equivalence point', 'Eşdeğerlik noktası');
+  static const halfEquivalence = Bi('Half-equivalence (pH ≈ pKa)', 'Yarı eşdeğerlik (pH ≈ pKa)');
+  static const initialPH = Bi('Initial pH', 'Başlangıç pH’ı');
+  static const indicatorsLabel = Bi('Suitable indicators', 'Uygun göstergeler');
+  static const noIndicator = Bi('No common indicator changes colour exactly here', 'Bu pH’ta renk değiştiren yaygın bir gösterge yok');
+  static const titrantAdded = Bi('Titrant added (mL)', 'Eklenen titrant (mL)');
+  static const titrationNote = Bi(
+    'Exact charge balance at 25 °C (Kw = 10⁻¹⁴), activities taken as concentrations.',
+    'Tam yük denkliği, 25 °C (Kw = 10⁻¹⁴); aktiflikler derişime eşit alınır.',
+  );
+  static const invalidPKa = Bi('Check the pKa values', 'pKa değerlerini kontrol edin');
+
   // pH scale
   static const acidic = Bi('Acidic', 'Asidik');
   static const neutral = Bi('Neutral', 'Nötr');
