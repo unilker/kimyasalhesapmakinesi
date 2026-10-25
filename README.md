@@ -16,17 +16,17 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Çözeltiler** | Çözelti hazırlama (m = C·V·M), molalite, %(k/k) → molarite, kütlece yüzde, ppm, Henry yasası |
 | **Seyreltme** | C₁V₁ = C₂V₂, seri seyreltme, iki çözeltiyi karıştırma |
 | **Asit–baz** | pH/pOH, kuvvetli asit/baz (suyun iyonlaşması dahil), zayıf asit/baz (tam çözüm), tampon ve tampon hazırlama, Ka/pKa, renkli pH skalası |
-| **Titrasyon eğrisi** | Kuvvetli/zayıf, mono/poliprotik asit ve bazlar, Na₂CO₃ gibi tuzlar; tam yük denkliğiyle pH eğrisi, eşdeğerlik ve yarı eşdeğerlik noktaları, uygun indikatörler |
+| **Titrasyon eğrisi** | Kuvvetli/zayıf, mono/poliprotik asit ve bazlar, Na₂CO₃ gibi tuzlar; tam yük denkliğiyle pH eğrisi, eşdeğerlik ve yarı eşdeğerlik noktaları, uygun indikatörler; CRC'den 50 asit/bazlık pKa tablosu |
 | **Denklem & stokiyometri** | Tam sayılı (kesin aritmetikle) denkleştirme, iyonik/redoks denklemler, sınırlayıcı bileşen, artan miktar, teorik verim |
-| **Denge** | Kp ⇄ Kc, Ksp ve çözünürlük; **ICE tablosu**: herhangi bir tepkime ve K için denge derişimleri (ortak iyon, saf katı/sıvı, uç K değerlerinde tam hassasiyet) |
+| **Denge** | Kp ⇄ Kc, Ksp ve çözünürlük; **ICE tablosu**: herhangi bir tepkime ve K için denge derişimleri (ortak iyon, saf katı/sıvı, uç K değerlerinde tam hassasiyet); CRC'den 120 tuzluk Ksp tablosu, molar ve g/L çözünürlük |
 | **Gaz yasaları** | İdeal, birleşik, gaz yoğunluğu, Dalton, Graham; van der Waals gerçek gaz, molekül hızları |
 | **Termokimya** | q = mcΔT, karışım sıcaklığı, ΔG = ΔH − TΔS, ΔG° = −RT ln K, Clausius–Clapeyron, van 't Hoff |
 | **Tepkime termodinamiği** | 353 maddelik veri tablosundan (CODATA anahtar değerleri + doğrulanmış CRC/NBS/JANAF) ΔH°, ΔS°, ΔG°, K; sıcaklığa bağlılık ve dönüşüm sıcaklığı |
-| **Kinetik** | 0., 1., 2. derece, yarılanma süresi, Arrhenius (tek ve iki sıcaklık) |
+| **Kinetik** | 0., 1., 2. derece, yarılanma süresi, Arrhenius (tek ve iki sıcaklık); **veriden hız kanunu**: [A]–t verisinden derece, k ± s ve t½, başlangıç hızları yönteminden dereceler ve k |
 | **Elektrokimya** | Nernst, Faraday elektroliz, ΔG = −nFE, E° ⇄ K; **piller**: 74 yarı tepkimelik aranabilir E° tablosu (Vanýsek, CRC), E°pil, denkleştirilmiş toplam tepkime, ΔG°, K |
 | **Spektroskopi** | Beer–Lambert, absorbans ⇄ %T, foton enerjisi / dalga boyu / frekans |
 | **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
-| **Nükleer, atom ve kristal** | Radyoaktif bozunma ve aktivite; Rydberg, Bohr, de Broglie, birim hücre |
+| **Nükleer, atom ve kristal** | Radyoaktif bozunma ve aktivite; **radyonüklit tablosu** (NUBASE2020: 86 nüklit, yarılanma ± belirsizlik, bozunma türleri, özgül aktivite); Rydberg, Bohr, de Broglie, birim hücre |
 | **Analitik kimya** | İstatistik (ortalama ± t-güven aralığı, %RSD, Dixon Q, Grubbs), kalibrasyon doğrusu (LOD/LOQ, bilinmeyen ± güven aralığı); **kütle spektrometrisi** (tam kütle, izotop deseni, [M+H]⁺ vb. iyonlar) |
 | **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
@@ -81,7 +81,7 @@ tool/                   element verisi, simge ve ekran görüntüsü üreticiler
 flutter pub get
 flutter run                 # bağlı cihaz veya emülatörde
 flutter analyze
-flutter test                # 170+ test
+flutter test                # 190+ test
 ```
 
 Mağaza için ekran görüntüleri üretmek (gerçek yazı tipleriyle PNG):
@@ -148,6 +148,8 @@ Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanm
 - Atom kütleleri: IUPAC/CIAAW 2024 standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
 - Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2022 / SI 2019.
 - İzotop kütleleri ve bollukları: NIST Atomic Weights and Isotopic Compositions.
+- Yarılanma süreleri ve bozunma türleri: NUBASE2020 (Kondev ve ark., Chin. Phys. C 45, 030001, 2021); nüklit kütleleri AME2020.
+- pKa/pKb ve Ksp değerleri: CRC Handbook of Chemistry and Physics, 84. baskı.
 - Standart elektrot potansiyelleri: P. Vanýsek, "Electrochemical Series", CRC Handbook of Chemistry and Physics.
 - Termodinamik veriler: CODATA Key Values for Thermodynamics (Cox, Wagman, Medvedev, 1989); tamamlayıcı olarak CRC Handbook, NBS (OpenStax Chemistry 2e Ek G) ve NIST-JANAF. Her satırın geçtiği denetimler `tool/data` içindeki dosya başlıklarında yazılıdır.
 - İstatistik: Miller & Miller, *Statistics and Chemometrics for Analytical Chemistry*; Dixon Q kritik değerleri Rorabacher (1991); LOD/LOQ ICH Q2.
