@@ -9,16 +9,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Screen sizes (logical pixels) covering phones, foldables and tablets.
 const sizes = <String, Size>{
   'small phone': Size(320, 640),
+  'small phone landscape': Size(640, 320),
   'phone': Size(390, 844),
   'phone landscape': Size(844, 390),
   'fold cover': Size(344, 882),
+  'fold cover landscape': Size(882, 344),
   'fold inner': Size(673, 841),
+  'fold inner landscape': Size(841, 673),
   'tablet portrait': Size(800, 1280),
   'tablet landscape': Size(1280, 800),
 };
 
-Future<AppState> pumpApp(WidgetTester tester, Size size, {String lang = 'tr'}) async {
-  SharedPreferences.setMockInitialValues({'lang': lang});
+/// Typical on-screen keyboard height for a screen of [size].
+double keyboardHeight(Size size) =>
+    size.width > size.height ? (size.height * 0.55).clamp(150, 260) : (size.height * 0.4).clamp(260, 380);
+
+Future<AppState> pumpApp(WidgetTester tester, Size size,
+    {String lang = 'tr', bool rotateButton = false}) async {
+  // The floating rotate button is covered by its own tests; keep it out of
+  // the way of taps elsewhere.
+  SharedPreferences.setMockInitialValues({'lang': lang, 'rotateButton': rotateButton});
   final state = await AppState.create();
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -75,6 +85,66 @@ void main() {
         }
       });
     }
+  }
+
+  // The focused text field must stay visible above the on-screen keyboard
+  // in every tool, in portrait and landscape.
+  for (final name in ['small phone', 'small phone landscape', 'phone', 'phone landscape',
+      'fold cover landscape', 'tablet landscape']) {
+    testWidgets('keyboard does not cover the focused field on $name', (tester) async {
+      final size = sizes[name]!;
+      await pumpApp(tester, size);
+      final kb = keyboardHeight(size);
+      final targets = <String, Finder>{
+        for (final tool in tools) tool.id: find.byType(TextField),
+      };
+      for (final tool in tools) {
+        await openTool(tester, tool.title.of('tr'));
+        final fields = targets[tool.id]!.hitTestable();
+        if (fields.evaluate().isNotEmpty) {
+          // The last field of the form is the one most likely to be covered.
+          // Pin the field by its controller: lazily built lists add/remove
+          // fields while scrolling and rebuilds create new widget instances.
+          final controller =
+              (find.byType(TextField).evaluate().last.widget as TextField).controller;
+          final field = find.byWidgetPredicate(
+              (w) => w is TextField && w.controller == controller);
+          await tester.ensureVisible(field);
+          await tester.pumpAndSettle();
+          await tester.tap(field);
+          tester.view.viewInsets = FakeViewPadding(bottom: kb);
+          await tester.pumpAndSettle();
+          await tester.enterText(field, '12');
+          await tester.pumpAndSettle();
+          final rect = tester.getRect(field);
+          expect(rect.bottom, lessThanOrEqualTo(size.height - kb + 0.5),
+              reason: '${tool.id}: field bottom ${rect.bottom} hidden by keyboard at ${size.height - kb}');
+          expect(rect.top, greaterThanOrEqualTo(0), reason: tool.id);
+          expect(tester.takeException(), isNull, reason: tool.id);
+          tester.view.viewInsets = FakeViewPadding.zero;
+          FocusManager.instance.primaryFocus?.unfocus();
+          await tester.pumpAndSettle();
+        }
+        final back = find.byType(BackButton);
+        if (back.evaluate().isNotEmpty) {
+          await tester.tap(back.first);
+          await tester.pumpAndSettle();
+        }
+      }
+      // Search fields on the home and periodic table screens.
+      for (final icon in [Icons.apps_outlined]) {
+        await tester.tap(find.byIcon(icon).first);
+        await tester.pumpAndSettle();
+        final field = find.byType(TextField).hitTestable().first;
+        await tester.tap(field);
+        tester.view.viewInsets = FakeViewPadding(bottom: kb);
+        await tester.pumpAndSettle();
+        expect(tester.getRect(field).bottom, lessThanOrEqualTo(size.height - kb + 0.5));
+        expect(tester.takeException(), isNull);
+        tester.view.viewInsets = FakeViewPadding.zero;
+        await tester.pumpAndSettle();
+      }
+    });
   }
 
   testWidgets('molar mass is calculated and saved to history', (tester) async {

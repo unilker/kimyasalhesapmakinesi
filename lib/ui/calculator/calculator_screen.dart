@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -283,22 +285,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     final hinge = hingeOf(context);
-    final landscape = size.width > size.height && size.width >= 560;
+    final landscape = size.width > size.height;
     final split = hinge != null || landscape;
+    // Short landscape screens need every pixel for the keys.
+    final short = size.height < 500;
     final display = _display(showSession: split || size.height > 760);
     final keypad = _keypad();
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.t(S.navCalculator))),
+      appBar: short ? null : AppBar(title: Text(context.t(S.navCalculator))),
       body: SafeArea(
-        top: false,
+        top: short,
         child: Focus(
           focusNode: _focus,
           autofocus: true,
           onKeyEvent: _onKey,
           child: split
               ? TwoPane(
-                  minSplitWidth: 560,
+                  minSplitWidth: 400,
                   firstFraction: 0.45,
                   allowTabletop: true,
                   first: display,
@@ -313,7 +317,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   Widget _portrait(Widget display, Widget keypad) {
     return LayoutBuilder(builder: (context, c) {
-      final keypadHeight = (c.maxHeight * 0.66).clamp(280.0, c.maxWidth * 1.45);
+      final preferred = math.max(c.maxHeight * 0.66, math.min(280.0, c.maxHeight * 0.8));
+      final keypadHeight = math.min(preferred, c.maxWidth * 1.45);
       return Column(
         children: [
           Expanded(child: display),

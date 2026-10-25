@@ -67,58 +67,71 @@ class _PeriodicTableScreenState extends State<PeriodicTableScreen> {
       ),
       body: SafeArea(
         top: false,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: TextField(
-                controller: _search,
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: context.t(S.searchElement),
-                  prefixIcon: const Icon(Icons.search_rounded),
-                  isDense: true,
-                  suffixIcon: _search.text.isEmpty
-                      ? null
-                      : IconButton(
-                          icon: const Icon(Icons.clear_rounded),
-                          onPressed: () => setState(_search.clear),
-                        ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 44,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: ChoiceChip(
-                      label: Text(context.t(S.allCategories)),
-                      selected: _category == null,
-                      onSelected: (_) => setState(() => _category = null),
+        child: LayoutBuilder(
+          builder: (context, c) {
+            // Little room (e.g. keyboard open in landscape): drop the category
+            // chips and show search results as a list.
+            final short = c.maxHeight < 260;
+            final list = _listMode || (short && _search.text.isNotEmpty);
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    controller: _search,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(
+                      hintText: context.t(S.searchElement),
+                      prefixIcon: const Icon(Icons.search_rounded),
+                      isDense: true,
+                      suffixIcon: _search.text.isEmpty
+                          ? null
+                          : IconButton(
+                              icon: const Icon(Icons.clear_rounded),
+                              onPressed: () => setState(_search.clear),
+                            ),
                     ),
                   ),
-                  for (final c in ElementCategory.values)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      child: ChoiceChip(
-                        avatar: CircleAvatar(
-                          backgroundColor: categoryColor(c, Theme.of(context).brightness),
+                ),
+                if (!short)
+                  SizedBox(
+                    height: 44,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
+                          child: ChoiceChip(
+                            label: Text(context.t(S.allCategories)),
+                            selected: _category == null,
+                            onSelected: (_) => setState(() => _category = null),
+                          ),
                         ),
-                        label: Text(context.t(S.categoryName(c))),
-                        selected: _category == c,
-                        onSelected: (sel) => setState(() => _category = sel ? c : null),
-                      ),
+                        for (final c in ElementCategory.values)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                            child: ChoiceChip(
+                              avatar: CircleAvatar(
+                                backgroundColor: categoryColor(
+                                  c,
+                                  Theme.of(context).brightness,
+                                ),
+                              ),
+                              label: Text(context.t(S.categoryName(c))),
+                              selected: _category == c,
+                              onSelected: (sel) =>
+                                  setState(() => _category = sel ? c : null),
+                            ),
+                          ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(child: _listMode ? _list() : _table()),
-          ],
+                  ),
+                if (!short) const SizedBox(height: 8),
+                Expanded(child: list ? _list() : _table()),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -146,11 +159,20 @@ class _PeriodicTableScreenState extends State<PeriodicTableScreen> {
               ),
               child: Text(
                 e.symbol,
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18, color: onCategoryColor(b)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  color: onCategoryColor(b),
+                ),
               ),
             ),
-            title: Text(e.name(context.lang), style: const TextStyle(fontWeight: FontWeight.w800)),
-            subtitle: Text('${e.number} · ${formatAtomicMass(context, e)} · ${context.t(S.categoryName(e.category))}'),
+            title: Text(
+              e.name(context.lang),
+              style: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+            subtitle: Text(
+              '${e.number} · ${formatAtomicMass(context, e)} · ${context.t(S.categoryName(e.category))}',
+            ),
             trailing: const Icon(Icons.chevron_right_rounded),
           );
         },
@@ -159,37 +181,41 @@ class _PeriodicTableScreenState extends State<PeriodicTableScreen> {
   }
 
   Widget _table() {
-    return LayoutBuilder(builder: (context, c) {
-      const cols = 18;
-      const gap = 3.0;
-      // Fit the table to the width when possible, otherwise scroll.
-      final fit = (c.maxWidth - 24 - gap * (cols - 1)) / cols;
-      final byHeight = (c.maxHeight - 32 - gap * 10) / 10.4;
-      // Phones scroll sideways, so let cells grow with the height there.
-      final cell = (fit > byHeight.clamp(0.0, 64.0) ? fit : byHeight.clamp(40.0, 64.0)).clamp(40.0, 92.0);
-      final width = cell * cols + gap * (cols - 1);
-      final height = cell * 9.4 + gap * 9;
-      final grid = SizedBox(
-        width: width,
-        height: height,
-        child: Stack(
-          children: [
-            for (final e in PeriodicTable.elements) _positioned(e, cell, gap),
-            _placeholder(6, '57–71', cell, gap),
-            _placeholder(7, '89–103', cell, gap),
-          ],
-        ),
-      );
-      return SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
-        child: Center(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: grid,
+    return LayoutBuilder(
+      builder: (context, c) {
+        const cols = 18;
+        const gap = 3.0;
+        // Fit the table to the width when possible, otherwise scroll.
+        final fit = (c.maxWidth - 24 - gap * (cols - 1)) / cols;
+        final byHeight = (c.maxHeight - 32 - gap * 10) / 10.4;
+        // Phones scroll sideways, so let cells grow with the height there.
+        final cell =
+            (fit > byHeight.clamp(0.0, 64.0) ? fit : byHeight.clamp(40.0, 64.0))
+                .clamp(40.0, 92.0);
+        final width = cell * cols + gap * (cols - 1);
+        final height = cell * 9.4 + gap * 9;
+        final grid = SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            children: [
+              for (final e in PeriodicTable.elements) _positioned(e, cell, gap),
+              _placeholder(6, '57–71', cell, gap),
+              _placeholder(7, '89–103', cell, gap),
+            ],
           ),
-        ),
-      );
-    });
+        );
+        return SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
+          child: Center(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: grid,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   double _top(int row, double cell, double gap) =>
@@ -197,7 +223,9 @@ class _PeriodicTableScreenState extends State<PeriodicTableScreen> {
 
   Widget _placeholder(int period, String text, double cell, double gap) {
     final b = Theme.of(context).brightness;
-    final cat = period == 6 ? ElementCategory.lanthanide : ElementCategory.actinide;
+    final cat = period == 6
+        ? ElementCategory.lanthanide
+        : ElementCategory.actinide;
     return Positioned(
       left: 2 * (cell + gap),
       top: _top(period, cell, gap),
@@ -212,7 +240,13 @@ class _PeriodicTableScreenState extends State<PeriodicTableScreen> {
         child: FittedBox(
           child: Padding(
             padding: const EdgeInsets.all(3),
-            child: Text(text, style: TextStyle(fontWeight: FontWeight.w800, color: onCategoryColor(b))),
+            child: Text(
+              text,
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: onCategoryColor(b),
+              ),
+            ),
           ),
         ),
       ),
@@ -281,14 +315,23 @@ class ElementTile extends StatelessWidget {
                 children: [
                   Text(
                     '${e.number}',
-                    style: TextStyle(fontSize: size * 0.2, fontWeight: FontWeight.w700, color: fg, height: 1),
+                    style: TextStyle(
+                      fontSize: size * 0.2,
+                      fontWeight: FontWeight.w700,
+                      color: fg,
+                      height: 1,
+                    ),
                   ),
                   Expanded(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
                         e.symbol,
-                        style: TextStyle(fontSize: size * 0.42, fontWeight: FontWeight.w900, color: fg),
+                        style: TextStyle(
+                          fontSize: size * 0.42,
+                          fontWeight: FontWeight.w900,
+                          color: fg,
+                        ),
                       ),
                     ),
                   ),
@@ -296,8 +339,15 @@ class ElementTile extends StatelessWidget {
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        context.nf.format(e.atomicMass, digits: e.massIsMassNumber ? 3 : 5),
-                        style: TextStyle(fontSize: size * 0.16, fontWeight: FontWeight.w600, color: fg),
+                        context.nf.format(
+                          e.atomicMass,
+                          digits: e.massIsMassNumber ? 3 : 5,
+                        ),
+                        style: TextStyle(
+                          fontSize: size * 0.16,
+                          fontWeight: FontWeight.w600,
+                          color: fg,
+                        ),
                       ),
                     ),
                 ],
@@ -329,7 +379,9 @@ void showElementDetail(BuildContext context, ChemElement e) {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (ctx) => ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(ctx).height * 0.85),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(ctx).height * 0.85,
+        ),
         child: content,
       ),
     );
@@ -361,16 +413,32 @@ class _ElementDetail extends StatelessWidget {
               decoration: BoxDecoration(
                 color: bg,
                 borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: bg.withValues(alpha: 0.5), blurRadius: 16, offset: const Offset(0, 6))],
+                boxShadow: [
+                  BoxShadow(
+                    color: bg.withValues(alpha: 0.5),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${e.number}', style: TextStyle(color: fg, fontWeight: FontWeight.w800)),
+                  Text(
+                    '${e.number}',
+                    style: TextStyle(color: fg, fontWeight: FontWeight.w800),
+                  ),
                   Expanded(
                     child: Center(
-                      child: Text(e.symbol,
-                          style: TextStyle(color: fg, fontSize: 40, fontWeight: FontWeight.w900, height: 1)),
+                      child: Text(
+                        e.symbol,
+                        style: TextStyle(
+                          color: fg,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          height: 1,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -381,14 +449,25 @@ class _ElementDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(e.name(lang),
-                      style: context.text.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+                  Text(
+                    e.name(lang),
+                    style: context.text.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
                   if (e.nameEn != e.nameTr)
-                    Text(lang == 'tr' ? e.nameEn : e.nameTr,
-                        style: TextStyle(color: context.colors.onSurfaceVariant)),
+                    Text(
+                      lang == 'tr' ? e.nameEn : e.nameTr,
+                      style: TextStyle(color: context.colors.onSurfaceVariant),
+                    ),
                   const SizedBox(height: 6),
-                  Text(context.t(S.categoryName(e.category)),
-                      style: TextStyle(fontWeight: FontWeight.w800, color: context.colors.primary)),
+                  Text(
+                    context.t(S.categoryName(e.category)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: context.colors.primary,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -396,11 +475,16 @@ class _ElementDetail extends StatelessWidget {
         ),
         const SizedBox(height: 18),
         InfoRow(context.t(S.atomicNumber), '${e.number}'),
-        InfoRow(context.t(S.atomicMass), '${formatAtomicMass(context, e)} g/mol'),
+        InfoRow(
+          context.t(S.atomicMass),
+          '${formatAtomicMass(context, e)} g/mol',
+        ),
         InfoRow(context.t(S.electronConfig), e.electronConfiguration),
         InfoRow(
           context.t(S.electronegativity),
-          e.electronegativity == null ? '—' : context.nf.format(e.electronegativity!),
+          e.electronegativity == null
+              ? '—'
+              : context.nf.format(e.electronegativity!),
         ),
         InfoRow(context.t(S.group), e.group == null ? '—' : '${e.group}'),
         InfoRow(context.t(S.period), '${e.period}'),
@@ -411,8 +495,12 @@ class _ElementDetail extends StatelessWidget {
         if (e.massIsMassNumber)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text(context.t(S.radioactiveNote),
-                style: context.text.bodySmall?.copyWith(color: context.colors.onSurfaceVariant)),
+            child: Text(
+              context.t(S.radioactiveNote),
+              style: context.text.bodySmall?.copyWith(
+                color: context.colors.onSurfaceVariant,
+              ),
+            ),
           ),
         const SizedBox(height: 16),
         Wrap(
@@ -420,7 +508,8 @@ class _ElementDetail extends StatelessWidget {
           runSpacing: 10,
           children: [
             FilledButton.tonalIcon(
-              onPressed: () => copyText(context, context.nf.plain(e.atomicMass, digits: 10)),
+              onPressed: () =>
+                  copyText(context, context.nf.plain(e.atomicMass, digits: 10)),
               icon: const Icon(Icons.copy_rounded),
               label: Text('${context.t(S.copy)}: ${context.t(S.atomicMass)}'),
             ),
@@ -430,9 +519,12 @@ class _ElementDetail extends StatelessWidget {
                 final sheet = Navigator.of(context);
                 final root = Navigator.of(context, rootNavigator: true);
                 sheet.pop();
-                root.push(MaterialPageRoute<void>(
-                  builder: (_) => MolarMassScreen(tool: tool, initialFormula: e.symbol),
-                ));
+                root.push(
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        MolarMassScreen(tool: tool, initialFormula: e.symbol),
+                  ),
+                );
               },
               icon: const Icon(Icons.scale_rounded),
               label: Text(context.t(S.useInMolarMass)),

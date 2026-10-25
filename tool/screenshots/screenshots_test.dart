@@ -154,6 +154,16 @@ void main() {
     await _shot('tablet_periodic_dark_en');
   });
 
+  testWidgets('landscape solver with keyboard', (t) async {
+    await _pump(t, const Size(844, 390));
+    await _openTool(t, 'Seyreltme ve Karıştırma');
+    final field = find.byType(TextField).last;
+    await t.tap(field);
+    t.view.viewInsets = const FakeViewPadding(bottom: 200 * 2);
+    await t.pumpAndSettle();
+    await _shot('landscape_keyboard');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));
@@ -175,6 +185,9 @@ void main() {
     await t.tap(find.byIcon(Icons.settings_rounded).first);
     await t.pumpAndSettle();
     await _shot('phone_settings');
+    await t.drag(find.byType(ListView).first, const Offset(0, -500));
+    await t.pumpAndSettle();
+    await _shot('phone_settings_orientation');
     await t.drag(find.byType(ListView).first, const Offset(0, -2000));
     await t.pumpAndSettle();
     await _shot('phone_settings_about');
