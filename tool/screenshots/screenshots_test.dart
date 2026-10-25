@@ -222,6 +222,18 @@ void main() {
     await _shot('phone_cell_table');
   });
 
+  testWidgets('phone hess', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Tepkime Termodinamiği');
+    await seekText(t, find.text('CaCO₃(s) → CaO(s) + CO₂(g)'));
+    await t.tap(find.text('CaCO₃(s) → CaO(s) + CO₂(g)'));
+    await t.pumpAndSettle();
+    await seekText(t, find.text('Türler ve tablo değerleri'));
+    await _shot('phone_hess_inputs');
+    await seekText(t, find.textContaining('ΔG° ('));
+    await _shot('phone_hess');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

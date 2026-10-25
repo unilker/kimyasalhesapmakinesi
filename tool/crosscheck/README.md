@@ -12,6 +12,12 @@ They run in CI on every push.
 | 400 random titrations (strong/weak, polyprotic acids, bases, salts) | Charge balance solved independently with `scipy.optimize.brentq` | `flutter test tool/crosscheck/dump_titration_test.dart && python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json` |
 | 1 000 random equilibria (ICE tables, K from 1e-30 to 1e30, solids/liquids, every concentration to 1e-9 relative) | Q(x) = K solved by 300-digit [mpmath](https://mpmath.org) bisection | `pip install mpmath && flutter test tool/crosscheck/dump_ice_test.dart && python3 tool/crosscheck/check_ice.py tool/crosscheck/out_ice.json` |
 
+Thermodynamic data: `tool/data/codata_key_values.tsv` (CODATA key values) and
+`tool/data/thermo_supplementary.tsv` (CRC/NBS/JANAF; each row passed a
+ΔfG = ΔfH − TΔfS consistency check and agrees with a second source and with
+the NIST WebBook where it lists the substance). `lib/core/thermo_data.dart`
+is generated from them by `tool/gen_thermo.py`; CI fails if it is out of date.
+
 Further reference tests live in `test/core/`:
 `atomic_weights_test.dart` (CIAAW 2024), `pubchem_mw_test.dart` (PubChem
 molecular weights) and `textbook_equations_test.dart` (38 balanced

@@ -357,6 +357,27 @@ class S {
   static const cellNote = Bi('25 °C, 1 atm; E° values: P. Vanýsek, CRC Handbook of Chemistry and Physics.',
       '25 °C, 1 atm; E° değerleri: P. Vanýsek, CRC Handbook of Chemistry and Physics.');
 
+  // Reaction thermodynamics (Hess)
+  static const hessNote = Bi(
+    'ΔH° and ΔS° from standard formation data at 298.15 K, 1 bar (CODATA key values; CRC/NBS/JANAF for the rest). At other temperatures ΔH° and ΔS° are taken as constant.',
+    'ΔH° ve ΔS° 298,15 K ve 1 bar standart oluşum verilerinden (CODATA anahtar değerleri; diğerleri CRC/NBS/JANAF). Başka sıcaklıklarda ΔH° ve ΔS° sabit kabul edilir.',
+  );
+  static const speciesData = Bi('Species and table values', 'Türler ve tablo değerleri');
+  static const temperatureK = Bi('Temperature', 'Sıcaklık');
+  static const errNotInTable = Bi('Not in the data table: ', 'Veri tablosunda yok: ');
+  static const errUnbalancedThermo = Bi('The written coefficients do not balance the equation',
+      'Yazılan katsayılar denklemi denkleştirmiyor');
+  static const alwaysSpontaneous = Bi('ΔH° < 0 and ΔS° > 0: spontaneous at every temperature',
+      'ΔH° < 0 ve ΔS° > 0: her sıcaklıkta istemli');
+  static const neverSpontaneous = Bi('ΔH° > 0 and ΔS° < 0: not spontaneous at any temperature',
+      'ΔH° > 0 ve ΔS° < 0: hiçbir sıcaklıkta istemli değil');
+  static Bi spontaneousBelow(String t) =>
+      Bi('Spontaneous below $t (enthalpy-driven)', '$t altında istemli (entalpi kontrollü)');
+  static Bi spontaneousAbove(String t) =>
+      Bi('Spontaneous above $t (entropy-driven)', '$t üstünde istemli (entropi kontrollü)');
+  static const atTemperature = Bi('At the chosen temperature', 'Seçilen sıcaklıkta');
+  static const sourceLabel = Bi('Source', 'Kaynak');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

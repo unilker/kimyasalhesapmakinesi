@@ -7,6 +7,7 @@ import 'balancer_screen.dart';
 import 'cell_screen.dart';
 import 'constants_screen.dart';
 import 'empirical_screen.dart';
+import 'hess_screen.dart';
 import 'ice_screen.dart';
 import 'molar_mass_screen.dart';
 import 'ph_scale.dart';
@@ -183,6 +184,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'heat ısı enthalpy entalpi entropy entropi gibbs clausius',
     builder: (t) => SolverScreen(tool: t, equations: thermoEquations),
+  ),
+  ToolInfo(
+    id: 'hess',
+    title: const Bi('Reaction Thermodynamics', 'Tepkime Termodinamiği'),
+    subtitle: const Bi('ΔH°, ΔS°, ΔG°, K from formation data', 'Oluşum verilerinden ΔH°, ΔS°, ΔG°, K'),
+    icon: Icons.whatshot_rounded,
+    color: Palette.orange,
+    category: ToolCategory.physical,
+    keywords: 'hess enthalpy entalpi entropy entropi gibbs formation oluşum combustion yanma spontaneous istemli codata thermodynamic termodinamik',
+    builder: (t) => HessScreen(tool: t),
   ),
   ToolInfo(
     id: 'kinetics',

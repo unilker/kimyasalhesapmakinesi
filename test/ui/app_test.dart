@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/app.dart';
 import 'package:kimya_hesap/core/chem/formula.dart' show prettyEquation;
 import 'package:kimya_hesap/state/app_state.dart';
-import 'package:kimya_hesap/ui/common.dart' show ToolScaffold;
+import 'package:kimya_hesap/ui/common.dart' show ErrorBanner, ToolScaffold;
 import 'package:kimya_hesap/ui/home/home_screen.dart';
 import 'package:kimya_hesap/ui/tools/registry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -364,6 +364,57 @@ void main() {
       expect(find.text('AgCl(s) + e⁻ ⇌ Ag(s) + Cl⁻'), findsOneWidget);
       expect(find.text('F₂(g) + 2e⁻ ⇌ 2F⁻'), findsNothing);
       expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('reaction thermodynamics: methane combustion and limestone', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Tepkime Termodinamiği');
+    final chip = find.widgetWithText(ActionChip, prettyEquation('CH4 + O2 -> CO2 + H2O(l)'));
+    await seek(tester, chip);
+    await tester.tap(chip);
+    await tester.pumpAndSettle();
+    // ΔH° = −890.57 kJ, ΔG° = −817.9 kJ
+    await seek(tester, find.text('−890,57 kJ/mol'));
+    expect(state.history.first.toolId, 'hess');
+
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    final lime = find.widgetWithText(ActionChip, prettyEquation('CaCO3(s) -> CaO(s) + CO2(g)'));
+    await seek(tester, lime);
+    await tester.tap(lime);
+    await tester.pumpAndSettle();
+    // calcite is offered with aragonite; ΔH° = 179.17 kJ → T* = 1118 K
+    await seek(tester, find.textContaining('1118,5 K'));
+    expect(find.textContaining('istemli'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final name in ['small phone', 'small phone landscape']) {
+    testWidgets('reaction thermodynamics: every example renders on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Tepkime Termodinamiği');
+      for (final eq in ['CH4 + O2 -> CO2 + H2O(l)', 'C6H12O6(s) + O2 -> CO2 + H2O(l)',
+          'C2H5OH(l) + O2 -> CO2 + H2O(l)', 'N2 + 3H2 -> 2NH3', 'CaCO3(s) -> CaO(s) + CO2(g)',
+          'NH4NO3(s) -> NH4^+ + NO3^-', 'AgCl(s) -> Ag^+ + Cl^-', '2NO2 -> N2O4(g)']) {
+        final chip = find.widgetWithText(ActionChip, prettyEquation(eq));
+        await seek(tester, chip);
+        await tester.tap(chip);
+        await tester.pumpAndSettle();
+        await seek(tester, find.textContaining('ΔG° ('));
+        expect(find.byType(ErrorBanner), findsNothing, reason: eq);
+        expect(tester.takeException(), isNull);
+        tester
+            .state<ScrollableState>(
+                find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+            .position
+            .jumpTo(0);
+        await tester.pumpAndSettle();
+      }
     });
   }
 
