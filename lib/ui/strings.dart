@@ -439,6 +439,27 @@ class S {
   static const needPositive = Bi('Concentrations must be positive and at least 3 pairs are needed',
       'Derişimler pozitif olmalı ve en az 3 çift gerekir');
 
+  // Radionuclides
+  static const nuclideNote = Bi(
+    'Half-lives, decay modes and masses: NUBASE2020 / AME2020 (1 y = 365.2422 d).',
+    'Yarılanma süreleri, bozunma türleri ve kütleler: NUBASE2020 / AME2020 (1 yıl = 365,2422 gün).',
+  );
+  static const chooseNuclide = Bi('Choose a radionuclide', 'Radyonüklit seçin');
+  static const searchNuclide = Bi('Search: 14C, iodine, 131 …', 'Ara: 14C, iyot, 131 …');
+  static const halfLife = Bi('Half-life t½', 'Yarılanma süresi t½');
+  static const decayModes = Bi('Decay modes', 'Bozunma türleri');
+  static const decayConstant = Bi('Decay constant λ', 'Bozunma sabiti λ');
+  static const meanLife = Bi('Mean life τ = 1/λ', 'Ortalama ömür τ = 1/λ');
+  static const specificActivity = Bi('Specific activity', 'Özgül aktivite');
+  static const atomicMassLabel = Bi('Atomic mass', 'Atom kütlesi');
+  static const naturalAbundance = Bi('Natural abundance', 'Doğal bolluk');
+  static const elapsedTime = Bi('Elapsed time', 'Geçen süre');
+  static const initialAmountOptional = Bi('Initial amount (optional)', 'Başlangıç miktarı (isteğe bağlı)');
+  static const remainingFraction = Bi('Remaining', 'Kalan');
+  static const decayedFraction = Bi('Decayed', 'Bozunan');
+  static const remainingAmount = Bi('Remaining amount', 'Kalan miktar');
+  static Bi halfLivesElapsed(String n) => Bi('$n half-lives', '$n yarılanma süresi');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

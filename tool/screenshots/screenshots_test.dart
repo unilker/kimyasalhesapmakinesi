@@ -271,6 +271,15 @@ void main() {
     await _shot('landscape_ice_en');
   });
 
+  testWidgets('phone nuclides', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Radyonüklitler');
+    await t.enterText(find.byType(TextField).first, '5730');
+    await _tapText(t, 'Hesapla');
+    await seekText(t, find.text('Kalan'));
+    await _shot('phone_nuclides');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

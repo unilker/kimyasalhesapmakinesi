@@ -11,6 +11,7 @@ import 'hess_screen.dart';
 import 'ice_screen.dart';
 import 'mass_spec_screen.dart';
 import 'molar_mass_screen.dart';
+import 'nuclide_screen.dart';
 import 'ph_scale.dart';
 import 'rate_data_screen.dart';
 import 'solver_screen.dart';
@@ -266,6 +267,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'radioactive radyoaktif decay bozunma half-life yarılanma activity aktivite becquerel curie carbon dating karbon',
     builder: (t) => SolverScreen(tool: t, equations: nuclearEquations),
+  ),
+  ToolInfo(
+    id: 'nuclides',
+    title: const Bi('Radionuclides', 'Radyonüklitler'),
+    subtitle: const Bi('Half-lives, decay modes, activity', 'Yarılanma, bozunma türü, aktivite'),
+    icon: Icons.blur_circular_rounded,
+    color: Palette.green,
+    category: ToolCategory.physical,
+    keywords: 'radionuclide radyonüklit isotope izotop half-life yarılanma decay bozunma nubase activity aktivite becquerel curie carbon dating karbon tarihleme',
+    builder: (t) => NuclideScreen(tool: t),
   ),
   ToolInfo(
     id: 'atomic',

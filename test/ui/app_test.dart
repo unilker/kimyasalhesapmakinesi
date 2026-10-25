@@ -534,6 +534,27 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('radionuclides: ¹³¹I after 24 days is 12.5 %', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Radyonüklitler');
+    await tester.tap(find.text('¹⁴C  Karbon'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '131');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('¹³¹I  İyot'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).first, '24,0747');
+    await tester.tap(find.text('d'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // 3 × 8.0249 d = 24.0747 d → (½)³
+    await seek(tester, find.text('12,5 %'));
+    expect(state.history.first.toolId, 'nuclides');
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);
