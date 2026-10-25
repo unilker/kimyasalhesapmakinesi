@@ -1,4 +1,4 @@
-/// Physical constants (CODATA 2018 recommended values; SI 2019 exact
+/// Physical constants (CODATA 2022 recommended values; SI 2019 exact
 /// values marked [exact]).
 class PhysicalConstant {
   const PhysicalConstant({
@@ -24,13 +24,20 @@ class PhysicalConstant {
 }
 
 const double avogadro = 6.02214076e23;
-const double gasConstant = 8.314462618; // J/(mol·K)
-const double faraday = 96485.33212; // C/mol
+// Exact since SI 2019: R = N_A·k_B, F = N_A·e (NIST lists them truncated).
+const double gasConstant = avogadro * boltzmann; // J/(mol·K)
+const double faraday = avogadro * elementaryCharge; // C/mol
 const double planck = 6.62607015e-34; // J·s
 const double speedOfLight = 299792458; // m/s
 const double boltzmann = 1.380649e-23; // J/K
 const double elementaryCharge = 1.602176634e-19; // C
 const double standardPressure = 101325; // Pa (1 atm)
+
+/// Molar volume of an ideal gas at 0 °C and 1 atm, in L/mol.
+const double molarVolumeAtm = gasConstant * 273.15 / standardPressure * 1000;
+
+/// Molar volume of an ideal gas at 0 °C and 1 bar (IUPAC STP), in L/mol.
+const double molarVolumeBar = gasConstant * 273.15 / 100000 * 1000;
 
 const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
@@ -54,7 +61,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'Ratm',
     symbol: 'R',
-    value: 0.082057366080960,
+    value: gasConstant / 101.325,
     unit: 'L·atm·mol⁻¹·K⁻¹',
     nameEn: 'Gas constant (L·atm)',
     nameTr: 'Gaz sabiti (L·atm)',
@@ -63,7 +70,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'Rcal',
     symbol: 'R',
-    value: 1.98720425864083,
+    value: gasConstant / 4.184,
     unit: 'cal·mol⁻¹·K⁻¹',
     nameEn: 'Gas constant (cal)',
     nameTr: 'Gaz sabiti (cal)',
@@ -117,7 +124,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'me',
     symbol: 'mₑ',
-    value: 9.1093837015e-31,
+    value: 9.1093837139e-31,
     unit: 'kg',
     nameEn: 'Electron mass',
     nameTr: 'Elektron kütlesi',
@@ -125,7 +132,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'mp',
     symbol: 'mₚ',
-    value: 1.67262192369e-27,
+    value: 1.67262192595e-27,
     unit: 'kg',
     nameEn: 'Proton mass',
     nameTr: 'Proton kütlesi',
@@ -133,7 +140,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'mn',
     symbol: 'mₙ',
-    value: 1.67492749804e-27,
+    value: 1.67492750056e-27,
     unit: 'kg',
     nameEn: 'Neutron mass',
     nameTr: 'Nötron kütlesi',
@@ -141,7 +148,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'u',
     symbol: 'u',
-    value: 1.66053906660e-27,
+    value: 1.66053906892e-27,
     unit: 'kg',
     nameEn: 'Atomic mass constant',
     nameTr: 'Atomik kütle sabiti',
@@ -149,7 +156,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'Vm',
     symbol: 'Vₘ',
-    value: 22.41396954,
+    value: molarVolumeAtm,
     unit: 'L·mol⁻¹ (0 °C, 1 atm)',
     nameEn: 'Molar volume of ideal gas',
     nameTr: 'İdeal gazın molar hacmi',
@@ -158,7 +165,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'VmSTP',
     symbol: 'Vₘ',
-    value: 22.71095464,
+    value: molarVolumeBar,
     unit: 'L·mol⁻¹ (0 °C, 1 bar)',
     nameEn: 'Molar volume (IUPAC STP)',
     nameTr: 'Molar hacim (IUPAC STP)',
@@ -167,7 +174,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'eps',
     symbol: 'ε₀',
-    value: 8.8541878128e-12,
+    value: 8.8541878188e-12,
     unit: 'F·m⁻¹',
     nameEn: 'Vacuum permittivity',
     nameTr: 'Boşluğun elektriksel geçirgenliği',
@@ -175,7 +182,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'Ry',
     symbol: 'R∞',
-    value: 10973731.568160,
+    value: 10973731.568157,
     unit: 'm⁻¹',
     nameEn: 'Rydberg constant',
     nameTr: 'Rydberg sabiti',
@@ -183,7 +190,7 @@ const List<PhysicalConstant> physicalConstants = [
   PhysicalConstant(
     key: 'aB',
     symbol: 'a₀',
-    value: 5.29177210903e-11,
+    value: 5.29177210544e-11,
     unit: 'm',
     nameEn: 'Bohr radius',
     nameTr: 'Bohr yarıçapı',

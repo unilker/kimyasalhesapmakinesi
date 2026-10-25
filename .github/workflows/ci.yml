@@ -17,6 +17,19 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      - name: Cross-check solvers against an independent reference
+        run: |
+          flutter test tool/crosscheck/dump_solvers_test.dart
+          python3 tool/crosscheck/check_solvers.py tool/crosscheck/out_solvers.json
+      - name: Cross-check the expression parser against Python
+        run: |
+          python3 tool/crosscheck/expressions.py gen tool/crosscheck/out_expr_in.json
+          flutter test tool/crosscheck/eval_expressions_test.dart
+          python3 tool/crosscheck/expressions.py check tool/crosscheck/out_expr_out.json
+      - name: Cross-check unit factors against pint
+        run: |
+          pip install pint
+          python3 tool/crosscheck/check_units.py
 
   android:
     needs: test

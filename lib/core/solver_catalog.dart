@@ -223,8 +223,8 @@ final moleEquations = <SolverEquation>[
     defaultTarget: 'V',
     variables: [_n('n', 'n'), _v('V', 'V')],
     solvers: {
-      'n': (v) => v['V']! / 22.41396954,
-      'V': (v) => v['n']! * 22.41396954,
+      'n': (v) => v['V']! / molarVolumeAtm,
+      'V': (v) => v['n']! * molarVolumeAtm,
     },
     note: const Bi('STP: 0 °C and 1 atm.', 'NŞA: 0 °C ve 1 atm.'),
   ),

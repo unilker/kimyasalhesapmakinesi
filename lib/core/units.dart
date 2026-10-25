@@ -145,7 +145,7 @@ const Map<Quantity, List<Unit>> units = {
     Unit('Jmol', 'J/mol', 1),
     Unit('kcalmol', 'kcal/mol', 4184),
     Unit('calmol', 'cal/mol', 4.184),
-    Unit('eV', 'eV', 96485.33212331001),
+    Unit('eV', 'eV', 96485.33212331001), // = N_A·e
   ],
   Quantity.molarEntropy: [
     Unit('JmolK', 'J/(mol·K)', 1),

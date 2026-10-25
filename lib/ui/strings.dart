@@ -132,8 +132,8 @@ class S {
   );
   static const dataSources = Bi('Data sources', 'Veri kaynakları');
   static const dataSourcesText = Bi(
-    'Atomic masses: IUPAC standard atomic weights. Constants: CODATA 2018 / SI 2019.',
-    'Atom kütleleri: IUPAC standart atom ağırlıkları. Sabitler: CODATA 2018 / SI 2019.',
+    'Atomic masses: IUPAC (CIAAW) standard atomic weights, 2024 revision. Constants: CODATA 2022 / SI 2019.',
+    'Atom kütleleri: IUPAC (CIAAW) standart atom ağırlıkları, 2024 revizyonu. Sabitler: CODATA 2022 / SI 2019.',
   );
   static const version = Bi('Version', 'Sürüm');
   static const developer = Bi('Developer', 'Geliştirici');

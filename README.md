@@ -22,7 +22,7 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Spektroskopi** | Beer–Lambert, absorbans ⇄ %T, foton enerjisi / dalga boyu / frekans |
 | **Koligatif** | Kaynama noktası yükselmesi, donma noktası alçalması, ozmotik basınç, Raoult |
 | **Basit formül** | Yüzde bileşimden basit ve (mol kütlesiyle) molekül formülü |
-| **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2018 sabitleri |
+| **Başvuru** | 118 elementli etkileşimli periyodik tablo, birim çevirici, CODATA 2022 sabitleri |
 | **Geçmiş** | Tüm hesaplar cihazda saklanır (25–500 kayıt, ayarlanabilir), kaydırarak silme, tek dokunuşla kopyalama |
 
 Formül tabanlı her araçta **istediğiniz değişkeni bilinmeyen** seçebilir, her girdi için **birim** seçebilirsiniz.
@@ -140,5 +140,5 @@ Bu proje **[Apache Lisansı 2.0](LICENSE)** ile lisanslanmıştır. Kodu kullanm
 ## Veri kaynakları ve üçüncü taraf lisanslar
 
 - Atom kütleleri: IUPAC standart atom ağırlıkları (köşeli parantez: en uzun ömürlü izotopun kütle numarası).
-- Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2018 / SI 2019.
+- Elektronegatiflik: Pauling ölçeği. Sabitler: CODATA 2022 / SI 2019. Atom kütleleri: CIAAW 2024.
 - Yazı tipleri: Nunito ve Noto Sans alt kümeleri. Her ikisi de SIL Open Font License 1.1 ile lisanslıdır (`assets/fonts/OFL*.txt`).

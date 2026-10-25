@@ -49,6 +49,26 @@ void main() {
     expect(ev('Ans×2', ans: 21), 42);
   });
 
+  test('degree trig is exact at textbook angles and for huge angles', () {
+    expect(ev('sin(30)'), 0.5);
+    expect(ev('cos(60)'), 0.5);
+    expect(ev('sin(150)'), 0.5);
+    expect(ev('cos(120)'), -0.5);
+    expect(ev('sin(-30)'), -0.5);
+    expect(ev('tan(45)'), 1);
+    expect(ev('tan(-45)'), -1);
+    expect(ev('cos(90)'), 0);
+    expect(ev('sin(360)'), 0);
+    expect(ev('sin(3630)'), 0.5); // 3630 = 10·360 + 30
+    expect(() => ev('tan(270)'), throwsA(isA<ExpressionException>()));
+    expect(() => ev('tan(-90)'), throwsA(isA<ExpressionException>()));
+    expect(ev('sin(45)'), 0.7071067811865476);
+    expect(ev('cos(30)'), 0.8660254037844386);
+    expect(ev('sin(240)'), -0.8660254037844386);
+    // 1e22° = 280° (mod 360): exact reduction keeps full precision.
+    expect(ev('sin(1E22)'), closeTo(-0.984807753012208, 1e-15));
+  });
+
   test('auto closes parentheses', () {
     expect(ev('(1+2'), 3);
     expect(ev('sin(30'), closeTo(0.5, 1e-12));
