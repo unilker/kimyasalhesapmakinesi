@@ -5,7 +5,9 @@ import '../core/chem/element.dart';
 const _seed = Color(0xFF6A4CFF);
 
 /// Bundled fallbacks for glyphs Nunito lacks (Greek, ⁺⁻, arrows …).
-const fontFallback = ['NotoSansSymbols', 'NotoSansMath'];
+// 'NotoColorEmoji' is not bundled: devices use their own emoji font; the
+// screenshot tests register it so that emoji render there too.
+const fontFallback = ['NotoSansSymbols', 'NotoSansMath', 'NotoColorEmoji'];
 
 ThemeData buildTheme(Brightness brightness) {
   final scheme = ColorScheme.fromSeed(

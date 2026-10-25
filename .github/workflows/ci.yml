@@ -17,6 +17,8 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      - name: Check store listing lengths
+        run: python3 tool/check_store_listing.py
       - name: Cross-check solvers against an independent reference
         run: |
           flutter test tool/crosscheck/dump_solvers_test.dart

@@ -101,40 +101,14 @@ Element tablosunu yeniden üretmek: `python3 tool/gen_elements.py lib/core/chem/
 
 ## Yayınlama
 
-Uygulama kimlikleri:
+Adım adım yayın kılavuzu (imzalama anahtarı, gizlilik politikası adresi, Play Console ve App Store Connect): **[docs/RELEASE.md](docs/RELEASE.md)**.
 
-- Android: `com.unilker.kimya_hesap`
-- iOS: `com.unilker.kimyaHesap`
-
-İsterseniz ilk yayından **önce** değiştirin, çünkü yayından sonra değiştirilemez.
-Sürüm numarası `pubspec.yaml` içindeki `version: 1.0.0+1` satırıdır.
-
-### Google Play
-
-1. Yükleme anahtarı oluşturun (bir kez):
-   ```bash
-   keytool -genkey -v -keystore ~/kimya-upload.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
-   ```
-2. `android/key.properties` dosyasını oluşturun. Bu dosya **asla commit edilmez** (`.gitignore` içinde):
-   ```properties
-   storePassword=...
-   keyPassword=...
-   keyAlias=upload
-   storeFile=/home/kullanici/kimya-upload.jks
-   ```
-3. `flutter build appbundle --release`, ardından `build/app/outputs/bundle/release/app-release.aab` dosyasını Play Console'a yükleyin.
-4. *Veri güvenliği* formunda "Veri toplanmıyor / paylaşılmıyor" seçeneğini işaretleyin. Gizlilik politikası olarak `docs/PRIVACY.md` içeriğini yayınlayın (ör. GitHub Pages).
-
-### App Store
-
-iOS derlemesi için macOS ve Xcode gerekir. Mac yoksa Codemagic veya GitHub Actions `macos` çalıştırıcısı kullanılabilir.
-
-1. `open ios/Runner.xcworkspace`, ardından *Signing & Capabilities* bölümünde Team'inizi seçin.
-2. `flutter build ipa --release` komutunu çalıştırın, sonra Transporter veya Xcode Organizer ile yükleyin.
-3. App Privacy bölümünde **Data Not Collected** seçin. `ITSAppUsesNonExemptEncryption=false` zaten ayarlıdır.
+- Mağaza metinleri (TR/EN, karakter sınırları denetlenir): [docs/STORE_LISTING.md](docs/STORE_LISTING.md)
+- Simge, öne çıkan grafik ve mağaza boyutlarında ekran görüntüleri: [docs/store/](docs/store/)
+- Gizlilik politikası: [docs/PRIVACY.md](docs/PRIVACY.md) · web sürümü [docs/privacy.html](docs/privacy.html)
+- İmzalı Play paketi: *Actions → Release build* (`.github/workflows/release.yml`)
 
 Mağaza başlığı **Kimya Hesap Makinesi**'dir; ana ekranda ve uygulama içinde kısa ad **Kimya Hesap** kullanılır.
-Mağaza metinleri taslağı: [docs/STORE_LISTING.md](docs/STORE_LISTING.md).
 
 ## Lisans ve atıf
 
