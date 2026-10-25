@@ -492,6 +492,18 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('rate law from data: NO2 example is second order', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Veriden Hız Kanunu');
+    await seek(tester, find.text('Örnek veri'));
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('2. derece'));
+    await seek(tester, find.textContaining('0,54445 ± 0,0014 M⁻¹ s⁻¹'));
+    expect(state.history.first.toolId, 'rateData');
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

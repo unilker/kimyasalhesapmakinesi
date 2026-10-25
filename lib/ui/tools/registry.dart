@@ -12,6 +12,7 @@ import 'ice_screen.dart';
 import 'mass_spec_screen.dart';
 import 'molar_mass_screen.dart';
 import 'ph_scale.dart';
+import 'rate_data_screen.dart';
 import 'solver_screen.dart';
 import 'stats_screen.dart';
 import 'titration_screen.dart';
@@ -205,6 +206,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'rate hız half life yarılanma arrhenius activation aktivasyon',
     builder: (t) => SolverScreen(tool: t, equations: kineticsEquations),
+  ),
+  ToolInfo(
+    id: 'rateData',
+    title: const Bi('Rate Law from Data', 'Veriden Hız Kanunu'),
+    subtitle: const Bi('Order, k and t½ from [A]–t data', '[A]–t verisinden derece, k ve t½'),
+    icon: Icons.timeline_rounded,
+    color: Palette.brown,
+    category: ToolCategory.physical,
+    keywords: 'kinetics kinetik order derece rate constant hız sabiti integrated integral half-life yarılanma data veri graph grafik linear',
+    builder: (t) => RateDataScreen(tool: t),
   ),
   ToolInfo(
     id: 'electro',

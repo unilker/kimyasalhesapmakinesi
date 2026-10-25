@@ -405,6 +405,24 @@ class S {
   static const errCannotRemove = Bi('The formula has no atom to remove for this ion',
       'Bu iyon için formülden çıkarılacak atom yok');
 
+  // Kinetic data analysis
+  static const rateDataNote = Bi(
+    'Least-squares lines of [A], ln[A] and 1/[A] against t; the order with the largest R² is suggested. Check the residuals and the chemistry before trusting it.',
+    '[A], ln[A] ve 1/[A] değerlerinin t’ye karşı en küçük kareler doğruları; en büyük R²’ye sahip derece önerilir. Güvenmeden önce artıkları ve kimyayı kontrol edin.',
+  );
+  static const timeConcPairs = Bi('Data: one “t [A]” pair per line', 'Veri: her satıra bir “t [A]” çifti');
+  static const timeUnit = Bi('Time unit', 'Zaman birimi');
+  static const suggestedOrder = Bi('Suggested order', 'Önerilen derece');
+  static Bi orderName(int n) => Bi(
+      switch (n) { 0 => 'Zero order', 1 => 'First order', _ => 'Second order' },
+      '$n. derece');
+  static const rateConstant = Bi('Rate constant k', 'Hız sabiti k');
+  static const initialConc = Bi('[A]₀ from the fit', 'Uydurmadan [A]₀');
+  static const halfLifeLabel = Bi('Half-life t½ (from [A]₀)', 'Yarılanma süresi t½ ([A]₀’dan)');
+  static const allOrders = Bi('All three linear plots', 'Üç doğrusal grafik');
+  static const needPositive = Bi('Concentrations must be positive and at least 3 pairs are needed',
+      'Derişimler pozitif olmalı ve en az 3 çift gerekir');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

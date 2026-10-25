@@ -244,6 +244,16 @@ void main() {
     await _shot('phone_mass_spec');
   });
 
+  testWidgets('phone rate data', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Veriden Hız Kanunu');
+    await seekText(t, find.text('Örnek veri'));
+    await t.tap(find.text('Örnek veri'));
+    await t.pumpAndSettle();
+    await seekText(t, find.byType(XyChart));
+    await _shot('phone_rate_data');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));
