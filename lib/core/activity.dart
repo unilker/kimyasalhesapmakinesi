@@ -1,6 +1,9 @@
 import 'dart:math' as math;
 
 import 'constants.dart';
+import 'water.dart';
+
+export 'water.dart' show waterDensity, waterPermittivity;
 
 /// Ionic strength and single-ion activity coefficients in water
 /// (Debye–Hückel family) on the molar concentration scale.
@@ -11,25 +14,6 @@ import 'constants.dart';
 /// water from Malmberg & Maryott (J. Res. NBS 56, 1, 1956; 0–100 °C).
 
 const double _vacuumPermittivity = 8.8541878188e-12; // F/m, CODATA 2022
-
-/// Relative permittivity of water at [celsius] (Malmberg & Maryott 1956).
-double waterPermittivity(double celsius) {
-  final t = celsius;
-  return 87.740 - 0.40008 * t + 9.398e-4 * t * t - 1.410e-6 * t * t * t;
-}
-
-/// Density of air-free water at 1 atm in kg/m³ (Kell, J. Chem. Eng. Data 20,
-/// 97, 1975), used to convert to the molal scale.
-double waterDensity(double celsius) {
-  final t = celsius;
-  return (999.83952 +
-          16.945176 * t -
-          7.9870401e-3 * t * t -
-          46.170461e-6 * t * t * t +
-          105.56302e-9 * t * t * t * t -
-          280.54253e-12 * t * t * t * t * t) /
-      (1 + 16.879850e-3 * t);
-}
 
 class DebyeHuckel {
   DebyeHuckel(this.celsius) {

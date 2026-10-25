@@ -22,6 +22,7 @@ import 'stats_screen.dart';
 import 'titration_screen.dart';
 import 'uncertainty_screen.dart';
 import 'unit_converter_screen.dart';
+import 'water_screen.dart';
 
 enum ToolCategory { basics, solutions, reactions, physical, analysis, reference }
 
@@ -291,6 +292,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.physical,
     keywords: 'radionuclide radyonüklit isotope izotop half-life yarılanma decay bozunma nubase activity aktivite becquerel curie carbon dating karbon tarihleme',
     builder: (t) => NuclideScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'water',
+    title: const Bi('Water Properties', 'Suyun Özellikleri'),
+    subtitle: const Bi('Kw and neutral pH vs T, vapour pressure, boiling point', 'Sıcaklıkla Kw ve nötr pH, buhar basıncı, kaynama noktası'),
+    icon: Icons.water_drop_rounded,
+    color: Palette.blue,
+    category: ToolCategory.physical,
+    keywords: 'water su kw pkw ionization iyonlaşma neutral nötr ph temperature sıcaklık vapour vapor buhar basıncı pressure boiling kaynama density yoğunluk iapws dielectric dielektrik',
+    builder: (t) => WaterScreen(tool: t),
   ),
   ToolInfo(
     id: 'atomic',

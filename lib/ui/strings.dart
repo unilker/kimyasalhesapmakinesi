@@ -547,6 +547,21 @@ class S {
       'Her iyon için ≥ 0 derişim ve sıfırdan farklı tam sayı yük gerekir');
   static const errSaltConc = Bi('Enter a positive salt concentration', 'Pozitif bir tuz derişimi girin');
 
+  // Water
+  static const waterNote = Bi(
+    'Kw: IAPWS R11-24; density: Kell (1975); vapour pressure: Wagner & Pruß (IAPWS); permittivity: Malmberg & Maryott. Liquid water at 1 atm, 0–100 °C.',
+    'Kw: IAPWS R11-24; yoğunluk: Kell (1975); buhar basıncı: Wagner ve Pruß (IAPWS); dielektrik sabiti: Malmberg ve Maryott. 1 atm’de sıvı su, 0–100 °C.',
+  );
+  static const pressureForBoiling = Bi('Pressure for the boiling point', 'Kaynama noktası için basınç');
+  static const neutralPh = Bi('Neutral pH', 'Nötr pH');
+  static const densityWater = Bi('Density', 'Yoğunluk');
+  static const vaporPressureLabel = Bi('Vapour pressure', 'Buhar basıncı');
+  static const permittivityLabel = Bi('Relative permittivity εᵣ', 'Bağıl dielektrik sabiti εᵣ');
+  static const boilingPointAt = Bi('Boiling point at', 'Kaynama noktası:');
+  static const waterTable = Bi('Water from 0 to 100 °C', '0–100 °C arasında su');
+  static const errBoilingPressure = Bi('Enter a pressure between 0.612 and 22 064 kPa',
+      '0,612 ile 22 064 kPa arasında bir basınç girin');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

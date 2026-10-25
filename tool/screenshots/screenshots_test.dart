@@ -319,6 +319,13 @@ void main() {
     await _shot('tablet_activity');
   });
 
+  testWidgets('phone water', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Suyun Özellikleri');
+    await seekText(t, find.text('t / °C'));
+    await _shot('phone_water');
+  });
+
   testWidgets('tablet nmr', (t) async {
     await _pump(t, tablet);
     await _openTool(t, 'NMR Frekansları');

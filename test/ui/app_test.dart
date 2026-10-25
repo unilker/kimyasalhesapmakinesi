@@ -741,6 +741,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('water properties: neutral pH at 25 and 37 °C, boiling point', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Suyun Özellikleri');
+    await seek(tester, find.text('6,997'));
+    await seek(tester, find.text('99,974 °C'));
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('37 °C'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('6,81'));
+    expect(state.history.first.toolId, 'water');
+    expect(state.history.first.result, contains('pKw = 13,621'));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);
