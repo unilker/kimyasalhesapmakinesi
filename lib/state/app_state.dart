@@ -60,6 +60,9 @@ List<DeviceOrientation> orientationsFor(OrientationPref p) => switch (p) {
 
 const historyLimitOptions = [25, 50, 100, 250, 500];
 
+/// How the tools are laid out on the home screen.
+enum ToolLayout { grid, list }
+
 /// App-wide settings and calculation history, persisted locally with
 /// [SharedPreferences]. Nothing ever leaves the device.
 class AppState extends ChangeNotifier {
@@ -82,6 +85,7 @@ class AppState extends ChangeNotifier {
   static const _kRotateButton = 'rotateButton';
   static const _kRotateY = 'rotateButtonY';
   static const _kRotateLeft = 'rotateButtonLeft';
+  static const _kToolLayout = 'toolLayout';
 
   LanguagePref _language = LanguagePref.system;
   ThemeMode _themeMode = ThemeMode.system;
@@ -93,6 +97,7 @@ class AppState extends ChangeNotifier {
   bool _showRotateButton = true;
   double _rotateButtonY = 0.2;
   bool _rotateButtonLeft = false;
+  ToolLayout _toolLayout = ToolLayout.grid;
 
   LanguagePref get language => _language;
   ThemeMode get themeMode => _themeMode;
@@ -105,6 +110,7 @@ class AppState extends ChangeNotifier {
   /// Vertical position of the rotate button as a fraction of the screen.
   double get rotateButtonY => _rotateButtonY;
   bool get rotateButtonLeft => _rotateButtonLeft;
+  ToolLayout get toolLayout => _toolLayout;
 
   /// Newest first.
   List<HistoryEntry> get history => List.unmodifiable(_history);
@@ -137,6 +143,10 @@ class AppState extends ChangeNotifier {
     _showRotateButton = _prefs.getBool(_kRotateButton) ?? true;
     _rotateButtonY = (_prefs.getDouble(_kRotateY) ?? 0.2).clamp(0.0, 1.0);
     _rotateButtonLeft = _prefs.getBool(_kRotateLeft) ?? false;
+    _toolLayout = ToolLayout.values.firstWhere(
+      (l) => l.name == _prefs.getString(_kToolLayout),
+      orElse: () => ToolLayout.grid,
+    );
     SystemChrome.setPreferredOrientations(orientationsFor(_orientation));
     final raw = _prefs.getString(_kHistory);
     if (raw != null) {
@@ -193,6 +203,12 @@ class AppState extends ChangeNotifier {
   void setShowRotateButton(bool v) {
     _showRotateButton = v;
     _prefs.setBool(_kRotateButton, v);
+    notifyListeners();
+  }
+
+  void setToolLayout(ToolLayout v) {
+    _toolLayout = v;
+    _prefs.setString(_kToolLayout, v.name);
     notifyListeners();
   }
 
