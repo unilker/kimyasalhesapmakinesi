@@ -40,6 +40,12 @@ import 'package:kimya_hesap/core/units.dart';
       Quantity.henry => (1e-4, 0.1),
       Quantity.vdwA => (0.03, 20),
       Quantity.vdwB => (0.01, 0.15),
+      Quantity.dimensionless => switch (id) {
+          'theta' => (0.5, 90),
+          'wn' => (50, 4500),
+          'kf' => (10, 2500),
+          _ => (0.1, 10),
+        },
       _ => (0.1, 10),
     };
 

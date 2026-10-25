@@ -694,6 +694,26 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('IR vibration preset shows cm⁻¹ and N/m labels instead of unit menus', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Atom ve Kristal');
+    await seek(tester, find.text('İki atomlu titreşim (harmonik)'));
+    await tester.tap(find.text('İki atomlu titreşim (harmonik)'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('¹H³⁵Cl'));
+    await tester.tap(find.text('¹H³⁵Cl'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('N/m'));
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('2990,0'));
+    expect(find.text('cm⁻¹'), findsWidgets);
+    expect(state.history.first.result, contains('cm⁻¹'));
+    expect(state.history.first.input, contains('516 N/m'));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

@@ -16,9 +16,13 @@ class SolverVar {
     this.defaultValue,
     this.molarMassFromFormula = false,
     this.symbolTr,
+    this.unitLabel = '',
   });
 
   final String id;
+
+  /// Unit text for dimensionless variables (e.g. `°`, `N/m`, `cm⁻¹`).
+  final String unitLabel;
 
   /// Display symbol, e.g. `P₁`.
   final String symbol;
