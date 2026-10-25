@@ -272,7 +272,7 @@ final List<ToolInfo> tools = [
     id: 'nuclides',
     title: const Bi('Radionuclides', 'Radyonüklitler'),
     subtitle: const Bi('Half-lives, decay modes, activity', 'Yarılanma, bozunma türü, aktivite'),
-    icon: Icons.blur_circular_rounded,
+    icon: Icons.hourglass_bottom_rounded,
     color: Palette.green,
     category: ToolCategory.physical,
     keywords: 'radionuclide radyonüklit isotope izotop half-life yarılanma decay bozunma nubase activity aktivite becquerel curie carbon dating karbon tarihleme',

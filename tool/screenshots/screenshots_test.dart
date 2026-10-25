@@ -280,6 +280,11 @@ void main() {
     await _shot('phone_nuclides');
   });
 
+  testWidgets('tall home overview', (t) async {
+    await _pump(t, const Size(390, 2600));
+    await _shot('tall_home');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));
