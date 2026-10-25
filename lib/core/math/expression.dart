@@ -39,14 +39,18 @@ const expressionFunctions = <String>{
 /// named constants in [physicalConstants] (by their [PhysicalConstant.key]).
 ///
 /// Both `.` and `,` are accepted as decimal separators.
+///
+/// [variables] (names made of letters only) take precedence over the named
+/// constants, but not over functions, `pi` and `e`.
 double evaluateExpression(
   String input, {
   AngleMode angleMode = AngleMode.degrees,
   double? ans,
+  Map<String, double>? variables,
 }) {
   final tokens = _tokenize(input);
   if (tokens.isEmpty) throw const ExpressionException(ExpressionErrorKind.empty);
-  final p = _Parser(tokens, angleMode, ans);
+  final p = _Parser(tokens, angleMode, ans, variables);
   final v = p.parseExpression();
   if (!p.atEnd) {
     throw ExpressionException(ExpressionErrorKind.syntax, p.peek.text);
@@ -70,6 +74,15 @@ double? parseNumberInput(String text) {
     return null;
   }
 }
+
+/// Whether [name] can be used as a variable in [evaluateExpression]: ASCII
+/// letters or Greek letters only (digits would read as implicit
+/// multiplication) and not a function, `pi`, `e` or `Ans`.
+bool isValidVariableName(String name) =>
+    RegExp(r'^[A-Za-z_Ͱ-Ͽ]+$').hasMatch(name) &&
+    !name.contains('π') &&
+    !expressionFunctions.contains(name) &&
+    !const {'pi', 'e', 'Ans', 'ans'}.contains(name);
 
 enum _T { number, ident, op, lparen, rparen, postfix }
 
@@ -164,11 +177,12 @@ List<_Token> _tokenize(String raw) {
 }
 
 class _Parser {
-  _Parser(this.tokens, this.angleMode, this.ans);
+  _Parser(this.tokens, this.angleMode, this.ans, this.variables);
 
   final List<_Token> tokens;
   final AngleMode angleMode;
   final double? ans;
+  final Map<String, double>? variables;
   int pos = 0;
 
   bool get atEnd => pos >= tokens.length;
@@ -283,6 +297,8 @@ class _Parser {
       case 'ans':
         return ans ?? 0;
     }
+    final v = variables?[name];
+    if (v != null) return v;
     final c = constantByKey(name);
     if (c != null) return c.value;
     throw ExpressionException(ExpressionErrorKind.unknownName, name);

@@ -18,6 +18,7 @@ import 'solver_screen.dart';
 import 'speciation_screen.dart';
 import 'stats_screen.dart';
 import 'titration_screen.dart';
+import 'uncertainty_screen.dart';
 import 'unit_converter_screen.dart';
 
 enum ToolCategory { basics, solutions, reactions, physical, analysis, reference }
@@ -308,6 +309,16 @@ final List<ToolInfo> tools = [
     category: ToolCategory.analysis,
     keywords: 'statistics istatistik mean ortalama standard deviation standart sapma confidence güven outlier aykırı q test grubbs calibration kalibrasyon regression regresyon lod loq',
     builder: (t) => StatsScreen(tool: t),
+  ),
+  ToolInfo(
+    id: 'uncertainty',
+    title: const Bi('Uncertainty Propagation', 'Belirsizlik Yayılımı'),
+    subtitle: const Bi('y ± u from any formula (GUM)', 'Her formülden y ± u (GUM)'),
+    icon: Icons.track_changes_rounded,
+    color: Palette.pink,
+    category: ToolCategory.analysis,
+    keywords: 'uncertainty belirsizlik error hata propagation yayılım gum budget bütçe monte carlo standard deviation standart sapma relative bağıl',
+    builder: (t) => UncertaintyScreen(tool: t),
   ),
   ToolInfo(
     id: 'massSpec',

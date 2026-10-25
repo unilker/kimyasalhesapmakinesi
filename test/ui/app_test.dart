@@ -613,6 +613,46 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('uncertainty propagation: default molarity example', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Belirsizlik Yayılımı');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    // c = 0.2502/(58.44·0.1) = 0.042813 ± 0.000047 M (V dominates)
+    await seek(tester, find.text('0,042813 ± 0,000048'));
+    expect(state.history.first.toolId, 'uncertainty');
+    // an invalid variable name is reported
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).at(1), 'm1');
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.textContaining('yalnızca harflerden'));
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final name in ['small phone', 'small phone landscape']) {
+    testWidgets('uncertainty propagation with Monte Carlo renders on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Belirsizlik Yayılımı');
+      await seek(tester, find.text('Monte Carlo kontrolü (20 000 çekiliş)'));
+      await tester.tap(find.text('Monte Carlo kontrolü (20 000 çekiliş)'));
+      await tester.pumpAndSettle();
+      await seek(tester, find.text('Hesapla'));
+      await tester.tap(find.text('Hesapla'));
+      await tester.pumpAndSettle();
+      await seek(tester, find.text('%95 kapsama aralığı'));
+      await seek(tester, find.text('Belirsizlik bütçesi'));
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);
