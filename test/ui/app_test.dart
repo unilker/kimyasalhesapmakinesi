@@ -53,6 +53,15 @@ Future<void> seek(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// Leaves a tool on compact layouts (list–detail layouts have no back button).
+Future<void> back(WidgetTester tester) async {
+  final b = find.byType(BackButton);
+  if (b.evaluate().isNotEmpty) {
+    await tester.tap(b.first);
+    await tester.pumpAndSettle();
+  }
+}
+
 Future<void> openTool(WidgetTester tester, String title) async {
   final card = find.descendant(of: find.byType(ToolCard), matching: find.text(title));
   final scrollable =
@@ -362,7 +371,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final name in ['small phone', 'small phone landscape']) {
+  for (final name in ['small phone', 'small phone landscape', 'fold inner', 'tablet landscape']) {
     testWidgets('E° table opens and filters on $name', (tester) async {
       await pumpApp(tester, sizes[name]!);
       await openTool(tester, 'Piller ve E° Tablosu');
@@ -554,6 +563,41 @@ void main() {
     expect(state.history.first.toolId, 'nuclides');
     expect(tester.takeException(), isNull);
   });
+
+  for (final name in ['tablet landscape', 'fold cover landscape']) {
+    testWidgets('pKa, Ksp and nuclide pickers work on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Titrasyon Eğrisi');
+      await seek(tester, find.text('pKa tablosundan seç'));
+      await tester.tap(find.text('pKa tablosundan seç'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('Asetik asit'));
+      await tester.pumpAndSettle();
+      expect(find.text('4,756'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await back(tester);
+      await openTool(tester, 'Denge Tablosu (ICE)');
+      await seek(tester, find.text('Ksp tablosundan tuz seç'));
+      await tester.tap(find.text('Ksp tablosundan tuz seç'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'AgCl');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Gümüş klorür'));
+      await tester.pumpAndSettle();
+      await seek(tester, find.text('Molar çözünürlük s'));
+      expect(tester.takeException(), isNull);
+      await back(tester);
+      await openTool(tester, 'Radyonüklitler');
+      await tester.tap(find.text('¹⁴C  Karbon'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Tc');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('⁹⁹ᵐTc  Teknesyum'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('6,0066 ± 0,0002 saat'), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
