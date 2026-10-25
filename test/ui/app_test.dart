@@ -474,6 +474,50 @@ void main() {
     });
   }
 
+  testWidgets('titration: phosphoric acid from the CRC pKa table', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Titrasyon Eğrisi');
+    await seek(tester, find.text('pKa tablosundan seç'));
+    await tester.tap(find.text('pKa tablosundan seç'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'fosforik');
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Fosforik asit'));
+    await tester.pumpAndSettle();
+    expect(find.text('2,16 7,21 12,32'), findsOneWidget);
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Eşdeğerlik noktası 3'));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('rate law from data: NO2 example is second order', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Veriden Hız Kanunu');
+    await seek(tester, find.text('Örnek veri'));
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('2. derece'));
+    await seek(tester, find.textContaining('0,54445 ± 0,0014 M⁻¹ s⁻¹'));
+    expect(state.history.first.toolId, 'rateData');
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('rate law from initial rates: 2NO + O2 is k[A]²[B]', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Veriden Hız Kanunu');
+    await tester.tap(find.text('Başlangıç hızları'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Örnek veri'));
+    await tester.tap(find.text('Örnek veri'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('hız = k[A]²[B]'));
+    await seek(tester, find.textContaining('M⁻² s⁻¹'));
+    expect(find.textContaining('7096 ± 13'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

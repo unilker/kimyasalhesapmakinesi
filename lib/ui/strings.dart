@@ -335,6 +335,13 @@ class S {
     'Tam yük denkliği, 25 °C (Kw = 10⁻¹⁴); aktiflikler derişime eşit alınır.',
   );
   static const invalidPKa = Bi('Check the pKa values', 'pKa değerlerini kontrol edin');
+  static const acidTableTitle = Bi('Weak acids and bases (25 °C)', 'Zayıf asit ve bazlar (25 °C)');
+  static const pickFromTable = Bi('Choose from the pKa table', 'pKa tablosundan seç');
+  static const searchAcid = Bi('Search: acetic, NH3, phosphoric …', 'Ara: asetik, NH3, fosforik …');
+  static const acidTableSource = Bi(
+    'Source: CRC Handbook of Chemistry and Physics, 84th ed. Bases are listed with pKb; the titration uses pKa(BH⁺) = 14.00 − pKb.',
+    'Kaynak: CRC Handbook of Chemistry and Physics, 84. baskı. Bazlar pKb ile verilir; titrasyonda pKa(BH⁺) = 14,00 − pKb kullanılır.',
+  );
 
   // Galvanic cell
   static const cathodeLabel = Bi('Cathode (reduction)', 'Katot (indirgenme)');
@@ -397,6 +404,40 @@ class S {
       Bi('$el has no natural isotopic composition', '$el elementinin doğal izotop bileşimi yok');
   static const errCannotRemove = Bi('The formula has no atom to remove for this ion',
       'Bu iyon için formülden çıkarılacak atom yok');
+
+  // Kinetic data analysis
+  static const rateDataNote = Bi(
+    'Least-squares lines of [A], ln[A] and 1/[A] against t; the order with the largest R² is suggested. Check the residuals and the chemistry before trusting it.',
+    '[A], ln[A] ve 1/[A] değerlerinin t’ye karşı en küçük kareler doğruları; en büyük R²’ye sahip derece önerilir. Güvenmeden önce artıkları ve kimyayı kontrol edin.',
+  );
+  static const timeConcPairs = Bi('Data: one “t [A]” pair per line', 'Veri: her satıra bir “t [A]” çifti');
+  static const timeUnit = Bi('Time unit', 'Zaman birimi');
+  static const suggestedOrder = Bi('Suggested order', 'Önerilen derece');
+  static Bi orderName(int n) => Bi(
+      switch (n) { 0 => 'Zero order', 1 => 'First order', _ => 'Second order' },
+      '$n. derece');
+  static const rateConstant = Bi('Rate constant k', 'Hız sabiti k');
+  static const initialConc = Bi('[A]₀ from the fit', 'Uydurmadan [A]₀');
+  static const halfLifeLabel = Bi('Half-life t½ (from [A]₀)', 'Yarılanma süresi t½ ([A]₀’dan)');
+  static const allOrders = Bi('All three linear plots', 'Üç doğrusal grafik');
+  static const integratedLaw = Bi('Concentration vs time', 'Derişim – zaman');
+  static const initialRatesMode = Bi('Initial rates', 'Başlangıç hızları');
+  static const initialRatesData = Bi('One experiment per line: [A] [B] … rate',
+      'Her satıra bir deney: [A] [B] … hız');
+  static const initialRatesNote = Bi(
+    'ln rate = ln k + m·ln[A] + n·ln[B] … fitted by least squares; k is then averaged over the experiments with the rounded orders.',
+    'ln hız = ln k + m·ln[A] + n·ln[B] … en küçük karelerle uydurulur; k, yuvarlanmış derecelerle deneylerin ortalamasıdır.',
+  );
+  static const fittedOrders = Bi('Fitted order', 'Uydurulan derece');
+  static const rateWord = Bi('rate', 'hız');
+  static const rateLaw = Bi('Rate law', 'Hız kanunu');
+  static const overallOrderLabel = Bi('Overall order', 'Toplam derece');
+  static const errInitialRates = Bi(
+    'Each line needs the same number of positive values, with more experiments than reactants and independently varied concentrations',
+    'Her satırda aynı sayıda pozitif değer olmalı; deney sayısı tepken sayısından fazla olmalı ve derişimler bağımsız değişmeli',
+  );
+  static const needPositive = Bi('Concentrations must be positive and at least 3 pairs are needed',
+      'Derişimler pozitif olmalı ve en az 3 çift gerekir');
 
   // ICE table
   static const iceNote = Bi(

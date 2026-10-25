@@ -1,0 +1,55 @@
+# Acid and base dissociation constants at 25 C from the CRC Handbook of
+# Chemistry and Physics, 84th ed. (2004), via the LibreTexts reference tables
+# E1 and E2. Kept: rows measured at 25 C whose Ka (Kb) and pKa (pKb) columns
+# agree within 0.03; steps with pKa >= 14 are dropped.
+# kind	name	formula	pK values (pKa for acids, pKb for bases)
+acid	Acetic acid	CH3CO2H	4.756
+acid	Arsenic acid	H3AsO4	2.26 6.76 11.29
+acid	Benzoic acid	C6H5CO2H	4.204
+acid	Bromoacetic acid	CH2BrCO2H	2.90
+acid	Carbonic acid	H2CO3	6.35 10.33
+acid	Chloroacetic acid	CH2ClCO2H	2.87
+acid	Chlorous acid	HClO2	1.94
+acid	Chromic acid	H2CrO4	0.74 6.49
+acid	Citric acid	C6H8O7	3.13 4.76 6.40
+acid	Cyanic acid	HCNO	3.46
+acid	Dichloroacetic acid	CHCl2CO2H	1.35
+acid	Fluoroacetic acid	CH2FCO2H	2.59
+acid	Formic acid	CH2O2	3.75
+acid	Hydrazoic acid	HN3	4.6
+acid	Hydrocyanic acid	HCN	9.21
+acid	Hydrofluoric acid	HF	3.20
+acid	Hydrogen peroxide	HOOH	11.7
+acid	Hydrogen selenide	H2Se	3.89 11.0
+acid	Hydrogen sulfide	H2S	7.05
+acid	Hypobromous acid	HBrO	8.55
+acid	Hypochlorous acid	HClO	7.40
+acid	Hypoiodous acid	HIO	10.5
+acid	Iodic acid	HIO3	0.78
+acid	Iodoacetic acid	CH2ICO2H	3.18
+acid	Nitrous acid	HNO2	3.25
+acid	Oxalic acid	C2H2O4	1.25 3.81
+acid	Periodic acid	HIO4	1.64
+acid	Phenol	C6H5OH	9.99
+acid	Phosphoric acid	H3PO4	2.16 7.21 12.32
+acid	Pyrophosphoric acid	H4P2O7	0.91 2.10 6.70 9.32
+acid	Resorcinol	C6H4(OH)2	9.32 11.1
+acid	Selenious acid	H2SeO3	2.62 8.32
+acid	Sulfurous acid	H2SO3	1.85 7.2
+acid	meso-Tartaric acid	C4H6O6	3.17 4.91
+acid	Tellurous acid	H2TeO3	6.27 8.43
+acid	Trichloroacetic acid	CCl3CO2H	0.66
+acid	Trifluoroacetic acid	CF3CO2H	0.52
+base	Ammonia	NH3	4.75
+base	Aniline	C6H5NH2	9.4
+base	n-Butylamine	C4H9NH2	3.40
+base	sec-Butylamine	(CH3)2CHCH2NH2	3.44
+base	tert-Butylamine	(CH3)3CNH2	3.32
+base	Dimethylamine	(CH3)2NH	3.27
+base	Ethylamine	C2H5NH2	3.35
+base	Hydrazine	N2H4	5.9
+base	Hydroxylamine	NH2OH	8.06
+base	Methylamine	CH3NH2	3.34
+base	Propylamine	C3H7NH2	3.46
+base	Pyridine	C5H5N	8.77
+base	Trimethylamine	(CH3)3N	4.20

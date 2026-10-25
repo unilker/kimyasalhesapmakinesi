@@ -37,16 +37,19 @@ jobs:
           python3 tool/crosscheck/check_stats.py tool/crosscheck/out_stats.json
           flutter test tool/crosscheck/dump_titration_test.dart
           python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json
+          flutter test tool/crosscheck/dump_kinetics_test.dart
+          python3 tool/crosscheck/check_kinetics.py tool/crosscheck/out_kinetics.json
       - name: Cross-check isotope patterns with an independent fine-structure algorithm
         run: |
           python3 tool/gen_isotopes.py
           git diff --exit-code lib/core/chem/isotopes_data.dart
           flutter test tool/crosscheck/dump_isotopes_test.dart
           python3 tool/crosscheck/check_isotopes.py tool/crosscheck/out_isotopes.json
-      - name: Thermodynamic data table is generated from tool/data
+      - name: Data tables are generated from tool/data
         run: |
           python3 tool/gen_thermo.py
-          git diff --exit-code lib/core/thermo_data.dart
+          python3 tool/gen_pka.py
+          git diff --exit-code lib/core/thermo_data.dart lib/core/acid_data.dart
       - name: Cross-check equilibrium (ICE) solutions against 300-digit mpmath
         run: |
           pip install mpmath

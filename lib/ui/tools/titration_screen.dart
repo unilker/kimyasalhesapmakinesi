@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/acids.dart';
 import '../../core/format.dart';
 import '../../core/math/expression.dart';
 import '../../core/stats.dart' show parseNumberList;
@@ -8,6 +9,7 @@ import '../common.dart';
 import '../strings.dart';
 import '../theme.dart';
 import '../widgets/xy_chart.dart';
+import 'acid_picker.dart';
 import 'ph_scale.dart';
 import 'registry.dart';
 
@@ -79,6 +81,20 @@ class _TitrationScreenState extends State<TitrationScreen> {
     });
   }
 
+  Future<void> _pickFromTable() async {
+    final a = await Navigator.of(context).push<AcidData>(
+      MaterialPageRoute(builder: (_) => const AcidPicker()),
+    );
+    if (a == null || !mounted) return;
+    final dec = context.lang == 'tr' ? ',' : '.';
+    setState(() {
+      _acid = !a.isBase;
+      _salt = 0;
+      _pKas.text = a.pKas.map((v) => v.toString().replaceAll('.', dec)).join(' ');
+      _t = null;
+    });
+  }
+
   void _calculate() {
     FocusScope.of(context).unfocus();
     final pkas = parseNumberList(_pKas.text);
@@ -143,6 +159,11 @@ class _TitrationScreenState extends State<TitrationScreen> {
           for (final p in _presets)
             ActionChip(label: Text(p.label), onPressed: () => _applyPreset(p)),
         ],
+      ),
+      OutlinedButton.icon(
+        onPressed: _pickFromTable,
+        icon: const Icon(Icons.menu_book_rounded),
+        label: Text(context.t(S.pickFromTable)),
       ),
       SectionTitle(context.t(S.analyte)),
       Wrap(
