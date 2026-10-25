@@ -37,6 +37,12 @@ jobs:
           python3 tool/crosscheck/check_stats.py tool/crosscheck/out_stats.json
           flutter test tool/crosscheck/dump_titration_test.dart
           python3 tool/crosscheck/check_titration.py tool/crosscheck/out_titration.json
+      - name: Cross-check isotope patterns with an independent fine-structure algorithm
+        run: |
+          python3 tool/gen_isotopes.py
+          git diff --exit-code lib/core/chem/isotopes_data.dart
+          flutter test tool/crosscheck/dump_isotopes_test.dart
+          python3 tool/crosscheck/check_isotopes.py tool/crosscheck/out_isotopes.json
       - name: Thermodynamic data table is generated from tool/data
         run: |
           python3 tool/gen_thermo.py

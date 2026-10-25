@@ -378,6 +378,25 @@ class S {
   static const atTemperature = Bi('At the chosen temperature', 'Seçilen sıcaklıkta');
   static const sourceLabel = Bi('Source', 'Kaynak');
 
+  // Mass spectrometry
+  static const msNote = Bi(
+    'Unit-resolution isotope pattern from NIST isotopic compositions; m/z includes the electron mass.',
+    'NIST izotop bileşimlerinden birim çözünürlüklü izotop deseni; m/z elektron kütlesini içerir.',
+  );
+  static const formulaOrIon = Bi('Molecular formula', 'Molekül formülü');
+  static const ionType = Bi('Ion', 'İyon');
+  static const neutralMolecule = Bi('Neutral M', 'Nötr M');
+  static const monoisotopic = Bi('Monoisotopic (exact) mass', 'Monoizotopik (tam) kütle');
+  static const monoisotopicMz = Bi('Monoisotopic m/z', 'Monoizotopik m/z');
+  static const averageMass = Bi('Average mass', 'Ortalama kütle');
+  static const nominalMass = Bi('Nominal mass', 'Nominal kütle');
+  static const isotopePeaks = Bi('Isotope peaks', 'İzotop tepeleri');
+  static const relativeIntensity = Bi('Relative intensity (%)', 'Bağıl şiddet (%)');
+  static Bi errNoIsotopes(String el) =>
+      Bi('$el has no natural isotopic composition', '$el elementinin doğal izotop bileşimi yok');
+  static const errCannotRemove = Bi('The formula has no atom to remove for this ion',
+      'Bu iyon için formülden çıkarılacak atom yok');
+
   // ICE table
   static const iceNote = Bi(
     'Enter K for the equation as written. Concentrations in mol/L for Kc, partial pressures for Kp; pure solids and liquids, marked (s) or (l), are left out.',

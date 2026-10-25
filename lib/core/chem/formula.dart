@@ -70,6 +70,24 @@ class ChemicalFormula {
   /// True for the free electron species (`e-`), used in redox half reactions.
   final bool isElectron;
 
+  /// This formula with [delta] atoms added (negative counts remove atoms)
+  /// and [charge] as the new charge, e.g. M → [M+H]⁺. Null when more atoms
+  /// would be removed than there are.
+  ChemicalFormula? withAtoms(Map<String, double> delta, int charge) {
+    final next = Map<String, double>.of(atoms);
+    for (final e in delta.entries) {
+      final n = (next[e.key] ?? 0) + e.value;
+      if (n < -1e-9) return null;
+      if (n.abs() < 1e-9) {
+        next.remove(e.key);
+      } else {
+        next[e.key] = n;
+      }
+    }
+    if (next.isEmpty) return null;
+    return ChemicalFormula._(input, next, charge, false);
+  }
+
   double get molarMass {
     var sum = 0.0;
     atoms.forEach((s, n) => sum += symbolMass(s)! * n);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kimya_hesap/app.dart';
-import 'package:kimya_hesap/core/chem/formula.dart' show prettyEquation;
+import 'package:kimya_hesap/core/chem/formula.dart' show prettyEquation, prettyFormula;
 import 'package:kimya_hesap/state/app_state.dart';
 import 'package:kimya_hesap/ui/common.dart' show ErrorBanner, ToolScaffold;
 import 'package:kimya_hesap/ui/home/home_screen.dart';
@@ -408,6 +408,51 @@ void main() {
         await seek(tester, find.textContaining('ΔG° ('));
         expect(find.byType(ErrorBanner), findsNothing, reason: eq);
         expect(tester.takeException(), isNull);
+        tester
+            .state<ScrollableState>(
+                find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+            .position
+            .jumpTo(0);
+        await tester.pumpAndSettle();
+      }
+    });
+  }
+
+  testWidgets('mass spectrometry: caffeine [M+H]⁺ and examples on small screens', (tester) async {
+    final state = await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Kütle Spektrometrisi');
+    await tester.enterText(find.byType(TextField).first, 'C8H10N4O2');
+    await tester.tap(find.text('[M+H]⁺'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('Hesapla'));
+    await tester.tap(find.text('Hesapla'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('195,087652'));
+    expect(state.history.first.toolId, 'massSpec');
+    // switching the ion recalculates: [M−H]⁻ = 194.080376 − 1.007825 + mₑ
+    tester
+        .state<ScrollableState>(
+            find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('[M−H]⁻'));
+    await tester.tap(find.text('[M−H]⁻'));
+    await tester.pumpAndSettle();
+    await seek(tester, find.text('193,073099'));
+  });
+
+  for (final name in ['small phone', 'small phone landscape', 'tablet landscape']) {
+    testWidgets('mass spectrometry examples render on $name', (tester) async {
+      await pumpApp(tester, sizes[name]!);
+      await openTool(tester, 'Kütle Spektrometrisi');
+      for (final f in ['C8H10N4O2', 'C9H8O4', 'CH2Cl2', 'C6H5Br', 'SnCl4', 'C60', 'C254H377N65O75S6']) {
+        final chip = find.widgetWithText(ActionChip, prettyFormula(f));
+        await seek(tester, chip);
+        await tester.tap(chip);
+        await tester.pumpAndSettle();
+        await seek(tester, find.text('Monoizotopik (tam) kütle'));
+        expect(tester.takeException(), isNull, reason: f);
         tester
             .state<ScrollableState>(
                 find.descendant(of: find.byType(ToolScaffold), matching: find.byType(Scrollable)).first)

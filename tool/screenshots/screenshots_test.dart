@@ -234,6 +234,16 @@ void main() {
     await _shot('phone_hess');
   });
 
+  testWidgets('phone mass spec', (t) async {
+    await _pump(t, phone);
+    await _openTool(t, 'Kütle Spektrometrisi');
+    await seekText(t, find.text('C₆H₅Br'));
+    await t.tap(find.text('C₆H₅Br'));
+    await t.pumpAndSettle();
+    await seekText(t, find.byType(XyChart));
+    await _shot('phone_mass_spec');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

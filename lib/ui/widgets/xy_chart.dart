@@ -10,6 +10,7 @@ class ChartSeries {
     required this.color,
     this.line = true,
     this.dots = false,
+    this.bars = false,
     this.width = 2.5,
   });
 
@@ -17,6 +18,9 @@ class ChartSeries {
   final Color color;
   final bool line;
   final bool dots;
+
+  /// Vertical sticks from the x axis (mass spectra).
+  final bool bars;
   final double width;
 }
 
@@ -37,6 +41,8 @@ class XyChart extends StatelessWidget {
     this.markers = const [],
     this.xLabel = '',
     this.yLabel = '',
+    this.xMin,
+    this.xMax,
     this.yMin,
     this.yMax,
     this.formatter = const NumberFormatter(significantDigits: 4),
@@ -47,6 +53,8 @@ class XyChart extends StatelessWidget {
   final List<ChartMarker> markers;
   final String xLabel;
   final String yLabel;
+  final double? xMin;
+  final double? xMax;
   final double? yMin;
   final double? yMax;
   final NumberFormatter formatter;
@@ -63,6 +71,8 @@ class XyChart extends StatelessWidget {
           markers: markers,
           xLabel: xLabel,
           yLabel: yLabel,
+          xMinOverride: xMin,
+          xMaxOverride: xMax,
           yMinOverride: yMin,
           yMaxOverride: yMax,
           formatter: formatter,
@@ -97,6 +107,8 @@ class _ChartPainter extends CustomPainter {
     required this.markers,
     required this.xLabel,
     required this.yLabel,
+    required this.xMinOverride,
+    required this.xMaxOverride,
     required this.yMinOverride,
     required this.yMaxOverride,
     required this.formatter,
@@ -109,6 +121,8 @@ class _ChartPainter extends CustomPainter {
   final List<ChartMarker> markers;
   final String xLabel;
   final String yLabel;
+  final double? xMinOverride;
+  final double? xMaxOverride;
   final double? yMinOverride;
   final double? yMaxOverride;
   final NumberFormatter formatter;
@@ -125,8 +139,8 @@ class _ChartPainter extends CustomPainter {
         .where((p) => p.dx.isFinite && p.dy.isFinite)
         .toList();
     if (pts.isEmpty) return;
-    var xMin = pts.map((p) => p.dx).reduce(math.min);
-    var xMax = pts.map((p) => p.dx).reduce(math.max);
+    var xMin = xMinOverride ?? pts.map((p) => p.dx).reduce(math.min);
+    var xMax = xMaxOverride ?? pts.map((p) => p.dx).reduce(math.max);
     var yMin = yMinOverride ?? pts.map((p) => p.dy).reduce(math.min);
     var yMax = yMaxOverride ?? pts.map((p) => p.dy).reduce(math.max);
     if (xMax == xMin) {
@@ -191,7 +205,7 @@ class _ChartPainter extends CustomPainter {
     canvas.clipRect(plot.inflate(4));
     for (final s in series) {
       final visible = s.points.where((p) => p.dx.isFinite && p.dy.isFinite).toList();
-      if (s.line && visible.length > 1) {
+      if (s.line && !s.bars && visible.length > 1) {
         final path = Path()..moveTo(px(visible.first.dx), py(visible.first.dy));
         for (final p in visible.skip(1)) {
           path.lineTo(px(p.dx), py(p.dy));
@@ -204,6 +218,15 @@ class _ChartPainter extends CustomPainter {
             ..strokeWidth = s.width
             ..strokeJoin = StrokeJoin.round,
         );
+      }
+      if (s.bars) {
+        final stick = Paint()
+          ..color = s.color
+          ..strokeWidth = s.width
+          ..strokeCap = StrokeCap.round;
+        for (final p in visible) {
+          canvas.drawLine(Offset(px(p.dx), py(math.max(yMin, 0))), Offset(px(p.dx), py(p.dy)), stick);
+        }
       }
       if (s.dots) {
         for (final p in visible) {

@@ -28,6 +28,8 @@ const double avogadro = 6.02214076e23;
 const double gasConstant = avogadro * boltzmann; // J/(mol·K)
 const double faraday = avogadro * elementaryCharge; // C/mol
 const double planck = 6.62607015e-34; // J·s
+/// Electron mass in unified atomic mass units (CODATA 2022).
+const double electronMassU = 5.485799090441e-4;
 const double speedOfLight = 299792458; // m/s
 const double boltzmann = 1.380649e-23; // J/K
 const double elementaryCharge = 1.602176634e-19; // C
