@@ -450,6 +450,15 @@ class S {
   static const initialAmounts = Bi('Initial concentrations', 'Başlangıç derişimleri');
   static const initialOf = Bi('Initial', 'Başlangıç');
   static const changeOf = Bi('Change', 'Değişim');
+  static const pickSalt = Bi('Choose a salt from the Ksp table', 'Ksp tablosundan tuz seç');
+  static const kspTableTitle = Bi('Solubility products (25 °C)', 'Çözünürlük çarpımları (25 °C)');
+  static const searchSalt = Bi('Search: AgCl, fluoride, calcium …', 'Ara: AgCl, florür, kalsiyum …');
+  static const kspSource = Bi(
+    'Source: CRC Handbook of Chemistry and Physics, 84th ed. Ideal solutions: activity coefficients, ion pairing and hydrolysis are ignored.',
+    'Kaynak: CRC Handbook of Chemistry and Physics, 84. baskı. İdeal çözelti: aktiflik katsayıları, iyon çiftleşmesi ve hidroliz ihmal edilir.',
+  );
+  static const molarSolubilityLabel = Bi('Molar solubility s', 'Molar çözünürlük s');
+  static const massSolubilityLabel = Bi('Solubility', 'Çözünürlük');
   static const equilibriumOf = Bi('Equilibrium', 'Denge');
   static const equilibriumComposition = Bi('Equilibrium composition', 'Denge bileşimi');
   static const extentLabel = Bi('Extent of reaction x', 'Tepkime ilerleme miktarı x');

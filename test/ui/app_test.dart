@@ -518,6 +518,22 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('ICE table: CaF2 from the Ksp table gives its solubility', (tester) async {
+    await pumpApp(tester, const Size(390, 844));
+    await openTool(tester, 'Denge Tablosu (ICE)');
+    await seek(tester, find.text('Ksp tablosundan tuz seç'));
+    await tester.tap(find.text('Ksp tablosundan tuz seç'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'CaF2');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Kalsiyum florür'));
+    await tester.pumpAndSettle();
+    // s = (Ksp/4)^(1/3) = 2.05078e-4 M, × 78.0748 g/mol
+    await seek(tester, find.text('2,05078 × 10⁻⁴ mol/L'));
+    expect(find.text('0,0160114 g/L'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('history limit trims old entries', (tester) async {
     final state = await pumpApp(tester, const Size(390, 844));
     state.setHistoryLimit(25);

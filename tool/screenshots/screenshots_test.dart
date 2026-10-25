@@ -254,6 +254,23 @@ void main() {
     await _shot('phone_rate_data');
   });
 
+  testWidgets('tablet dark cell', (t) async {
+    await _pump(t, tablet, theme: 'dark');
+    await _openTool(t, 'Piller ve E° Tablosu');
+    await _tapText(t, 'Hesapla');
+    await _shot('tablet_dark_cell');
+  });
+
+  testWidgets('landscape ice english', (t) async {
+    await _pump(t, const Size(844, 390), lang: 'en');
+    await _openTool(t, 'ICE Table');
+    await seekText(t, find.text('N₂O₄ ⇌ 2NO₂'));
+    await t.tap(find.text('N₂O₄ ⇌ 2NO₂'));
+    await t.pumpAndSettle();
+    await seekText(t, find.text('Equilibrium composition'));
+    await _shot('landscape_ice_en');
+  });
+
   testWidgets('landscape calculator', (t) async {
     await _pump(t, const Size(844, 390));
     await t.tap(find.byIcon(Icons.calculate_outlined));

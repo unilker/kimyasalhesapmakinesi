@@ -4,10 +4,12 @@ import '../../core/chem/equation.dart';
 import '../../core/chem/formula.dart';
 import '../../core/ice.dart';
 import '../../core/math/expression.dart';
+import '../../core/solubility.dart';
 import '../common.dart';
 import '../errors.dart';
 import '../strings.dart';
 import 'registry.dart';
+import 'salt_picker.dart';
 
 class _Example {
   const _Example(this.equation, this.k, this.initial);
@@ -74,6 +76,18 @@ class _IceScreenState extends State<IceScreen> {
 
   TextEditingController _field(String label) =>
       _initial.putIfAbsent(label, TextEditingController.new);
+
+  Future<void> _pickSalt() async {
+    final s = await Navigator.of(context).push<SaltData>(MaterialPageRoute(builder: (_) => const SaltPicker()));
+    if (s == null || !mounted) return;
+    _reaction.text = s.equation;
+    _k.text = context.nf.plain(s.ksp, digits: 4);
+    _parse();
+    for (final sp in _parsed!.species) {
+      if (sp.inQ) _field(sp.label).text = '0';
+    }
+    _calculate();
+  }
 
   void _applyExample(_Example e) {
     final dec = context.lang == 'tr' ? ',' : '.';
@@ -177,6 +191,11 @@ class _IceScreenState extends State<IceScreen> {
         onChanged: _parse,
         items: const [' ⇌ ', ' + ', '^', '(', ')', '(aq)', '(s)', '(g)', '(l)'],
       ),
+      OutlinedButton.icon(
+        onPressed: _pickSalt,
+        icon: const Icon(Icons.menu_book_rounded),
+        label: Text(context.t(S.pickSalt)),
+      ),
       SectionTitle(context.t(S.examples)),
       Wrap(
         spacing: 8,
@@ -257,6 +276,10 @@ class _IceScreenState extends State<IceScreen> {
           const Divider(height: 18),
           InfoRow(context.t(S.reactionLabel), r.equation),
           InfoRow(context.t(S.extentLabel), nf.format(res.extent)),
+          if (_solidMolarMass(r) case final mm? when res.extent > 0) ...[
+            InfoRow(context.t(S.molarSolubilityLabel), '${nf.format(res.extent)} mol/L'),
+            InfoRow(context.t(S.massSolubilityLabel), '${nf.format(res.extent * mm)} g/L'),
+          ],
           InfoRow(context.t(S.initialQ), nf.format(q0)),
           if (direction != null) Text(context.t(direction)),
         ],
@@ -290,5 +313,17 @@ class _IceScreenState extends State<IceScreen> {
     final a = nu.abs();
     final s = a == a.roundToDouble() ? (a == 1 ? '' : '${a.toInt()}') : context.nf.format(a);
     return '${nu < 0 ? '−' : '+'}$s';
+  }
+
+  /// Molar mass of the salt when the reaction is the dissolution of a single
+  /// pure solid (1 formula unit) into ions, else null.
+  double? _solidMolarMass(IceReaction r) {
+    final reactants = [for (final s in r.species) if (s.nu < 0) s];
+    if (reactants.length != 1 || reactants.first.inQ || reactants.first.nu != -1) return null;
+    try {
+      return parseWrittenEquation(_reaction.text).reactants.first.formula.molarMass;
+    } on Object {
+      return null;
+    }
   }
 }
