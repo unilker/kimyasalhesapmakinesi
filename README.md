@@ -17,6 +17,7 @@ Android ve iOS'ta telefon, tablet ve katlanabilir cihazlarda çalışır. Arayü
 | **Seyreltme** | C₁V₁ = C₂V₂, seri seyreltme, iki çözeltiyi karıştırma |
 | **Asit–baz** | pH/pOH, kuvvetli asit/baz (suyun iyonlaşması dahil), zayıf asit/baz (tam çözüm), tampon ve tampon hazırlama, Ka/pKa, renkli pH skalası |
 | **Titrasyon eğrisi** | Kuvvetli/zayıf, mono/poliprotik asit ve bazlar, Na₂CO₃ gibi tuzlar; tam yük denkliğiyle pH eğrisi, eşdeğerlik ve yarı eşdeğerlik noktaları, uygun indikatörler; CRC'den 50 asit/bazlık pKa tablosu |
+| **Tür dağılımı** | Poliprotik asit ve bazlarda α kesirleri – pH diyagramı, seçilen pH'ta baskın tür ve kesirler |
 | **Denklem & stokiyometri** | Tam sayılı (kesin aritmetikle) denkleştirme, iyonik/redoks denklemler, sınırlayıcı bileşen, artan miktar, teorik verim |
 | **Denge** | Kp ⇄ Kc, Ksp ve çözünürlük; **ICE tablosu**: herhangi bir tepkime ve K için denge derişimleri (ortak iyon, saf katı/sıvı, uç K değerlerinde tam hassasiyet); CRC'den 120 tuzluk Ksp tablosu, molar ve g/L çözünürlük |
 | **Gaz yasaları** | İdeal, birleşik, gaz yoğunluğu, Dalton, Graham; van der Waals gerçek gaz, molekül hızları |
@@ -81,7 +82,7 @@ tool/                   element verisi, simge ve ekran görüntüsü üreticiler
 flutter pub get
 flutter run                 # bağlı cihaz veya emülatörde
 flutter analyze
-flutter test                # 190+ test
+flutter test                # 210+ test
 ```
 
 Mağaza için ekran görüntüleri üretmek (gerçek yazı tipleriyle PNG):

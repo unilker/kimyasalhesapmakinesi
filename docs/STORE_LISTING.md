@@ -26,12 +26,14 @@ Kimya Hesap; mol kütlesinden denklem denkleştirmeye, pH’tan gaz yasalarına 
 • Denklem denkleştirme (iyonik/redoks dahil) ve stokiyometri: sınırlayıcı bileşen, teorik verim
 • Çözeltiler: molarite, molalite, %(k/k) → M, ppm, seyreltme ve karıştırma
 • Asit–baz: pH/pOH, kuvvetli/zayıf asit-baz (tam çözüm), tampon, pH skalası
-• Titrasyon eğrileri: poliprotik asitler, eşdeğerlik noktaları, uygun indikatörler
+• Titrasyon eğrileri ve tür dağılım diyagramları: poliprotik asitler, eşdeğerlik noktaları, indikatörler, CRC pKa tablosu
 • Denge: ICE tablosu, Ksp ve ortak iyon, Kp ⇄ Kc
 • Tepkime termodinamiği: CODATA verileriyle ΔH°, ΔS°, ΔG°, K
 • Piller: aranabilir standart elektrot potansiyelleri tablosu, E°pil, toplam tepkime
 • Analitik kimya: istatistik, Q/Grubbs testleri, kalibrasyon (LOD/LOQ), kütle spektrometrisi (tam kütle, izotop deseni)
-• Gaz yasaları (gerçek gazlar dahil), kinetik, spektroskopi, koligatif özellikler, nükleer kimya
+• Kinetik: deney verisinden tepkime derecesi ve hız sabiti, başlangıç hızları yöntemi
+• Radyonüklit tablosu (NUBASE2020), Ksp tablosu ve çözünürlük
+• Gaz yasaları (gerçek gazlar dahil), spektroskopi, koligatif özellikler, nükleer kimya
 • Her denklemde istediğiniz değişkeni bilinmeyen seçin, her girdi için birim seçin
 • Etkileşimli periyodik tablo (118 element), birim çevirici, CODATA sabitleri
 • İşlem geçmişi (25–500 kayıt), koyu tema, Türkçe ve İngilizce
@@ -52,12 +54,14 @@ Chem Calc brings the calculations chemists need — from molar mass and equation
 • Equation balancing (incl. ionic/redox) and stoichiometry: limiting reactant, theoretical yield
 • Solutions: molarity, molality, % (w/w) → M, ppm, dilution and mixing
 • Acids & bases: pH/pOH, strong/weak acids and bases (exact), buffers, pH scale
-• Titration curves: polyprotic acids, equivalence points, suitable indicators
+• Titration curves and species distribution diagrams: polyprotic acids, equivalence points, indicators, CRC pKa table
 • Equilibrium: ICE tables, Ksp and common-ion effect, Kp ⇄ Kc
 • Reaction thermodynamics: ΔH°, ΔS°, ΔG°, K from CODATA data
 • Galvanic cells: searchable standard electrode potential table, E°cell, overall reaction
 • Analytical chemistry: statistics, Q/Grubbs tests, calibration (LOD/LOQ), mass spectrometry (exact mass, isotope pattern)
-• Gas laws (incl. real gases), kinetics, spectroscopy, colligative properties, nuclear chemistry
+• Kinetics: reaction order and rate constant from data, method of initial rates
+• Radionuclide table (NUBASE2020), Ksp table and solubility
+• Gas laws (incl. real gases), spectroscopy, colligative properties, nuclear chemistry
 • Solve any equation for any variable, with units for every input
 • Interactive periodic table, unit converter, CODATA constants
 • Calculation history, dark theme, English and Turkish
